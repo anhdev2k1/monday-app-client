@@ -10,6 +10,7 @@
     "@types/node": "^16.18.24",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
+    "antd": "^5.4.4",
     "customize-cra": "^1.0.0",
     "react": "^18.2.0",
     "react-app-rewired": "^2.2.1",
