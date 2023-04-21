@@ -1,7 +1,6 @@
 import { Button, Form, Input } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './_login.scss';
 const LoginStep2 = () => {
    const onFinish = (values: any) => {
@@ -34,7 +33,7 @@ const LoginStep2 = () => {
                className='form__container-item--flex'
             >
                 <span className='form__input-heading'>Password</span>
-               <Input.Password type="password" className="form__container-input" />
+               <Input.Password type="password" className="form__container-input" placeholder='Password' />
             </Form.Item>
             <Link to="" >
                <span className='link-forgot'>Forgot your password?</span>
