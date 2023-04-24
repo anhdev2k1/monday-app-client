@@ -5,9 +5,8 @@ export interface IChildrenComponentProps {
 }
 
 type LayoutType = React.FC<IChildrenComponentProps> | null;
-
 export interface IRoutes {
    path: string;
-   component: React.ComponentType<any>;
+   component: React.ComponentType<any>; 
    layout?: LayoutType;
 }
