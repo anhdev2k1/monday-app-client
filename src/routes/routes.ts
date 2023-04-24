@@ -1,4 +1,6 @@
 import config from '~/config';
+import LayoutWorkspace from '~/layouts/LayoutWorkspace';
+import Board from '~/pages/Board';
 import LoginStep1 from '~/pages/Login/loginStep1';
 import LoginStep2 from '~/pages/Login/loginStep2';
 import Register from '~/pages/Register';
@@ -14,5 +16,9 @@ const publicRoutes: IRoutes[] = [
    { path: config.routes.register, component: Register },
    { path: config.routes.registerStep2, component: RegisterStep2 },
 ];
+// Public routes
+const privateRoutes: IRoutes[] = [
+   { path: config.routes.board, component: Board, layout: LayoutWorkspace },
+];
 
-export { publicRoutes };
+export { publicRoutes, privateRoutes };
