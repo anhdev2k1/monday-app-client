@@ -5,7 +5,7 @@ import axios from "axios"
 import './_login.scss';
 import { useState } from 'react';
 const LoginStep2 = () => {
-   const [status, setStatus] = useState("")
+   const [dataLogin, setDataLogin] = useState<any>({})
    const navigate = useNavigate()
    const handleLogin = async (data: any) => {
       try {
@@ -17,19 +17,19 @@ const LoginStep2 = () => {
              "Content-Type": "application/json"
             }
           })
-          setStatus(res.data.status)
+          setDataLogin(res.data)
       } catch (error) {
          console.log("error:", error);
       }
    }
    const onFinish = (values: any) => {
       handleLogin(values)
-      if(status === "success"){
-         navigate("/")
+      if(dataLogin.status === "success"){
+         navigate("/workspace/10004")
+         localStorage.setItem("token",JSON.stringify(dataLogin.accessToken))
       }
    };
    return (
-      
       <div className="form__container">
          <h2 className="form__container-heading">Log in</h2>
          <Form name="basic" onFinish={onFinish} autoComplete="off" layout='vertical'>
