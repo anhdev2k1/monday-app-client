@@ -5,19 +5,42 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import ImgBanner from '~/assets/images/register/welcome-to-monday.jpg';
 import axios from 'axios';
+import Notification from '~/components/Notification';
+import { useState } from 'react';
+import { NotificationPlacement } from 'antd/es/notification/interface';
 interface IDataRegister {
    email: string;
    name: string;
    password: string;
 }
+interface IInfoNotifi {
+   isOpen: boolean;
+   info: 'success' | 'warning' | 'open' | 'error' | 'info';
+   description: string;
+   placement: NotificationPlacement;
+}
 const Register = () => {
    const baseUrl = process.env.REACT_APP_SERVER_API_URL;
+   const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
+      isOpen: false,
+      info: 'open',
+      description: '',
+      placement: 'topLeft',
+   });
+   console.log('acb');
 
    const onFinish = (values: IDataRegister) => {
       if (values) {
-         const requestUrl = `${baseUrl}/v1/api/auth/signup`;
+         const requestUrl = `${baseUrl}/v1/api/auth/signin`;
          const response = axios.post(requestUrl, values);
-         console.log(response);
+         if (true) {
+            setInfoNotifi({
+               isOpen: true,
+               info: 'success',
+               description: 'Register successfully',
+               placement: 'topLeft',
+            });
+         }
       }
    };
    return (
@@ -113,6 +136,13 @@ const Register = () => {
                ></div>
             </div>
          </Col>
+         {infoNotifi.isOpen && (
+            <Notification
+               info={infoNotifi.info}
+               description={infoNotifi.description}
+               placement={infoNotifi.placement}
+            />
+         )}
       </Row>
    );
 };
