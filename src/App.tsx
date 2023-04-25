@@ -3,6 +3,8 @@ import { privateRoutes, publicRoutes } from './routes/routes';
 import DefaultLayout from './layouts/DefaultLayout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '~/assets/_globalStyle.scss';
+import PrivateRoute from './routes/PrivateRoute';
+import { IRoutes } from './shared/model/global';
 function App() {
    return (
       <Router>
@@ -30,7 +32,7 @@ function App() {
                      />
                   );
                })}
-               {privateRoutes.map((route, index) => {
+               {privateRoutes.map((route: IRoutes, index) => {
                   const Page = route.component;
                   let Layout = DefaultLayout;
 
@@ -45,9 +47,11 @@ function App() {
                         key={index}
                         path={route.path}
                         element={
-                           <Layout>
-                              <Page />
-                           </Layout>
+                           <PrivateRoute
+                              isAuthenticated={true}
+                              component={Layout}
+                              children={<Page />}
+                           />
                         }
                      />
                   );
