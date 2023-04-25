@@ -9,7 +9,7 @@ const Workspace = () => {
          <div className="workspace__wrapper">
             <div className="container">
                <section className="workspace__content">
-                  <Link to="/workspace/id">
+                  <Link to="/board/id">
                      <div className="workspace__content-item">
                         <h2 className="workspace__content-heading">Recently visited</h2>
                         <div className="content__item-box">
@@ -46,7 +46,7 @@ const Workspace = () => {
                      </div>
                   </Link>
 
-                  <Link to="/board/anh">
+                  <Link to="/workspace/233">
                      <div className="workspace__content-item">
                         <h2 className="workspace__content-heading">My workspaces</h2>
                         <div className="content__item-box workspace__item-flex">
