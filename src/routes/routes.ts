@@ -4,7 +4,6 @@ import Board from '~/pages/Board';
 import LoginStep2 from '~/pages/Login/loginStep2';
 import Register from '~/pages/Register';
 import Workspace from '~/pages/Workspace/workspace';
-import RegisterStep2 from '~/pages/RegisterStep2';
 import { IRoutes } from '~/shared/model/global';
 
 // Public routes
@@ -12,7 +11,6 @@ const publicRoutes: IRoutes[] = [
    { path: config.routes.home, component: Workspace },
    { path: config.routes.login, component: LoginStep2 },
    { path: config.routes.register, component: Register },
-   { path: config.routes.registerStep2, component: RegisterStep2 },
 ];
 // Public routes
 const privateRoutes: IRoutes[] = [
