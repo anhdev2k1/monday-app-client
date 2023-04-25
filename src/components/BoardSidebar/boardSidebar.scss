@@ -1,0 +1,32 @@
+.item__board {
+   display: flex;
+   cursor: pointer;
+   justify-content: space-between;
+   align-items: center;
+   border-radius: 3px;
+   background-color: #cce5ff;
+   padding: 6px 10px 6px 6px;
+   font-size: 1.3rem;
+   font-weight: 500;
+   .board__info {
+      display: flex;
+      align-items: center;
+      .board__title {
+         margin-left: 6px;
+      }
+   }
+
+   .board__btn--dot {
+      font-size: 1.8rem;
+      border: none;
+      background-color: transparent;
+      display: none;
+      transform: translateY(-4px);
+      cursor: pointer;
+   }
+   &:hover {
+      .board__btn--dot {
+         display: block;
+      }
+   }
+}
