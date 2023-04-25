@@ -1,27 +1,31 @@
 import { Button, Form, Input } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from "axios"
+import axios from 'axios';
 import './_login.scss';
 import { useState } from 'react';
+import { notification } from 'antd';
+import type { NotificationPlacement } from 'antd/es/notification/interface';
+
+
 const LoginStep2 = () => {
-   const [dataLogin, setDataLogin] = useState<any>({})
-   const navigate = useNavigate()
+   const [dataLogin, setDataLogin] = useState<any>({});
+   const navigate = useNavigate();
    const handleLogin = async (data: any) => {
       try {
          const res = await axios({
-            method: "GET",
+            method: 'GET',
             data,
-            url: "http://localhost:3001/v1/api/auth/login",
-            headers:{
-             "Content-Type": "application/json"
-            }
-          })
-          setDataLogin(res.data)
+            url: 'http://localhost:3001/v1/api/auth/login',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+         });
+         setDataLogin(res.data);
       } catch (error) {
-         console.log("error:", error);
+         console.log('error:', error);
       }
-   }
+   };
    const onFinish = (values: any) => {
       handleLogin(values)
       if(dataLogin.status === "success"){
@@ -32,7 +36,7 @@ const LoginStep2 = () => {
    return (
       <div className="form__container">
          <h2 className="form__container-heading">Log in</h2>
-         <Form name="basic" onFinish={onFinish} autoComplete="off" layout='vertical'>
+         <Form name="basic" onFinish={onFinish} autoComplete="off" layout="vertical">
             <Form.Item
                name="email"
                label="Email"
@@ -48,7 +52,11 @@ const LoginStep2 = () => {
                ]}
                className="form__container-item--flex"
             >
-               <Input placeholder="Example@company.com" className="form__container-input" name="email"/>
+               <Input
+                  placeholder="Example@company.com"
+                  className="form__container-input"
+                  name="email"
+               />
             </Form.Item>
             <Form.Item
                name="password"
@@ -72,6 +80,7 @@ const LoginStep2 = () => {
                   <ArrowRightOutlined />
                </Button>
             </Form.Item>
+
             <div className="suggest__signup-wrapper">
                <div className="suggest__signup-component">
                   <span>Don't have an account yet?</span>
