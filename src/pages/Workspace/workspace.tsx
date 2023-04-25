@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '~/components/Navbar/navbar';
 import './workspace.scss';
+import { Link } from 'react-router-dom';
 const Workspace = () => {
    return (
       <>
@@ -8,7 +9,7 @@ const Workspace = () => {
          <div className="workspace__wrapper">
             <div className="container">
                <section className="workspace__content">
-                  <div className="workspace__content-item">
+                  <Link to="/board/2123" className="workspace__content-item">
                      <h2 className="workspace__content-heading">Recently visited</h2>
                      <div className="content__item-box">
                         <img
@@ -41,9 +42,9 @@ const Workspace = () => {
                            </span>
                         </div>
                      </div>
-                  </div>
+                  </Link>
 
-                  <div className="workspace__content-item">
+                  <Link to="/workspace/123" className="workspace__content-item">
                      <h2 className="workspace__content-heading">My workspaces</h2>
                      <div className="content__item-box workspace__item-flex">
                         <div className="content__item-icon">
@@ -54,7 +55,7 @@ const Workspace = () => {
                            <span className="workspace__item-title--desc">work management</span>
                         </div>
                      </div>
-                  </div>
+                  </Link>
                </section>
             </div>
          </div>

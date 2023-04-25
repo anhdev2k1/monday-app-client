@@ -7,6 +7,7 @@ const routes = {
    registerStep2: '/register-step2',
    // private router
    board: '/board/:id',
+   workspace:'/workspace/:id'
 };
 
 export default routes;

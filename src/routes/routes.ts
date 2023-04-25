@@ -7,6 +7,7 @@ import Register from '~/pages/Register';
 import Workspace from '~/pages/Workspace/workspace';
 import RegisterStep2 from '~/pages/RegisterStep2';
 import { IRoutes } from '~/shared/model/global';
+import WorkspaceManagement from '~/pages/WorkspaceManagement';
 
 // Public routes
 const publicRoutes: IRoutes[] = [
@@ -19,6 +20,7 @@ const publicRoutes: IRoutes[] = [
 // Public routes
 const privateRoutes: IRoutes[] = [
    { path: config.routes.board, component: Board, layout: LayoutWorkspace },
+   { path: config.routes.workspace, component: WorkspaceManagement, layout: LayoutWorkspace },
 ];
 
 export { publicRoutes, privateRoutes };
