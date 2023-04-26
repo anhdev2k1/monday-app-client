@@ -1,29 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600&display=swap');
-*{
-    margin: 0;
-    padding: 0;
+* {
+   margin: 0;
+   padding: 0;
 }
-html{
-    font-size: 62.5%;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-family: 'Roboto Mono', monospace;
-    line-height: 26.5px;
-    color: #333;
+:root {
+   --background-primary-color: #0173ea;
+   --text-btn-color: #323338;
 }
-a{
-    text-decoration: none;
+html {
+   font-size: 62.5%;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   font-family: 'Roboto Mono', monospace;
+   line-height: 26.5px;
+   color: #333;
 }
-ul{
-    list-style-type: none;
+a {
+   text-decoration: none;
 }
-img{
-    max-width: 100%;
-    height: 100%;
-    object-fit: cover;
+ul {
+   list-style-type: none;
 }
-.container{
-    width: 1200px;
-    margin: 0 auto;
-    min-height: 200px;
+img {
+   max-width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+.container {
+   width: 1200px;
+   margin: 0 auto;
+   min-height: 200px;
 }
