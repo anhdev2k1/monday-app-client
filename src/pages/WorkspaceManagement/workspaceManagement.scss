@@ -70,4 +70,28 @@
             }
         }
     }
+    .workspace__subscribers-header{
+        display: flex;
+        align-items: center;
+        font-size: 1.6rem;
+    }
+    .workspace__info-user{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 20px;
+        > span{
+            font-size: 1.8rem;
+        }
+        .info__user-img{
+            width: 50px;
+            height: 50px;
+            background-color: green;
+            color: white;
+            font-size: 2rem;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+        }
+    }
 }
