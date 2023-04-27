@@ -3,8 +3,13 @@ import type { TabsProps } from 'antd';
 import './workspaceManagement.scss';
 import { Input } from 'antd';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '~/services/redux/store';
 const { TextArea } = Input;
 const WorkspaceManagement = () => {
+   const nameWorkspace = useSelector((state: RootState) => state.workspace.name)
+   console.log(nameWorkspace);
+   
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -75,7 +80,7 @@ const WorkspaceManagement = () => {
                   <span>M</span>
                </div>
                <div className="workspace__header-title">
-                  <Input className="header__title-name" defaultValue="Main Workspace"/>
+                  <Input className="header__title-name" value={nameWorkspace}/>
                   <TextArea rows={3} defaultValue="Keep coding" className='header__title-desc' />
                </div>
             </div>
