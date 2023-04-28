@@ -8,7 +8,7 @@ interface IPropsTooltip {
    position: TooltipPlacement;
 }
 const Tippy = ({ children, html, position }: IPropsTooltip) => (
-   <div>
+   <div className="tippy">
       <div>
          <Tooltip autoAdjustOverflow placement={position} title={html}>
             {children}

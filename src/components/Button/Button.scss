@@ -1,47 +1,46 @@
 .wrapperBtn {
    display: inline-flex;
    align-items: center;
-   justify-content: space-between;
-   min-width: 100px;
-   padding: 6px 4px;
+   justify-content: space-around;
+
    border-radius: 4px;
    font-size: 1.4rem;
    font-weight: 400;
    cursor: pointer;
-   background-color: var(--background-btn-default);
+   background-color: transparent;
    border: 1px solid transparent;
+   -webkit-user-select: none;
    user-select: none;
-   max-width: 110px;
+   max-width: 140px;
    > span {
       margin-left: 4px;
    }
-
-   + .wrapperBtn {
+   + .wrapperBtn,
+   + .tippy {
       margin-left: 8px;
    }
-
    &.disabled {
       cursor: no-drop;
       pointer-events: none;
       opacity: 0.5;
    }
    &:hover {
-      background-color: #dddfec;
-      font-size: 14px;
+      background-color: var(--background-btn-default);
       color: var(--text-btn-color);
    }
 }
 
 .icon + .title,
 .title + .icon {
-   margin-left: 8px;
+   margin: 0 4px;
 }
 
 .icon {
    display: inline-flex;
    align-items: center;
    justify-content: center;
-   width: 24px;
+   width: 20px;
+   font-size: 1.4rem;
 }
 
 // Button types
@@ -59,17 +58,33 @@
 .active {
    background-color: var(--white);
 }
+.boder {
+   border: 0.5px solid #ccc;
+}
 .transparent {
    background-color: transparent;
 }
 
+.hideHover {
+   &:hover {
+      background-color: #ffffff;
+   }
+}
 // Button sizes
+
+.medium {
+   min-width: 20px;
+   padding: 8px 4px;
+}
 .small {
    min-width: 88px;
    padding: 4px 16px;
 }
 
 .large {
-   padding: 14px 16px;
-   min-width: 140px;
+   padding: 10px 6px;
+   max-width: 100%;
+   .icon + .title {
+      font-size: 2rem;
+   }
 }

@@ -2,19 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from './Button';
 import './Button.scss';
+import { SizeType, StatusType } from '~/shared/model/global';
 
 interface PropsTypeButton {
    to?: string;
    // css
-   primary?: boolean;
-   active?: boolean;
-   disabled?: boolean;
-   small?: boolean;
-   large?: boolean;
-   warning?: boolean;
-   transparent?: boolean;
+   statusType?: StatusType;
+   sizeType?: SizeType;
    // variable
    type?: 'button' | 'submit' | 'reset';
+   hideHover?: boolean;
    title?: string;
    className?: string;
    leftIcon?: React.ReactNode;
@@ -30,13 +27,8 @@ interface PropsTypeLink {
 const ButtonCustom: React.FC<PropsTypeButton> = ({
    to,
    title,
-   primary = false,
-   active = false,
-   disabled = false,
-   transparent = false,
-   small = false,
-   large = false,
-   warning = false,
+   statusType = StatusType.Transparent,
+   sizeType = SizeType.Medium,
    className,
    leftIcon,
    rightIcon,
@@ -50,7 +42,7 @@ const ButtonCustom: React.FC<PropsTypeButton> = ({
    };
 
    // Remove event listener when btn is disabled
-   if (disabled) {
+   if (statusType === StatusType.Disabled) {
       Object.keys(props).forEach((key) => {
          if (key.startsWith('on') && typeof props[key] === 'function') {
             delete props[key];
@@ -62,10 +54,7 @@ const ButtonCustom: React.FC<PropsTypeButton> = ({
       props.to = to;
       Comp = Link;
    }
-   const classes = `wrapperBtn ${primary ? 'primary' : ''} 
-   ${active ? 'active' : ''} ${transparent ? 'transparent' : ''}
-    ${disabled ? 'disabled' : ''} ${warning ? 'warning' : ''}
-       ${small ? 'small' : ''} ${large ? 'large' : ''} ${className ? className : ''}`;
+   const classes = `wrapperBtn ${statusType} ${sizeType}  ${className ? className : ''}`;
 
    return (
       <Comp className={classes.trim()} {...props}>
