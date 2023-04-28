@@ -15,6 +15,7 @@ const PrivateRoute = ({
    ...rest
 }: PrivateRouteProps) => {
    // const navigate = useNavigate();
+
    return isAuthenticated ? <Component {...rest}>{Children}</Component> : <Navigate to="/login" />;
 };
 

@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import workspaceReducer from "../redux/features/updateWorkspace"
-import userReducer from "../redux/features/user"
+import workspaceReducer from '../redux/features/updateWorkspace';
+import userReducer from '../redux/features/user';
+import tokenReducer from './features/updateToken';
+
 export const store = configureStore({
    reducer: {
-    workspace: workspaceReducer,
-    user: userReducer
+      workspace: workspaceReducer,
+      user: userReducer,
+      infoToken: tokenReducer,
    },
 });
 export type RootState = ReturnType<typeof store.getState>;

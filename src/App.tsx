@@ -5,9 +5,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '~/assets/_globalStyle.scss';
 import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
-import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from './services/redux/store';
 function App() {
-
+   const token = useSelector((state: RootState) => state.infoToken.token);
    return (
       <Router>
          <div className="App">
@@ -15,7 +16,6 @@ function App() {
                {publicRoutes.map((route, index) => {
                   const Page = route.component;
                   let Layout = DefaultLayout;
-
                   if (route.layout) {
                      Layout = route.layout;
                   } else if (route.layout === null) {
@@ -50,7 +50,7 @@ function App() {
                         path={route.path}
                         element={
                            <PrivateRoute
-                              isAuthenticated={true}
+                              isAuthenticated={!!token}
                               component={Layout}
                               children={<Page />}
                            />
