@@ -36,7 +36,7 @@ const Register = () => {
 
    const onFinish = async (values: IDataRegister) => {
       if (values) {
-         const requestUrl = `${baseUrl}v1/api/auth/signin`;
+         const requestUrl = `${baseUrl}v1/api/auth/signup`;
          const response = await axios.post<IResponseData<IResponseRegister>>(requestUrl, values);
          const { accessToken } = response.data.metadata;
          if (accessToken) {
