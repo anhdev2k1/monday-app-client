@@ -3,22 +3,71 @@ import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import './sidebar.scss';
 import { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { renameWorkspace } from '~/services/redux/features/updateWorkspace';
 import BoardSidebar from '../BoardSidebar';
-
+import ModalBox from '../Modal';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Button, message, Popconfirm } from 'antd';
+import axios from 'axios';
+import { RootState } from '~/services/redux/store';
+import Notification from '../Notification';
 const Sidebar: React.FC = () => {
    const [isRename, setIsRename] = useState(false);
    const [dataRename, setDataRename] = useState('Main workspace');
-   const dispatch = useDispatch()
+   const dispatch = useDispatch();
+   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!)
+   const getToken = JSON.parse(localStorage.getItem("token")!)
+   const user = useSelector((state: RootState) => state.user.user)
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
    };
    const focusInput = (e: any) => {
       setDataRename(e.target.value);
-      dispatch(renameWorkspace(e.target.value))
+      const updateWorkspace = async () => {
+         const data = {
+            name: e.target.value
+         }
+         const res = await axios({
+            method: "PATCH",
+            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
+            data,
+            headers: {
+               'Content-Type': 'application/json',
+               'x-client-id':`${user._id}`,
+               'Authorization': `Bearer ${getToken}`
+            }
+         })
+         if(res.data.status === 'success'){
+            <Notification info='success' description = 'Bạn đã cập nhật thành công workspace' placement='topRight'/>
+         }else{
+            <Notification info='error' description = 'Đã có lỗi xảy ra!!' placement='topRight'/>
+         }
+      }
+      updateWorkspace()
+      dispatch(renameWorkspace(e.target.value));
       setIsRename((pre) => !pre);
    };
+   const handleDelete  = () => {
+      const deleteWorkspace = async () => {
+         const res = await axios({
+            method:"DELETE",
+            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
+            headers: {
+               'Content-Type': 'application/json',
+               'x-client-id':`${user._id}`,
+               'Authorization': `Bearer ${getToken}`
+            }
+            
+         })
+         if(res.data.status === 'success'){
+            <Notification info='success' description = 'Bạn đã xoá thành công workspace' placement='topRight'/>
+         }else{
+            <Notification info='error' description = 'Đã có lỗi xảy ra!!' placement='topRight'/>
+         }
+      }
+      deleteWorkspace()
+   }
    const items: MenuProps['items'] = [
       {
          key: '1',
@@ -98,25 +147,13 @@ const Sidebar: React.FC = () => {
       },
       {
          key: '4',
-         label: <span>Add new workspace</span>,
-         icon: (
-            <svg
-               viewBox="0 0 20 20"
-               fill="currentColor"
-               width="16"
-               height="16"
-               aria-hidden="true"
-               aria-label="Add new workspace"
-               className="icon_component icon_component--no-focus-style"
-            >
-               <path
-                  d="M10.75 6C10.75 5.58579 10.4142 5.25 10 5.25C9.58579 5.25 9.25 5.58579 9.25 6V9.25H6C5.58579 9.25 5.25 9.58579 5.25 10C5.25 10.4142 5.58579 10.75 6 10.75H9.25V14C9.25 14.4142 9.58579 14.75 10 14.75C10.4142 14.75 10.75 14.4142 10.75 14V10.75H14C14.4142 10.75 14.75 10.4142 14.75 10C14.75 9.58579 14.4142 9.25 14 9.25H10.75V6Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
-               ></path>
-            </svg>
-         ),
+         label: <span onClick={handleDelete}>Delete</span>,
+         
+         icon: <DeleteOutlined />,
+      },
+      {
+         key: '5',
+         label: <ModalBox label="Add new workspace" icon="" />,
       },
    ];
    return (
@@ -228,28 +265,8 @@ const Sidebar: React.FC = () => {
                   <span>Search</span>
                </div>
             </div>
-            {/* <div className="sidebar__boards">
-               <div className="sidebar__boards-item">
-                  <svg
-                     viewBox="0 0 20 20"
-                     fill="currentColor"
-                     width="19"
-                     height="19"
-                     aria-hidden="true"
-                     aria-label="Public board"
-                     className="icon_component"
-                  >
-                     <path
-                        d="M7.5 4.5H16C16.2761 4.5 16.5 4.72386 16.5 5V15C16.5 15.2761 16.2761 15.5 16 15.5H7.5L7.5 4.5ZM6 4.5H4C3.72386 4.5 3.5 4.72386 3.5 5V15C3.5 15.2761 3.72386 15.5 4 15.5H6L6 4.5ZM2 5C2 3.89543 2.89543 3 4 3H16C17.1046 3 18 3.89543 18 5V15C18 16.1046 17.1046 17 16 17H4C2.89543 17 2 16.1046 2 15V5Z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                     ></path>
-                  </svg>
-                  
-               </div>
-            </div> */}
-            <BoardSidebar/>
+
+            <BoardSidebar />
          </div>
       </>
    );

@@ -5,11 +5,23 @@ import { Input } from 'antd';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/services/redux/store';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 const { TextArea } = Input;
 const WorkspaceManagement = () => {
    const nameWorkspace = useSelector((state: RootState) => state.workspace.name)
-   console.log(nameWorkspace);
-   
+   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!)
+   const [dataWorkspace, setDataWorkspace] = useState<any>({})
+   useEffect(() => {
+      const getWorkspace = async () => {
+         const res = await axios({
+            method: "GET",
+            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`
+         })
+         setDataWorkspace(res.data.metadata.workspace)
+      }
+      getWorkspace()
+   },[nameWorkspace])
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -80,7 +92,7 @@ const WorkspaceManagement = () => {
                   <span>M</span>
                </div>
                <div className="workspace__header-title">
-                  <Input className="header__title-name" value={nameWorkspace}/>
+                  <Input className="header__title-name" value={dataWorkspace.name}/>
                   <TextArea rows={3} defaultValue="Keep coding" className='header__title-desc' />
                </div>
             </div>

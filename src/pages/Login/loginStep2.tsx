@@ -6,10 +6,14 @@ import './_login.scss';
 import { useState } from 'react';
 import { notification } from 'antd';
 import type { NotificationPlacement } from 'antd/es/notification/interface';
+import { useDispatch } from 'react-redux';
+import { currentUser } from '~/services/redux/features/user';
+import Notification from '~/components/Notification';
 
 
 const LoginStep2 = () => {
    const [dataLogin, setDataLogin] = useState<any>({});
+   const dispatch = useDispatch()
    const navigate = useNavigate();
    const handleLogin = async (data: any) => {
       try {
@@ -29,8 +33,12 @@ const LoginStep2 = () => {
    const onFinish = (values: any) => {
       handleLogin(values)
       if(dataLogin.status === "success"){
+         <Notification info='success' description = 'Bạn đã đăng nhập thành công' placement='topRight'/>
          navigate("/workspace/10004")
          localStorage.setItem("token",JSON.stringify(dataLogin.accessToken))
+         dispatch(currentUser(dataLogin.metadata.user))
+      }else{
+         <Notification info='error' description = 'Đăng nhập thất bại !!' placement='topRight'/>
       }
    };
    return (

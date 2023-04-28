@@ -6,7 +6,7 @@ export interface workspaceState {
 }
 
 const initialState: workspaceState = {
-  name: 'Main workspace'
+  name: 'Main workspace',
 }
 
 export const workspaceSlice = createSlice({

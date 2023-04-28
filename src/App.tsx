@@ -5,7 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '~/assets/_globalStyle.scss';
 import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
+import axios from 'axios';
 function App() {
+
    return (
       <Router>
          <div className="App">
