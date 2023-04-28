@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import workspaceReducer from "../redux/features/updateWorkspace"
+import workspaceReducer from '../redux/features/updateWorkspace';
+import tokenReducer from './features/updateToken';
 export const store = configureStore({
    reducer: {
-    workspace: workspaceReducer
+      workspace: workspaceReducer,
+      infoToken: tokenReducer,
    },
 });
 export type RootState = ReturnType<typeof store.getState>;

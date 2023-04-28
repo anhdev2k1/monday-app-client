@@ -1,15 +1,14 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import { privateRoutes, publicRoutes } from './routes/routes';
 import DefaultLayout from './layouts/DefaultLayout';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '~/assets/_globalStyle.scss';
 import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
+import { useSelector } from 'react-redux';
+import { RootState } from './services/redux/store';
 function App() {
-   let token = localStorage.getItem('token');
-   if (token) {
-      token = JSON.parse(token);
-   }
+   const token = useSelector((state: RootState) => state.infoToken.token);
    return (
       <Router>
          <div className="App">

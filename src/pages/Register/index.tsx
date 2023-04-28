@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { IResponseData } from '~/shared/model/global';
 import { IResponseRegister } from '~/shared/model/register';
+import { useDispatch } from 'react-redux';
+import { setToken } from '~/services/redux/features/updateToken';
 interface IDataRegister {
    email: string;
    name: string;
@@ -24,6 +26,7 @@ interface IInfoNotifi {
 const Register = () => {
    const baseUrl = process.env.REACT_APP_SERVER_API_URL;
    const navigate = useNavigate();
+   const dispatch = useDispatch();
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
       info: 'open',
@@ -43,6 +46,7 @@ const Register = () => {
                description: 'Register successfully',
                placement: 'topLeft',
             });
+            dispatch(setToken(accessToken));
             localStorage.setItem('token', JSON.stringify(accessToken));
             navigate('/');
          } else {
