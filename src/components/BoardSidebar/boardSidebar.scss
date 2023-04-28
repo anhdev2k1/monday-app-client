@@ -13,6 +13,20 @@
       align-items: center;
       .board__title {
          margin-left: 6px;
+         min-height: 20px;
+      }
+      .board__title--input {
+         border-color: #0073ea;
+         border-style: solid;
+         border-width: 1px;
+         color: #323338;
+         display: inline-block;
+         font-size: 14px;
+         line-height: 21px;
+         padding: 2px;
+         text-align: left;
+         margin-left: 6px;
+         outline: none;
       }
    }
 

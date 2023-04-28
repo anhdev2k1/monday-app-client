@@ -1,11 +1,29 @@
 import { Dropdown, MenuProps } from 'antd';
 import './boardSidebar.scss';
 import Tippy from '../Tippy';
+import { useState } from 'react';
 const BoardSidebar = () => {
+   const [valueInput, setValueInput] = useState<string>('Monday');
+   const [isEditInput, setIsEditInput] = useState<boolean>(false);
+   const handleOnChangeValueInput = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+      if (!valueInput) {
+         return setValueInput('Monday');
+      }
+      setIsEditInput(!isEditInput);
+      // call api change name workpace
+   };
    const items: MenuProps['items'] = [
       {
          key: '1',
-         label: <span>Rename Board</span>,
+         label: (
+            <span
+               onClick={() => {
+                  setIsEditInput(true);
+               }}
+            >
+               Rename Board
+            </span>
+         ),
          icon: (
             <svg
                viewBox="0 0 20 20"
@@ -77,7 +95,7 @@ const BoardSidebar = () => {
       },
       {
          key: '4',
-         label: <span>Duplicate Board</span>,
+         label: <span>Delete Board</span>,
          icon: (
             <svg
                viewBox="0 0 20 20"
@@ -118,7 +136,19 @@ const BoardSidebar = () => {
                      clipRule="evenodd"
                   ></path>
                </svg>
-               <span className="board__title">Monday</span>
+               {isEditInput ? (
+                  <input
+                     autoFocus
+                     onChange={(e) => {
+                        setValueInput(e.target.value);
+                     }}
+                     onBlur={handleOnChangeValueInput}
+                     className="board__title--input"
+                     value={valueInput}
+                  />
+               ) : (
+                  <span className="board__title">{valueInput}</span>
+               )}
             </div>
             <Dropdown menu={{ items }}>
                <button className="board__btn--dot">...</button>
