@@ -2,12 +2,14 @@ import './_register.scss';
 import { Row, Col } from 'antd';
 import { Button, Form, Input } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ImgBanner from '~/assets/images/register/welcome-to-monday.jpg';
 import axios from 'axios';
 import Notification from '~/components/Notification';
 import { useState } from 'react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
+import { IResponseData } from '~/shared/model/global';
+import { IResponseRegister } from '~/shared/model/register';
 interface IDataRegister {
    email: string;
    name: string;
@@ -21,23 +23,33 @@ interface IInfoNotifi {
 }
 const Register = () => {
    const baseUrl = process.env.REACT_APP_SERVER_API_URL;
+   const navigate = useNavigate();
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
       info: 'open',
       description: '',
       placement: 'topLeft',
    });
-   console.log('acb');
 
-   const onFinish = (values: IDataRegister) => {
+   const onFinish = async (values: IDataRegister) => {
       if (values) {
-         const requestUrl = `${baseUrl}/v1/api/auth/signin`;
-         const response = axios.post(requestUrl, values);
-         if (true) {
+         const requestUrl = `${baseUrl}v1/api/auth/signin`;
+         const response = await axios.post<IResponseData<IResponseRegister>>(requestUrl, values);
+         const { accessToken } = response.data.metadata;
+         if (accessToken) {
             setInfoNotifi({
                isOpen: true,
                info: 'success',
                description: 'Register successfully',
+               placement: 'topLeft',
+            });
+            localStorage.setItem('token', JSON.stringify(accessToken));
+            navigate('/');
+         } else {
+            setInfoNotifi({
+               isOpen: true,
+               info: 'error',
+               description: response.data.message,
                placement: 'topLeft',
             });
          }

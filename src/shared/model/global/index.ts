@@ -24,3 +24,10 @@ export interface IRoutes {
    component: React.ComponentType<any>;
    layout?: LayoutType;
 }
+
+export interface IResponseData<T> {
+   message: string;
+   status: string;
+   statusCode: number;
+   metadata: T;
+}
