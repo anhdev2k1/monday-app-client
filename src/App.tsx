@@ -1,11 +1,15 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { privateRoutes, publicRoutes } from './routes/routes';
 import DefaultLayout from './layouts/DefaultLayout';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import '~/assets/_globalStyle.scss';
 import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
 function App() {
+   let token = localStorage.getItem('token');
+   if (token) {
+      token = JSON.parse(token);
+   }
    return (
       <Router>
          <div className="App">
@@ -13,7 +17,6 @@ function App() {
                {publicRoutes.map((route, index) => {
                   const Page = route.component;
                   let Layout = DefaultLayout;
-
                   if (route.layout) {
                      Layout = route.layout;
                   } else if (route.layout === null) {
@@ -48,7 +51,7 @@ function App() {
                         path={route.path}
                         element={
                            <PrivateRoute
-                              isAuthenticated={true}
+                              isAuthenticated={!!token}
                               component={Layout}
                               children={<Page />}
                            />

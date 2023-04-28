@@ -9,12 +9,13 @@ import WorkspaceManagement from '~/pages/WorkspaceManagement';
 
 // Public routes
 const publicRoutes: IRoutes[] = [
-   { path: config.routes.home, component: Workspace },
    { path: config.routes.login, component: LoginStep2 },
    { path: config.routes.register, component: Register },
 ];
 // Public routes
 const privateRoutes: IRoutes[] = [
+   { path: config.routes.home, component: Workspace },
+
    { path: config.routes.board, component: Board, layout: LayoutWorkspace },
    { path: config.routes.workspace, component: WorkspaceManagement, layout: LayoutWorkspace },
 ];

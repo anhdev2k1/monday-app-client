@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from '~/components/Navbar/navbar';
 import './workspace.scss';
 import { Link } from 'react-router-dom';
