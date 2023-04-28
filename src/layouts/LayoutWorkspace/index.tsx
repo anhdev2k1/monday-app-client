@@ -7,9 +7,7 @@ const LayoutWorkspace: React.FC<IChildrenComponentProps> = ({ children }) => {
          <nav></nav>
          <div className="wrapper" style={{ display: 'flex' }}>
             <Sidebar />
-            <div className="content" style={{ flex: 1, backgroundColor: '#edeff8' }}>
-               {children}
-            </div>
+            <div className="content" style={{flex : 1}}>{children}</div>
          </div>
       </div>
    );

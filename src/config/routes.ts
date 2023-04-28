@@ -5,7 +5,7 @@ const routes = {
    register: '/register',
    // private router
    board: '/board/:id',
-   workspace: '/workspace/:id',
+   workspace:'/workspace/:id'
 };
 
 export default routes;
