@@ -5,6 +5,7 @@ import './sidebar.scss';
 import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { renameWorkspace } from '~/services/redux/features/updateWorkspace';
+import BoardSidebar from '../BoardSidebar';
 
 const Sidebar: React.FC = () => {
    const [isRename, setIsRename] = useState(false);
@@ -227,7 +228,7 @@ const Sidebar: React.FC = () => {
                   <span>Search</span>
                </div>
             </div>
-            <div className="sidebar__boards">
+            {/* <div className="sidebar__boards">
                <div className="sidebar__boards-item">
                   <svg
                      viewBox="0 0 20 20"
@@ -245,9 +246,10 @@ const Sidebar: React.FC = () => {
                         clip-rule="evenodd"
                      ></path>
                   </svg>
-                  <span>Test</span>
+                  
                </div>
-            </div>
+            </div> */}
+            <BoardSidebar/>
          </div>
       </>
    );
