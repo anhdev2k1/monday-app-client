@@ -93,6 +93,20 @@ export const getDetailWorkspace = createAsyncThunk(
    { serializeError: serializeAxiosError },
 );
 
+// get detail
+export const getListlWorkspace = createAsyncThunk(
+   'get-list-workspace-slice',
+   async () => {
+      const requestUrl = `${baseUrl}v1/api/workspace}`;
+      return await axios.get<
+         IResponseWorkSpace<{
+            workspace: IWorkspace[];
+         }>
+      >(requestUrl);
+   },
+   { serializeError: serializeAxiosError },
+);
+
 // create
 export const createWorkSpace = createAsyncThunk(
    'create-workspace-slice',
@@ -142,6 +156,27 @@ export const workspaceSlice = createSlice({
                const { response } = action.error as { response: any };
                state.currWorkspace.status = response.data.statusCode;
                state.currWorkspace.mess = response.data.message;
+            }
+         })
+         .addMatcher(isFulfilled(getListlWorkspace), (state, action) => {
+            state.infoListWorkSpace.data = action.payload.data.metadata?.workspace;
+            state.infoListWorkSpace.mess = action.payload.data.message;
+            state.infoListWorkSpace.status = action.payload.data.status;
+            state.infoListWorkSpace.error = false;
+         })
+         .addMatcher(isPending(getListlWorkspace), (state) => {
+            state.infoListWorkSpace.loading = true;
+            state.infoListWorkSpace.status = '';
+            state.infoListWorkSpace.mess = '';
+            state.infoListWorkSpace.error = false;
+         })
+         .addMatcher(isRejected(getListlWorkspace), (state, action) => {
+            state.infoListWorkSpace.loading = false;
+            state.infoListWorkSpace.error = true;
+            if (action?.error) {
+               const { response } = action.error as { response: any };
+               state.infoListWorkSpace.status = response.data.statusCode;
+               state.infoListWorkSpace.mess = response.data.message;
             }
          })
          .addMatcher(isFulfilled(createWorkSpace), (state, action) => {

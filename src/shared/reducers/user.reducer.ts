@@ -88,12 +88,13 @@ export const userSlice = createSlice({
             state.login.data = action.payload.data.metadata;
             state.login.mess = action.payload.data.message;
             state.login.error = false;
-            const dispatch = useAppDispatch();
-            dispatch(setToken(action.payload.data.metadata.accessToken));
             localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
+            // console.log(action.payload.data.metadata);
+            // console.log(action.payload.data.metadata.user);
+            // console.log(action.payload.data.metadata.user.useProfile);
             localStorage.setItem(
                'userName',
-               JSON.stringify(action.payload.data.metadata.user.useProfile.name),
+               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
             );
             localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
@@ -117,12 +118,10 @@ export const userSlice = createSlice({
             state.register.data = action.payload.data.metadata;
             state.register.mess = action.payload.data.message;
             state.register.error = false;
-            const dispatch = useAppDispatch();
-            dispatch(setToken(action.payload.data.metadata.accessToken));
             localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
             localStorage.setItem(
                'userName',
-               JSON.stringify(action.payload.data.metadata.user.useProfile.name),
+               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
             );
             localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
