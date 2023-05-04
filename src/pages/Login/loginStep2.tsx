@@ -2,12 +2,13 @@ import { Button, Form, Input } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import './_login.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Info } from '~/components/Notification';
 import { IDataLogin, IInfoNotifi } from '../Register';
 import Notification from '~/components/Notification';
-import { loginAccount } from '~/shared/reducers/user.reducer';
+import { loginAccount, resetLogin } from '~/shared/reducers/user.reducer';
 import { useAppDispatch, useAppSelector } from '~/config/store';
+import { setToken } from '~/shared/reducers/token.reducer';
 
 const LoginStep2 = () => {
    const dispatch = useAppDispatch();
@@ -21,28 +22,36 @@ const LoginStep2 = () => {
 
    const token = useAppSelector((state) => state.tokenSlice.token);
    const messageLogin = useAppSelector((state) => state.userSlice.login.mess);
+   const errLogin = useAppSelector((state) => state.userSlice.login.error);
 
-   const onFinish = async (values: IDataLogin) => {
-      if (values.email && values.password) {
-         await dispatch(loginAccount(values));
-         if (token) {
+   useEffect(() => {
+      if (messageLogin) {
+         if (messageLogin !== '' && !errLogin) {
+            dispatch(setToken(token));
+            setTimeout(() => {
+               navigate('/');
+            }, 1000);
             setInfoNotifi({
                isOpen: true,
                info: Info.Success,
                description: messageLogin,
-               placement: 'topRight',
+               placement: 'topLeft',
             });
-            setTimeout(() => {
-               navigate('/');
-            }, 1000);
-         } else {
+         } else if (messageLogin !== '' && errLogin) {
             setInfoNotifi({
                isOpen: true,
                info: Info.Error,
                description: messageLogin,
-               placement: 'topRight',
+               placement: 'topLeft',
             });
          }
+         dispatch(resetLogin());
+      }
+   }, [messageLogin, errLogin]);
+
+   const onFinish = async (values: IDataLogin) => {
+      if (values.email && values.password) {
+         await dispatch(loginAccount(values));
       }
    };
 
