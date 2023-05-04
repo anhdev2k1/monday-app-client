@@ -1,18 +1,26 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { notification } from 'antd';
 import type { NotificationPlacement } from 'antd/es/notification/interface';
 
+export enum Info {
+   Success = 'success',
+   Warning = 'warning',
+   Open = 'open',
+   Error = 'error',
+   Info = 'info',
+}
+
 interface IPropsNotification {
-   info: 'success' | 'warning' | 'open' | 'error' | 'info';
+   info: Info;
    description: string;
    placement: NotificationPlacement;
 }
-const Notification = ({ info = 'success', description = '', placement }: IPropsNotification) => {
+const Notification = ({ info = Info.Success, description = '', placement }: IPropsNotification) => {
    const [api, contextHolder] = notification.useNotification();
 
    const openNotification = () => {
       api[info]({
-         message: `Notification ${placement}`,
+         message: info,
          description,
          placement,
       });

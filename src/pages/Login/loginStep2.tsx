@@ -4,43 +4,61 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './_login.scss';
 import { useState } from 'react';
-import { notification } from 'antd';
-import type { NotificationPlacement } from 'antd/es/notification/interface';
 import { useDispatch } from 'react-redux';
 import { currentUser } from '~/services/redux/features/user';
+import { Info } from '~/components/Notification';
+import { setToken } from '~/services/redux/features/updateToken';
+import { IDataLogin, IInfoNotifi } from '../Register';
+import { IResponseUser } from '~/shared/model/authentication';
+import { IResponseData } from '~/shared/model/global';
 import Notification from '~/components/Notification';
 
-
 const LoginStep2 = () => {
-   const [dataLogin, setDataLogin] = useState<any>({});
-   const dispatch = useDispatch()
+   const baseUrl = process.env.REACT_APP_SERVER_API_URL;
+   const dispatch = useDispatch();
    const navigate = useNavigate();
-   const handleLogin = async (data: any) => {
-      try {
-         const res = await axios({
-            method: 'GET',
-            data,
-            url: 'http://localhost:3001/v1/api/auth/login',
-            headers: {
-               'Content-Type': 'application/json',
-            },
-         });
-         setDataLogin(res.data);
-      } catch (error) {
-         console.log('error:', error);
+   const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
+      isOpen: false,
+      info: Info.Open,
+      description: '',
+      placement: 'topRight',
+   });
+
+   const onFinish = async (values: IDataLogin) => {
+      if (values) {
+         const requestUrl = `${baseUrl}v1/api/auth/signin`;
+         const response = await axios.post<IResponseData<IResponseUser>>(requestUrl, values);
+         const { accessToken } = response.data.metadata;
+         if (accessToken) {
+            setInfoNotifi({
+               isOpen: true,
+               info: Info.Success,
+               description: response.data.message,
+               placement: 'topRight',
+            });
+            dispatch(setToken(accessToken));
+            dispatch(
+               currentUser({
+                  _id: response.data.metadata.user._id,
+                  name: response.data.metadata.user.name,
+               }),
+            );
+
+            localStorage.setItem('token', JSON.stringify(accessToken));
+            setTimeout(() => {
+               navigate('/');
+            }, 1000);
+         } else {
+            setInfoNotifi({
+               isOpen: true,
+               info: Info.Error,
+               description: response.data.message,
+               placement: 'topRight',
+            });
+         }
       }
    };
-   const onFinish = (values: any) => {
-      handleLogin(values)
-      if(dataLogin.status === "success"){
-         <Notification info='success' description = 'Bạn đã đăng nhập thành công' placement='topRight'/>
-         navigate("/workspace/10004")
-         localStorage.setItem("token",JSON.stringify(dataLogin.accessToken))
-         dispatch(currentUser(dataLogin.metadata.user))
-      }else{
-         <Notification info='error' description = 'Đăng nhập thất bại !!' placement='topRight'/>
-      }
-   };
+
    return (
       <div className="form__container">
          <h2 className="form__container-heading">Log in</h2>
@@ -104,6 +122,13 @@ const LoginStep2 = () => {
                </div>
             </div>
          </Form>
+         {infoNotifi.isOpen && (
+            <Notification
+               info={infoNotifi.info}
+               description={infoNotifi.description}
+               placement={infoNotifi.placement}
+            />
+         )}
       </div>
    );
 };

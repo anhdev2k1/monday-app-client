@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import './sidebar.scss';
@@ -8,66 +8,59 @@ import { renameWorkspace } from '~/services/redux/features/updateWorkspace';
 import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Button, message, Popconfirm } from 'antd';
 import axios from 'axios';
 import { RootState } from '~/services/redux/store';
-import Notification from '../Notification';
+
 const Sidebar: React.FC = () => {
    const [isRename, setIsRename] = useState(false);
    const [dataRename, setDataRename] = useState('Main workspace');
    const dispatch = useDispatch();
-   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!)
-   const getToken = JSON.parse(localStorage.getItem("token")!)
-   const user = useSelector((state: RootState) => state.user.user)
+   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!);
+   const workspaceName = useSelector((state: RootState) => state.workspace.name);
+
+   const getToken = JSON.parse(localStorage.getItem('token')!);
+   const id = useSelector((state: RootState) => state.user._id);
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
    };
+
+   console.log({ workspaceName });
+
    const focusInput = (e: any) => {
       setDataRename(e.target.value);
       const updateWorkspace = async () => {
          const data = {
-            name: e.target.value
-         }
+            name: e.target.value,
+         };
          const res = await axios({
-            method: "PATCH",
+            method: 'PATCH',
             url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
             data,
             headers: {
                'Content-Type': 'application/json',
-               'x-client-id':`${user._id}`,
-               'Authorization': `Bearer ${getToken}`
-            }
-         })
-         if(res.data.status === 'success'){
-            <Notification info='success' description = 'Bạn đã cập nhật thành công workspace' placement='topRight'/>
-         }else{
-            <Notification info='error' description = 'Đã có lỗi xảy ra!!' placement='topRight'/>
-         }
-      }
-      updateWorkspace()
+               'x-client-id': `${id}`,
+               Authorization: `Bearer ${getToken}`,
+            },
+         });
+      };
+      updateWorkspace();
       dispatch(renameWorkspace(e.target.value));
       setIsRename((pre) => !pre);
    };
-   const handleDelete  = () => {
+   const handleDelete = () => {
       const deleteWorkspace = async () => {
          const res = await axios({
-            method:"DELETE",
+            method: 'DELETE',
             url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
             headers: {
                'Content-Type': 'application/json',
-               'x-client-id':`${user._id}`,
-               'Authorization': `Bearer ${getToken}`
-            }
-            
-         })
-         if(res.data.status === 'success'){
-            <Notification info='success' description = 'Bạn đã xoá thành công workspace' placement='topRight'/>
-         }else{
-            <Notification info='error' description = 'Đã có lỗi xảy ra!!' placement='topRight'/>
-         }
-      }
-      deleteWorkspace()
-   }
+               'x-client-id': `${id}`,
+               Authorization: `Bearer ${getToken}`,
+            },
+         });
+      };
+      deleteWorkspace();
+   };
    const items: MenuProps['items'] = [
       {
          key: '1',
@@ -148,7 +141,7 @@ const Sidebar: React.FC = () => {
       {
          key: '4',
          label: <span onClick={handleDelete}>Delete</span>,
-         
+
          icon: <DeleteOutlined />,
       },
       {
@@ -191,7 +184,7 @@ const Sidebar: React.FC = () => {
                {isRename ? (
                   <input type="text" defaultValue={dataRename} onBlur={focusInput} />
                ) : (
-                  <span>{dataRename}</span>
+                  <span>{workspaceName}</span>
                )}
                <svg
                   viewBox="0 0 20 20"

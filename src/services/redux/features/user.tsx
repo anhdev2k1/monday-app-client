@@ -1,29 +1,29 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
-
-export interface User {
-  _id?: string;
-}
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { IResponseUser } from '~/shared/model/authentication';
 
 export interface userState {
-  user: User
+   name: string;
+   _id: string;
 }
 
 const initialState: userState = {
-  user: {}
-}
+   name: '',
+   _id: '',
+};
 
 export const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers: {
-    currentUser: (state, action: PayloadAction<object>) => {
-      state.user = action.payload
-    },
-  },
-})
+   name: 'user',
+   initialState,
+   reducers: {
+      currentUser: (state, action: PayloadAction<userState>) => {
+         state._id = action.payload._id;
+         state.name = action.payload.name;
+      },
+   },
+});
 
 // Action creators are generated for each case reducer function
-export const { currentUser } = userSlice.actions
+export const { currentUser } = userSlice.actions;
 
-export default userSlice.reducer
+export default userSlice.reducer;

@@ -8,20 +8,30 @@ import { RootState } from '~/services/redux/store';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 const { TextArea } = Input;
+
 const WorkspaceManagement = () => {
-   const nameWorkspace = useSelector((state: RootState) => state.workspace.name)
-   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!)
-   const [dataWorkspace, setDataWorkspace] = useState<any>({})
+   const getToken = useSelector((state: RootState) => state.infoToken.token);
+   const id = useSelector((state: RootState) => state.user._id);
+   const nameWorkspace = useSelector((state: RootState) => state.workspace.name);
+
+   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!);
+   const [dataWorkspace, setDataWorkspace] = useState<any>({});
    useEffect(() => {
       const getWorkspace = async () => {
          const res = await axios({
-            method: "GET",
-            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`
-         })
-         setDataWorkspace(res.data.metadata.workspace)
-      }
-      getWorkspace()
-   },[nameWorkspace])
+            method: 'GET',
+            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
+            headers: {
+               'Content-Type': 'application/json',
+               'x-client-id': `${id}`,
+               Authorization: `Bearer ${getToken}`,
+            },
+         });
+         setDataWorkspace(res.data.metadata.workspace);
+      };
+      getWorkspace();
+   }, [nameWorkspace]);
+
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -87,15 +97,15 @@ const WorkspaceManagement = () => {
                   alt=""
                />
             </div>
-            <div className="workspace__header">
+            <Link to="/workspace/123" className="workspace__header">
                <div className="workspace__header-avt">
                   <span>M</span>
                </div>
                <div className="workspace__header-title">
-                  <Input className="header__title-name" value={dataWorkspace.name}/>
-                  <TextArea rows={3} defaultValue="Keep coding" className='header__title-desc' />
+                  <Input className="header__title-name" value={nameWorkspace} />
+                  <TextArea rows={3} defaultValue="Keep coding" className="header__title-desc" />
                </div>
-            </div>
+            </Link>
             <div className="workspace__content">
                <Tabs defaultActiveKey="1" items={items} />
             </div>

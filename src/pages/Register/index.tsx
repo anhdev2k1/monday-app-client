@@ -5,54 +5,61 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import ImgBanner from '~/assets/images/register/welcome-to-monday.jpg';
 import axios from 'axios';
-import Notification from '~/components/Notification';
+import Notification, { Info } from '~/components/Notification';
 import { useState } from 'react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { IResponseData } from '~/shared/model/global';
-import { IResponseRegister } from '~/shared/model/register';
+import { IResponseUser } from '~/shared/model/authentication';
 import { useDispatch } from 'react-redux';
 import { setToken } from '~/services/redux/features/updateToken';
-interface IDataRegister {
+
+export interface IDataLogin {
    email: string;
-   name: string;
    password: string;
 }
-interface IInfoNotifi {
+
+interface IDataRegister extends IDataLogin {
+   name: string;
+}
+export interface IInfoNotifi {
    isOpen: boolean;
-   info: 'success' | 'warning' | 'open' | 'error' | 'info';
+   info: Info;
    description: string;
    placement: NotificationPlacement;
 }
+
 const Register = () => {
    const baseUrl = process.env.REACT_APP_SERVER_API_URL;
    const navigate = useNavigate();
    const dispatch = useDispatch();
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
-      info: 'open',
+      info: Info.Open,
       description: '',
-      placement: 'topLeft',
+      placement: 'topRight',
    });
 
    const onFinish = async (values: IDataRegister) => {
       if (values) {
          const requestUrl = `${baseUrl}v1/api/auth/signup`;
-         const response = await axios.post<IResponseData<IResponseRegister>>(requestUrl, values);
+         const response = await axios.post<IResponseData<IResponseUser>>(requestUrl, values);
          const { accessToken } = response.data.metadata;
          if (accessToken) {
             setInfoNotifi({
                isOpen: true,
-               info: 'success',
+               info: Info.Success,
                description: 'Register successfully',
                placement: 'topLeft',
             });
             dispatch(setToken(accessToken));
             localStorage.setItem('token', JSON.stringify(accessToken));
-            navigate('/');
+            setTimeout(() => {
+               navigate('/');
+            }, 1000);
          } else {
             setInfoNotifi({
                isOpen: true,
-               info: 'error',
+               info: Info.Error,
                description: response.data.message,
                placement: 'topLeft',
             });

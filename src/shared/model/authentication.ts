@@ -1,4 +1,4 @@
-export interface IResponseRegister {
+export interface IResponseUser {
    user: {
       _id: string;
       email: string;
