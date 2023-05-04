@@ -7,8 +7,9 @@ import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
 import { useSelector } from 'react-redux';
 import { RootState } from './services/redux/store';
+import { useAppSelector } from './config/store';
 function App() {
-   const token = useSelector((state: RootState) => state.infoToken.token);
+   const token = useAppSelector((state) => state.tokenSlice.token);
    return (
       <Router>
          <div className="App">

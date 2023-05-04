@@ -7,27 +7,24 @@ import { useSelector } from 'react-redux';
 import { RootState } from '~/services/redux/store';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAppDispatch, useAppSelector } from '~/config/store';
+import { getDetailWorkspace } from '../Workspace/workspace.reducer';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
-   const getToken = useSelector((state: RootState) => state.infoToken.token);
-   const id = useSelector((state: RootState) => state.user._id);
-   const nameWorkspace = useSelector((state: RootState) => state.workspace.name);
-
-   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!);
-   const [dataWorkspace, setDataWorkspace] = useState<any>({});
+   const dispatch = useAppDispatch();
+   const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
+   const getIDWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?._id);
+   const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    useEffect(() => {
       const getWorkspace = async () => {
-         const res = await axios({
-            method: 'GET',
-            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
-            headers: {
-               'Content-Type': 'application/json',
-               'x-client-id': `${id}`,
-               Authorization: `Bearer ${getToken}`,
-            },
-         });
-         setDataWorkspace(res.data.metadata.workspace);
+         if (getIDWorkspace) {
+            await dispatch(
+               getDetailWorkspace({
+                  idWorkSpace: getIDWorkspace,
+               }),
+            );
+         }
       };
       getWorkspace();
    }, [nameWorkspace]);
@@ -76,7 +73,7 @@ const WorkspaceManagement = () => {
                   <div className="info__user-img">
                      <span>AN</span>
                   </div>
-                  <span>Anh Nguyễn</span>
+                  <span>{currentWorkspace?.name}</span>
                </div>
             </>
          ),

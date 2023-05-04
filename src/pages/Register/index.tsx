@@ -6,12 +6,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import ImgBanner from '~/assets/images/register/welcome-to-monday.jpg';
 import axios from 'axios';
 import Notification, { Info } from '~/components/Notification';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
 import { IResponseData } from '~/shared/model/global';
 import { IResponseUser } from '~/shared/model/authentication';
 import { useDispatch } from 'react-redux';
-import { setToken } from '~/services/redux/features/updateToken';
+import { setToken } from '~/shared/reducers/token.reducer';
+import { useAppDispatch, useAppSelector } from '~/config/store';
+import { registerAccount } from '~/shared/reducers/user.reducer';
 
 export interface IDataLogin {
    email: string;
@@ -31,7 +33,7 @@ export interface IInfoNotifi {
 const Register = () => {
    const baseUrl = process.env.REACT_APP_SERVER_API_URL;
    const navigate = useNavigate();
-   const dispatch = useDispatch();
+   const dispatch = useAppDispatch();
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
       info: Info.Open,
@@ -39,31 +41,32 @@ const Register = () => {
       placement: 'topRight',
    });
 
+   const token = useAppSelector((state) => state.tokenSlice.token);
+   const messageRegister = useAppSelector((state) => state.userSlice.register.mess);
+   useEffect(() => {
+      if (token) {
+         setInfoNotifi({
+            isOpen: true,
+            info: Info.Success,
+            description: messageRegister,
+            placement: 'topLeft',
+         });
+         setTimeout(() => {
+            navigate('/');
+         }, 1000);
+      } else {
+         setInfoNotifi({
+            isOpen: true,
+            info: Info.Error,
+            description: messageRegister,
+            placement: 'topLeft',
+         });
+      }
+   }, [token]);
+
    const onFinish = async (values: IDataRegister) => {
-      if (values) {
-         const requestUrl = `${baseUrl}v1/api/auth/signup`;
-         const response = await axios.post<IResponseData<IResponseUser>>(requestUrl, values);
-         const { accessToken } = response.data.metadata;
-         if (accessToken) {
-            setInfoNotifi({
-               isOpen: true,
-               info: Info.Success,
-               description: 'Register successfully',
-               placement: 'topLeft',
-            });
-            dispatch(setToken(accessToken));
-            localStorage.setItem('token', JSON.stringify(accessToken));
-            setTimeout(() => {
-               navigate('/');
-            }, 1000);
-         } else {
-            setInfoNotifi({
-               isOpen: true,
-               info: Info.Error,
-               description: response.data.message,
-               placement: 'topLeft',
-            });
-         }
+      if (values.email && values.password && values.name) {
+         dispatch(registerAccount(values));
       }
    };
    return (

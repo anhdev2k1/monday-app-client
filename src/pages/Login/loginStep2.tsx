@@ -1,21 +1,16 @@
 import { Button, Form, Input } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './_login.scss';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { currentUser } from '~/services/redux/features/user';
 import { Info } from '~/components/Notification';
-import { setToken } from '~/services/redux/features/updateToken';
 import { IDataLogin, IInfoNotifi } from '../Register';
-import { IResponseUser } from '~/shared/model/authentication';
-import { IResponseData } from '~/shared/model/global';
 import Notification from '~/components/Notification';
+import { loginAccount } from '~/shared/reducers/user.reducer';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 
 const LoginStep2 = () => {
-   const baseUrl = process.env.REACT_APP_SERVER_API_URL;
-   const dispatch = useDispatch();
+   const dispatch = useAppDispatch();
    const navigate = useNavigate();
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
@@ -24,27 +19,19 @@ const LoginStep2 = () => {
       placement: 'topRight',
    });
 
+   const token = useAppSelector((state) => state.tokenSlice.token);
+   const messageLogin = useAppSelector((state) => state.userSlice.login.mess);
+
    const onFinish = async (values: IDataLogin) => {
-      if (values) {
-         const requestUrl = `${baseUrl}v1/api/auth/signin`;
-         const response = await axios.post<IResponseData<IResponseUser>>(requestUrl, values);
-         const { accessToken } = response.data.metadata;
-         if (accessToken) {
+      if (values.email && values.password) {
+         await dispatch(loginAccount(values));
+         if (token) {
             setInfoNotifi({
                isOpen: true,
                info: Info.Success,
-               description: response.data.message,
+               description: messageLogin,
                placement: 'topRight',
             });
-            dispatch(setToken(accessToken));
-            dispatch(
-               currentUser({
-                  _id: response.data.metadata.user._id,
-                  name: response.data.metadata.user.name,
-               }),
-            );
-
-            localStorage.setItem('token', JSON.stringify(accessToken));
             setTimeout(() => {
                navigate('/');
             }, 1000);
@@ -52,7 +39,7 @@ const LoginStep2 = () => {
             setInfoNotifi({
                isOpen: true,
                info: Info.Error,
-               description: response.data.message,
+               description: messageLogin,
                placement: 'topRight',
             });
          }

@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Modal } from 'antd';
 import { Input, Form } from 'antd';
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '~/services/redux/store';
 import { useForm } from 'antd/es/form/Form';
-import { renameWorkspace } from '~/services/redux/features/updateWorkspace';
+import { useAppDispatch } from '~/config/store';
+import { createWorkSpace } from '~/pages/Workspace/workspace.reducer';
 interface IModalBoxProps {
    label: string;
    icon: string;
 }
 
 const ModalBox = ({ label, icon }: IModalBoxProps) => {
-   const dispatch = useDispatch();
-   const getToken = useSelector((state: RootState) => state.infoToken.token);
-   const id = useSelector((state: RootState) => state.user._id);
+   const dispatch = useAppDispatch();
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [name, setName] = useState('');
-   const [dataWorkspace, setDataWorkspace] = useState<any>({});
    const [form] = useForm();
    const showModal = () => {
       setIsModalOpen(true);
@@ -28,19 +23,7 @@ const ModalBox = ({ label, icon }: IModalBoxProps) => {
          name,
       };
       const createWorkspace = async () => {
-         const res = await axios({
-            method: 'POST',
-            url: 'http://localhost:3001/v1/api/workspace',
-            data,
-            headers: {
-               'Content-Type': 'application/json',
-               'x-client-id': `${id}`,
-               Authorization: `Bearer ${getToken}`,
-            },
-         });
-         dispatch(renameWorkspace(res.data.metadata.workspace.name));
-         setDataWorkspace(res.data.metadata.workspace);
-         localStorage.setItem('idWorkspace', JSON.stringify(res.data.metadata.workspace._id));
+         await dispatch(createWorkSpace(data));
       };
       createWorkspace();
       form.resetFields();

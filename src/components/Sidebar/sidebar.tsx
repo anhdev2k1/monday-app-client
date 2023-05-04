@@ -1,25 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space } from 'antd';
 import './sidebar.scss';
-import { useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { renameWorkspace } from '~/services/redux/features/updateWorkspace';
+import { useState } from 'react';
 import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
 import { DeleteOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import { RootState } from '~/services/redux/store';
+import { useAppDispatch, useAppSelector } from '~/config/store';
+import { deleteWorkSpace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
 
 const Sidebar: React.FC = () => {
+   const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace);
    const [isRename, setIsRename] = useState(false);
-   const [dataRename, setDataRename] = useState('Main workspace');
-   const dispatch = useDispatch();
-   const getIDWorkspace = JSON.parse(localStorage.getItem('idWorkspace')!);
-   const workspaceName = useSelector((state: RootState) => state.workspace.name);
+   const [dataRename, setDataRename] = useState(currentWorkspace.data?.name);
+   const dispatch = useAppDispatch();
+   const workspaceName = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
 
-   const getToken = JSON.parse(localStorage.getItem('token')!);
-   const id = useSelector((state: RootState) => state.user._id);
+   // get current workspace in store
+
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
    };
@@ -31,33 +29,18 @@ const Sidebar: React.FC = () => {
       const updateWorkspace = async () => {
          const data = {
             name: e.target.value,
+            idWorkspace: currentWorkspace.data?._id,
          };
-         const res = await axios({
-            method: 'PATCH',
-            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
-            data,
-            headers: {
-               'Content-Type': 'application/json',
-               'x-client-id': `${id}`,
-               Authorization: `Bearer ${getToken}`,
-            },
-         });
+         await dispatch(editWorkSpace(data));
       };
       updateWorkspace();
-      dispatch(renameWorkspace(e.target.value));
       setIsRename((pre) => !pre);
    };
    const handleDelete = () => {
       const deleteWorkspace = async () => {
-         const res = await axios({
-            method: 'DELETE',
-            url: `http://localhost:3001/v1/api/workspace/${getIDWorkspace}`,
-            headers: {
-               'Content-Type': 'application/json',
-               'x-client-id': `${id}`,
-               Authorization: `Bearer ${getToken}`,
-            },
-         });
+         if (currentWorkspace.data?._id) {
+            await dispatch(deleteWorkSpace({ idWorkSpace: currentWorkspace.data?._id }));
+         }
       };
       deleteWorkspace();
    };
