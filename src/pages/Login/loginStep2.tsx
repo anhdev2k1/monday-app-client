@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Info } from '~/components/Notification';
 import { IDataLogin, IInfoNotifi } from '../Register';
 import Notification from '~/components/Notification';
-import { loginAccount } from '~/shared/reducers/user.reducer';
+import { loginAccount, resetLogin } from '~/shared/reducers/user.reducer';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { setToken } from '~/shared/reducers/token.reducer';
 
@@ -27,16 +27,17 @@ const LoginStep2 = () => {
    useEffect(() => {
       if (messageLogin) {
          if (messageLogin !== '' && !errLogin) {
+            dispatch(setToken(token));
+            console.log(localStorage.getItem('token'));
+            setTimeout(() => {
+               navigate('/');
+            }, 1000);
             setInfoNotifi({
                isOpen: true,
                info: Info.Success,
                description: messageLogin,
                placement: 'topLeft',
             });
-            setTimeout(() => {
-               navigate('/');
-            }, 1000);
-            dispatch(setToken(token));
          } else if (messageLogin !== '' && errLogin) {
             setInfoNotifi({
                isOpen: true,
@@ -45,6 +46,7 @@ const LoginStep2 = () => {
                placement: 'topLeft',
             });
          }
+         dispatch(resetLogin());
       }
    }, [messageLogin, errLogin]);
 

@@ -10,6 +10,8 @@ import { RootState } from './services/redux/store';
 import { useAppSelector } from './config/store';
 function App() {
    const token = useAppSelector((state) => state.tokenSlice.token);
+   console.log(token);
+
    return (
       <Router>
          <div className="App">
