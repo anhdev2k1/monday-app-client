@@ -145,7 +145,6 @@ export const userSlice = createSlice({
    reducers: {
       resetLogin(state) {
          state.login.loading = false;
-         state.login.data = undefined;
          state.login.status = '';
          state.login.mess = '';
          state.login.error = false;
