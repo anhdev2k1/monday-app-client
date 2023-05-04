@@ -25,24 +25,26 @@ const LoginStep2 = () => {
    const errLogin = useAppSelector((state) => state.userSlice.login.error);
 
    useEffect(() => {
-      if (messageLogin !== '' && !errLogin) {
-         setInfoNotifi({
-            isOpen: true,
-            info: Info.Success,
-            description: messageLogin,
-            placement: 'topLeft',
-         });
-         setTimeout(() => {
-            navigate('/');
-         }, 1000);
-         dispatch(setToken(token));
-      } else if (messageLogin !== '' && errLogin) {
-         setInfoNotifi({
-            isOpen: true,
-            info: Info.Error,
-            description: messageLogin,
-            placement: 'topLeft',
-         });
+      if (messageLogin) {
+         if (messageLogin !== '' && !errLogin) {
+            setInfoNotifi({
+               isOpen: true,
+               info: Info.Success,
+               description: messageLogin,
+               placement: 'topLeft',
+            });
+            setTimeout(() => {
+               navigate('/');
+            }, 1000);
+            dispatch(setToken(token));
+         } else if (messageLogin !== '' && errLogin) {
+            setInfoNotifi({
+               isOpen: true,
+               info: Info.Error,
+               description: messageLogin,
+               placement: 'topLeft',
+            });
+         }
       }
    }, [messageLogin, errLogin]);
 
