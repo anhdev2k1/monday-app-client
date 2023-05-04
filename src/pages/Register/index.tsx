@@ -43,8 +43,10 @@ const Register = () => {
 
    const token = useAppSelector((state) => state.tokenSlice.token);
    const messageRegister = useAppSelector((state) => state.userSlice.register.mess);
+   const errRegister = useAppSelector((state) => state.userSlice.register.error);
+
    useEffect(() => {
-      if (token) {
+      if (messageRegister !== '' && !errRegister) {
          setInfoNotifi({
             isOpen: true,
             info: Info.Success,
@@ -54,7 +56,8 @@ const Register = () => {
          setTimeout(() => {
             navigate('/');
          }, 1000);
-      } else {
+         dispatch(setToken(token));
+      } else if (messageRegister !== '' && errRegister) {
          setInfoNotifi({
             isOpen: true,
             info: Info.Error,
@@ -62,11 +65,11 @@ const Register = () => {
             placement: 'topLeft',
          });
       }
-   }, [token]);
+   }, [messageRegister, errRegister]);
 
    const onFinish = async (values: IDataRegister) => {
       if (values.email && values.password && values.name) {
-         dispatch(registerAccount(values));
+         await dispatch(registerAccount(values));
       }
    };
    return (
