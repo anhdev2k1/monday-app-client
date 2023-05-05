@@ -83,12 +83,10 @@ export const editWorkSpace = createAsyncThunk(
 export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
    async (idWorkSpace: IDetailWorkspace) => {
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
-      return await axios.get<
-         IResponseWorkSpace<{
-            workspace: IWorkspace;
-         }>
-      >(requestUrl);
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkSpace}`;
+      return await axios.get<IResponseWorkSpace<{
+         workspace: IWorkspace
+      }>>(requestUrl);
    },
    { serializeError: serializeAxiosError },
 );
@@ -97,10 +95,10 @@ export const getDetailWorkspace = createAsyncThunk(
 export const getListlWorkspace = createAsyncThunk(
    'get-list-workspace-slice',
    async () => {
-      const requestUrl = `${baseUrl}v1/api/workspace}`;
+      const requestUrl = `${baseUrl}v1/api/workspace`;
       return await axios.get<
          IResponseWorkSpace<{
-            workspace: IWorkspace[];
+            workspaces: IWorkspace[];
          }>
       >(requestUrl);
    },
@@ -126,7 +124,7 @@ export const createWorkSpace = createAsyncThunk(
 export const deleteWorkSpace = createAsyncThunk(
    'delete-workspace-slice',
    async (idWorkSpace: IDetailWorkspace) => {
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkSpace}`;
       return await axios.delete<IResponseWorkSpace<undefined>>(requestUrl);
    },
    { serializeError: serializeAxiosError },
@@ -159,7 +157,7 @@ export const workspaceSlice = createSlice({
             }
          })
          .addMatcher(isFulfilled(getListlWorkspace), (state, action) => {
-            state.infoListWorkSpace.data = action.payload.data.metadata?.workspace;
+            state.infoListWorkSpace.data = action.payload.data.metadata?.workspaces;
             state.infoListWorkSpace.mess = action.payload.data.message;
             state.infoListWorkSpace.status = action.payload.data.status;
             state.infoListWorkSpace.error = false;
@@ -183,7 +181,10 @@ export const workspaceSlice = createSlice({
             state.currWorkspace.data = action.payload.data.metadata?.workspace;
          })
          .addMatcher(isPending(createWorkSpace), (state) => {})
-         .addMatcher(isRejected(createWorkSpace), (state, action) => {});
+         .addMatcher(isRejected(createWorkSpace), (state, action) => {})
+         .addMatcher(isFulfilled(getDetailWorkspace), (state, action) => {
+            state.currWorkspace.data = action.payload.data.metadata?.workspace;
+         });
    },
    reducers: {
       resetCurrWorkspace(state) {
