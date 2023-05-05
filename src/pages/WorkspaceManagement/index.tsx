@@ -2,32 +2,37 @@ import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import './workspaceManagement.scss';
 import { Input } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/services/redux/store';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { getDetailWorkspace } from '../Workspace/workspace.reducer';
+import {
+   editWorkSpace,
+   getDetailWorkspace,
+   setDescriptionWorkspace,
+   setNameWorkspace,
+} from '../Workspace/workspace.reducer';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
+   const { idWorkspace } = useParams();
+
    const dispatch = useAppDispatch();
    const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
-   const getIDWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?._id);
+   const descriptionWorkspace = useAppSelector(
+      (state) => state.workspaceSlice.currWorkspace.data?.description,
+   );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    useEffect(() => {
       const getWorkspace = async () => {
-         if (getIDWorkspace) {
-            await dispatch(
-               getDetailWorkspace({
-                  idWorkSpace: getIDWorkspace,
-               }),
-            );
+         if (idWorkspace) {
+            await dispatch(getDetailWorkspace(idWorkspace));
          }
       };
       getWorkspace();
-   }, [nameWorkspace]);
+   }, [idWorkspace]);
 
    const items: TabsProps['items'] = [
       {
@@ -85,6 +90,32 @@ const WorkspaceManagement = () => {
          disabled: true,
       },
    ];
+   const handleBlurInput = (
+      e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>,
+      fieldUpdate: 'name' | 'description',
+   ) => {
+      dispatch(
+         editWorkSpace({
+            [fieldUpdate]: e.target.value,
+            idWorkspace,
+         }),
+      );
+   };
+
+   const handleChangeInput = useCallback(
+      (
+         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+         fieldUpdate: 'name' | 'description',
+      ) => {
+         if (fieldUpdate === 'name') {
+            dispatch(setNameWorkspace(e.target.value));
+         } else {
+            dispatch(setDescriptionWorkspace(e.target.value));
+         }
+      },
+      [],
+   );
+
    return (
       <>
          <div className="wrapper">
@@ -94,13 +125,32 @@ const WorkspaceManagement = () => {
                   alt=""
                />
             </div>
-            <Link to="/workspace/123" className="workspace__header">
+            <Link to="/workspace/645329765a9adf79b0dde6f8" className="workspace__header">
                <div className="workspace__header-avt">
                   <span>M</span>
                </div>
                <div className="workspace__header-title">
-                  <Input className="header__title-name" value={nameWorkspace} />
-                  <TextArea rows={3} defaultValue="Keep coding" className="header__title-desc" />
+                  <Input
+                     className="header__title-name"
+                     value={nameWorkspace}
+                     onChange={(e) => {
+                        handleChangeInput(e, 'name');
+                     }}
+                     onBlur={(e) => {
+                        handleBlurInput(e, 'name');
+                     }}
+                  />
+                  <TextArea
+                     rows={3}
+                     defaultValue={descriptionWorkspace}
+                     className="header__title-desc"
+                     onChange={(e) => {
+                        handleChangeInput(e, 'description');
+                     }}
+                     onBlur={(e) => {
+                        handleBlurInput(e, 'description');
+                     }}
+                  />
                </div>
             </Link>
             <div className="workspace__content">

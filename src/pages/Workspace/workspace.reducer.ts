@@ -25,7 +25,7 @@ export interface IInitWorkSpace {
       status: string | number;
       mess: string;
    };
-   deleteWorkSpace: {
+   deleteWorkspace: {
       loading: boolean;
       error: boolean;
       status: string | number;
@@ -49,7 +49,7 @@ const initialState: IInitWorkSpace = {
       status: '',
       mess: '',
    },
-   deleteWorkSpace: {
+   deleteWorkspace: {
       loading: false,
       error: false,
       status: '',
@@ -59,11 +59,11 @@ const initialState: IInitWorkSpace = {
 
 // interface Data
 interface IUpdateWorkSpace extends IWorkspace {
-   idWorkSpace: string;
+   idWorkspace: string;
 }
 
 interface IDetailWorkspace {
-   idWorkSpace: string;
+   idWorkspace: string;
 }
 
 // actions
@@ -72,8 +72,8 @@ interface IDetailWorkspace {
 export const editWorkSpace = createAsyncThunk(
    'edit-workspace-slice',
    async (infoEditWorkSpace: Partial<IUpdateWorkSpace>) => {
-      const { idWorkSpace, ...infoUpdate } = infoEditWorkSpace;
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
+      const { idWorkspace, ...infoUpdate } = infoEditWorkSpace;
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace}`;
       return await axios.patch<IResponseWorkSpace<IWorkspace>>(requestUrl, infoUpdate);
    },
    { serializeError: serializeAxiosError },
@@ -82,8 +82,8 @@ export const editWorkSpace = createAsyncThunk(
 // get detail
 export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
-   async (idWorkSpace: IDetailWorkspace) => {
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
+   async (idWorkspace: string) => {
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace}`;
       return await axios.get<
          IResponseWorkSpace<{
             workspace: IWorkspace;
@@ -123,10 +123,10 @@ export const createWorkSpace = createAsyncThunk(
 
 // delete
 
-export const deleteWorkSpace = createAsyncThunk(
+export const deleteWorkspace = createAsyncThunk(
    'delete-workspace-slice',
-   async (idWorkSpace: IDetailWorkspace) => {
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
+   async (idWorkspace: IDetailWorkspace) => {
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace}`;
       return await axios.delete<IResponseWorkSpace<undefined>>(requestUrl);
    },
    { serializeError: serializeAxiosError },
@@ -137,27 +137,27 @@ export const workspaceSlice = createSlice({
    initialState,
    extraReducers(builder) {
       builder
-         .addMatcher(isFulfilled(editWorkSpace), (state, action) => {
-            state.currWorkspace.data = action.payload.data.metadata;
-            state.currWorkspace.mess = action.payload.data.message;
-            state.currWorkspace.status = action.payload.data.status;
-            state.currWorkspace.error = false;
-         })
-         .addMatcher(isPending(editWorkSpace), (state) => {
-            state.currWorkspace.loading = true;
-            state.currWorkspace.status = '';
-            state.currWorkspace.mess = '';
-            state.currWorkspace.error = false;
-         })
-         .addMatcher(isRejected(editWorkSpace), (state, action) => {
-            state.currWorkspace.loading = false;
-            state.currWorkspace.error = true;
-            if (action?.error) {
-               const { response } = action.error as { response: any };
-               state.currWorkspace.status = response.data.statusCode;
-               state.currWorkspace.mess = response.data.message;
-            }
-         })
+         // .addMatcher(isFulfilled(editWorkSpace), (state, action) => {
+         //    state.currWorkspace.data = action.payload.data.metadata;
+         //    state.currWorkspace.mess = action.payload.data.message;
+         //    state.currWorkspace.status = action.payload.data.status;
+         //    state.currWorkspace.error = false;
+         // })
+         // .addMatcher(isPending(editWorkSpace), (state) => {
+         //    state.currWorkspace.loading = true;
+         //    state.currWorkspace.status = '';
+         //    state.currWorkspace.mess = '';
+         //    state.currWorkspace.error = false;
+         // })
+         // .addMatcher(isRejected(editWorkSpace), (state, action) => {
+         //    state.currWorkspace.loading = false;
+         //    state.currWorkspace.error = true;
+         //    if (action?.error) {
+         //       const { response } = action.error as { response: any };
+         //       state.currWorkspace.status = response.data.statusCode;
+         //       state.currWorkspace.mess = response.data.message;
+         //    }
+         // })
          .addMatcher(isFulfilled(getListlWorkspace), (state, action) => {
             state.infoListWorkSpace.data = action.payload.data.metadata?.workspace;
             state.infoListWorkSpace.mess = action.payload.data.message;
@@ -186,6 +186,34 @@ export const workspaceSlice = createSlice({
          .addMatcher(isRejected(createWorkSpace), (state, action) => {});
    },
    reducers: {
+      setNameWorkspace: (state, action) => {
+         return {
+            ...state,
+            currWorkspace: {
+               ...state.currWorkspace,
+               data: {
+                  ...state.currWorkspace.data,
+                  name: action.payload,
+               },
+            },
+         };
+      },
+      setDescriptionWorkspace: (state, action) => {
+         // state.currWorkspace.data!.description = action.payload;
+         if (state.currWorkspace.data) {
+            state.currWorkspace.data!.description = action.payload;
+            // return {
+            //    ...state,
+            //    currWorkspace: {
+            //       ...state.currWorkspace,
+            //       data: {
+            //          ...state.currWorkspace.data,
+            //          description: action.payload
+            //       },
+            //    },
+            // };
+         }
+      },
       resetCurrWorkspace(state) {
          state.currWorkspace.loading = false;
          state.currWorkspace.data = undefined;
@@ -197,6 +225,7 @@ export const workspaceSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { resetCurrWorkspace } = workspaceSlice.actions;
+export const { resetCurrWorkspace, setNameWorkspace, setDescriptionWorkspace } =
+   workspaceSlice.actions;
 
 export default workspaceSlice.reducer;

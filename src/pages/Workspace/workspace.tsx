@@ -53,7 +53,10 @@ const Workspace = () => {
                      </div>
                   </Link>
 
-                  <Link to="/workspace/123" className="workspace__content-item">
+                  <Link
+                     to="/workspace/645329765a9adf79b0dde6f8"
+                     className="workspace__content-item"
+                  >
                      <h2 className="workspace__content-heading">My workspaces</h2>
                      <div className="content__item-box workspace__item-flex">
                         <div className="content__item-icon">

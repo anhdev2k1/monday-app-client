@@ -7,7 +7,7 @@ import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { deleteWorkSpace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
+import { deleteWorkspace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
 
 const Sidebar: React.FC = () => {
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace);
@@ -37,12 +37,12 @@ const Sidebar: React.FC = () => {
       setIsRename((pre) => !pre);
    };
    const handleDelete = () => {
-      const deleteWorkspace = async () => {
+      const handledeleteWorkspace = async () => {
          if (currentWorkspace.data?._id) {
-            await dispatch(deleteWorkSpace({ idWorkSpace: currentWorkspace.data?._id }));
+            dispatch(deleteWorkspace({ idWorkspace: currentWorkspace.data?._id }));
          }
       };
-      deleteWorkspace();
+      handledeleteWorkspace();
    };
    const items: MenuProps['items'] = [
       {
