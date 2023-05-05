@@ -7,24 +7,28 @@ import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
 import { DeleteOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { deleteWorkSpace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
+import { deleteWorkspace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
+import { useParams } from 'react-router-dom';
 
 const Sidebar: React.FC = () => {
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const [isRename, setIsRename] = useState(false);
-   const [dataRename, setDataRename] = useState<any>(currentWorkSpace?.name);
+   // const [dataRename, setDataRename] = useState<any>(currentWorkSpace?.name);
    const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage()
+   const {idWorkSpace} = useParams()
+   
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
    };
    const focusInput = (e: any) => {
-      setDataRename(e.target.value);
+      const {value} = e.target
+      // setDataRename(value);
       const updateWorkspace = async () => {
          const data = {
-            name: e.target.value,
-            idWorkSpace: currentWorkSpace?._id,
+            name:value,
+            idWorkSpace
          };
         dispatch(editWorkSpace(data));
       };
@@ -32,13 +36,13 @@ const Sidebar: React.FC = () => {
       setIsRename((pre) => !pre);
    };
    const handleDelete = () => {
-      const deleteWorkspace = async () => {
-         if (currentWorkSpace?._id) {
-            dispatch(deleteWorkSpace({ idWorkSpace: currentWorkSpace?._id }));
+      const deleteWorkSpace = async () => {
+         if (idWorkSpace) {
+            dispatch(deleteWorkspace({ idWorkSpace}));
             messageApi.success("Đã xoá thành công")
          }
       };
-      deleteWorkspace();
+      deleteWorkSpace();
    };
    const items: MenuProps['items'] = [
       {
@@ -161,7 +165,7 @@ const Sidebar: React.FC = () => {
                   <span>{currentWorkSpace?.name.substring(0,1)}</span>
                </div>
                {isRename ? (
-                  <input type="text" defaultValue={dataRename} onBlur={focusInput} />
+                  <input type="text" defaultValue={currentWorkSpace?.name} onBlur={focusInput} />
                ) : (
                   <span>{currentWorkSpace?.name}</span>
                )}

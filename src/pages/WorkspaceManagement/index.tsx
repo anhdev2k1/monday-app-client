@@ -3,50 +3,52 @@ import type { TabsProps } from 'antd';
 import './workspaceManagement.scss';
 import { Input } from 'antd';
 import { Link, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { getDetailWorkspace } from '../Workspace/workspace.reducer';
-import { editWorkSpace } from '../Workspace/workspace.reducer';
+import { useCallback, useEffect, useState } from 'react';
+import {
+   editWorkSpace,
+   getDetailWorkspace,
+   setDescriptionWorkspace,
+   setNameWorkspace,
+} from '../Workspace/workspace.reducer';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
    const dispatch = useAppDispatch();
+   // const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
+   // const descriptionWorkspace = useAppSelector(
+   //    (state) => state.workspaceSlice.currWorkspace.data?.description,
+   // );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
-   
-   const [reName, setRename] = useState()
-   
-   const [reDes, setReDes] = useState()
-   const { id } = useParams();
-   
+   const { idWorkSpace } = useParams();
+
    useEffect(() => {
-      const getWorkspace = async () => {
-         if (id) {
+      const getWorkspace = () => {
+         if (idWorkSpace) {
             dispatch(
                getDetailWorkspace({
-                  idWorkSpace: id,
+                  idWorkSpace,
                }),
             );
          }
       };
       getWorkspace();
    }, []);
-   const updateWorkspace = (field:string,value:string) => {
-      const data = {
-         idWorkSpace: currentWorkspace?._id,
-         [`${field}`]: value
-      }
-      dispatch(editWorkSpace(data))
-   }
-   const handleRename = (e:any) => {
-      const {value} = e.target
-      setRename(value)
-      updateWorkspace('name',value)
-   }
-   const handleReDescription = (e:any) => {
-      const {value} = e.target
-      setReDes(value)
-      updateWorkspace('description',value)
-   }
+   // const updateWorkspace = (field:string,value:string) => {
+   //    const data = {
+   //       idWorkSpace,
+   //       [`${field}`]: value
+   //    }
+   //    dispatch(editWorkSpace(data))
+   // }
+   // const handleRename = (e:any) => {
+   //    const {value} = e.target
+   //    updateWorkspace('name',value)
+   // }
+   // const handleReDescription = (e:any) => {
+   //    const {value} = e.target
+   //    updateWorkspace('description',value)
+   // }
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -89,7 +91,7 @@ const WorkspaceManagement = () => {
                </div>
                <div className="workspace__info-user">
                   <div className="info__user-img">
-                     <span>{currentWorkspace?.name.substring(0,1)}</span>
+                     <span>{currentWorkspace?.name.substring(0, 1)}</span>
                   </div>
                   <span>{currentWorkspace?.name}</span>
                </div>
@@ -103,6 +105,32 @@ const WorkspaceManagement = () => {
          disabled: true,
       },
    ];
+   const handleBlurInput = (
+      e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>,
+      fieldUpdate: 'name' | 'description',
+   ) => {
+      dispatch(
+         editWorkSpace({
+            [fieldUpdate]: e.target.value,
+            idWorkSpace,
+         }),
+      );
+   };
+
+   const handleChangeInput = useCallback(
+      (
+         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+         fieldUpdate: 'name' | 'description',
+      ) => {
+         if (fieldUpdate === 'name') {
+            dispatch(setNameWorkspace(e.target.value));
+         } else {
+            dispatch(setDescriptionWorkspace(e.target.value));
+         }
+      },
+      [],
+   );
+
    return (
       <>
          <div className="wrapper">
@@ -114,11 +142,30 @@ const WorkspaceManagement = () => {
             </div>
             <div className="workspace__header">
                <div className="workspace__header-avt">
-                  <span>{currentWorkspace?.name.substring(0,1)}</span>
+                  <span>{currentWorkspace?.name.substring(0, 1)}</span>
                </div>
                <div className="workspace__header-title">
-                  <Input className="header__title-name" value={reName} onBlur={handleRename}/>
-                  <TextArea rows={3} value={reDes} className="header__title-desc" onBlur={handleReDescription}/>
+                  <Input
+                     className="header__title-name"
+                     value={currentWorkspace?.name}
+                     onChange={(e) => {
+                        handleChangeInput(e, 'name');
+                     }}
+                     onBlur={(e) => {
+                        handleBlurInput(e, 'name');
+                     }}
+                  />
+                  <TextArea
+                     rows={3}
+                     defaultValue={currentWorkspace?.description}
+                     className="header__title-desc"
+                     onChange={(e) => {
+                        handleChangeInput(e, 'description');
+                     }}
+                     onBlur={(e) => {
+                        handleBlurInput(e, 'description');
+                     }}
+                  />
                </div>
             </div>
             <div className="workspace__content">

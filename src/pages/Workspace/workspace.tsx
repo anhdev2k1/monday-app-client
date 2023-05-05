@@ -1,6 +1,5 @@
 import Navbar from '~/components/Navbar/navbar';
 import './workspace.scss';
-import { Link } from 'react-router-dom';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
@@ -11,11 +10,10 @@ const Workspace = () => {
    const [messageApi, contextHolder] = message.useMessage();
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
-   const currentUser = useAppSelector((state) => state.userSlice.login.data?.user);
+   // const currentUser = useAppSelector((state) => state.userSlice.login.data?.user);
    const listWorkspaces = useAppSelector((state) => state.workspaceSlice.infoListWorkSpace.data);
    const handleRedirect = (e: any, workspaceID:string) => {
       e.preventDefault();
-
       const pathName = e.currentTarget.getAttribute('data-path');
       messageApi.loading('Đợi xý nhé...');
       setTimeout(() => {
