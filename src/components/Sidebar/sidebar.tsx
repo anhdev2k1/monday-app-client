@@ -5,7 +5,7 @@ import './sidebar.scss';
 import { useState } from 'react';
 import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SearchOutlined, PlusOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { deleteWorkspace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
 import { useParams } from 'react-router-dom';
@@ -15,22 +15,21 @@ const Sidebar: React.FC = () => {
    const [isRename, setIsRename] = useState(false);
    // const [dataRename, setDataRename] = useState<any>(currentWorkSpace?.name);
    const dispatch = useAppDispatch();
-   const [messageApi, contextHolder] = message.useMessage()
-   const {idWorkSpace} = useParams()
-   
+   const [messageApi, contextHolder] = message.useMessage();
+   const { idWorkSpace } = useParams();
+
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
    };
    const focusInput = (e: any) => {
-      const {value} = e.target
-      // setDataRename(value);
+      const { value } = e.target;
       const updateWorkspace = async () => {
          const data = {
-            name:value,
-            idWorkSpace
+            name: value,
+            idWorkSpace,
          };
-        dispatch(editWorkSpace(data));
+         dispatch(editWorkSpace(data));
       };
       updateWorkspace();
       setIsRename((pre) => !pre);
@@ -38,11 +37,16 @@ const Sidebar: React.FC = () => {
    const handleDelete = () => {
       const deleteWorkSpace = async () => {
          if (idWorkSpace) {
-            dispatch(deleteWorkspace({ idWorkSpace}));
-            messageApi.success("Đã xoá thành công")
+            dispatch(deleteWorkspace({ idWorkSpace }));
+            messageApi.success('Đã xoá thành công');
          }
       };
       deleteWorkSpace();
+   };
+   const [toggleWorkspace, setToggleWorkspace] = useState(false);
+   const ToggleWorkspaces = () => {
+      setToggleWorkspace((pre) => !pre);
+         
    };
    const items: MenuProps['items'] = [
       {
@@ -133,7 +137,7 @@ const Sidebar: React.FC = () => {
    ];
    return (
       <>
-      {contextHolder}
+         {contextHolder}
          <div className="sidebar__wrapper">
             <div className="sidebar__header">
                <span className="sidebar__header-heading">Workspace</span>
@@ -160,9 +164,9 @@ const Sidebar: React.FC = () => {
                </div>
             </div>
 
-            <div className="sidebar__menu-container">
+            <div className="sidebar__menu-container" onClick={ToggleWorkspaces}>
                <div className="sidebar__menu-container--icon">
-                  <span>{currentWorkSpace?.name.substring(0,1)}</span>
+                  <span>{currentWorkSpace?.name.substring(0, 1)}</span>
                </div>
                {isRename ? (
                   <input type="text" defaultValue={currentWorkSpace?.name} onBlur={focusInput} />
@@ -184,6 +188,42 @@ const Sidebar: React.FC = () => {
                      clip-rule="evenodd"
                   ></path>
                </svg>
+
+               {toggleWorkspace && (
+                  <div className="workspace__modal-hover">
+                     <div className="workspace__modal-search">
+                        <input
+                           type="text"
+                           className="workspace__modal-input"
+                           placeholder="Search for a workspace"
+                        />
+                        <div className="workspace__modal-search-btn">
+                           <SearchOutlined />
+                        </div>
+                     </div>
+                     <div className="workspace__modal-list">
+                        <h3>My workspaces</h3>
+                        <div className="workspace__modal-item">
+                           <div className="workspace__modal-item-avt">
+                              <span>F</span>
+                           </div>
+                           <span className="workspace__modal-item-name">
+                              Full Product Developer
+                           </span>
+                        </div>
+                     </div>
+                     <div className="workspace__modal-feature">
+                        <div className="workspace__modal-feature-item">
+                           <ModalBox label="Add new workspace" icon="" />
+                        </div>
+
+                        <div className="workspace__modal-feature-item">
+                           <AppstoreOutlined />
+                           <span>Browse all</span>
+                        </div>
+                     </div>
+                  </div>
+               )}
             </div>
             <div className="sidebar__features">
                <div className="sidebar__features-item">

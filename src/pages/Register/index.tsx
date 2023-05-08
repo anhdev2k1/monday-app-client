@@ -35,8 +35,8 @@ const Register = () => {
    const navigate = useNavigate();
    const dispatch = useAppDispatch();
    const token = useAppSelector((state) => state.tokenSlice.token);
-   const messageRegister = useAppSelector((state) => state.userSlice.register.mess);
-   const errRegister = useAppSelector((state) => state.userSlice.register.error);
+   const messageRegister = useAppSelector((state) => state.userSlice.user.mess);
+   const errRegister = useAppSelector((state) => state.userSlice.user.error);
 
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
@@ -69,7 +69,7 @@ const Register = () => {
 
    const onFinish = async (values: IDataRegister) => {
       if (values.email && values.password && values.name) {
-         await dispatch(registerAccount(values));
+          dispatch(registerAccount(values));
       }
    };
    return (

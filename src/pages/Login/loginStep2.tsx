@@ -1,4 +1,4 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import './_login.scss';
@@ -13,6 +13,7 @@ import { setToken } from '~/shared/reducers/token.reducer';
 const LoginStep2 = () => {
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
+   const user = useAppSelector((state) => state.userSlice.user.status);
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
       info: Info.Open,
@@ -21,8 +22,8 @@ const LoginStep2 = () => {
    });
 
    const token = useAppSelector((state) => state.tokenSlice.token);
-   const messageLogin = useAppSelector((state) => state.userSlice.login.mess);
-   const errLogin = useAppSelector((state) => state.userSlice.login.error);
+   const messageLogin = useAppSelector((state) => state.userSlice.user.mess);
+   const errLogin = useAppSelector((state) => state.userSlice.user.error);
 
    useEffect(() => {
       if (messageLogin) {
@@ -48,10 +49,9 @@ const LoginStep2 = () => {
          dispatch(resetLogin());
       }
    }, [messageLogin, errLogin]);
-
    const onFinish = async (values: IDataLogin) => {
       if (values.email && values.password) {
-         await dispatch(loginAccount(values));
+         dispatch(loginAccount(values));
       }
    };
 

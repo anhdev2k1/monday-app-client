@@ -13,14 +13,7 @@ import { useAppDispatch } from '~/config/store';
 import { setToken } from './token.reducer';
 
 export interface IAuthen {
-   login: {
-      data?: IUserWithToken;
-      loading: boolean;
-      error: boolean;
-      status: string | number;
-      mess: string;
-   };
-   register: {
+   user: {
       data?: IUserWithToken;
       loading: boolean;
       error: boolean;
@@ -31,14 +24,7 @@ export interface IAuthen {
 
 const baseUrl = SERVER_API_URL;
 const initialState: IAuthen = {
-   login: {
-      data: undefined,
-      loading: false,
-      error: false,
-      status: '',
-      mess: '',
-   },
-   register: {
+   user: {
       data: undefined,
       loading: false,
       error: false,
@@ -85,69 +71,70 @@ export const userSlice = createSlice({
    extraReducers(builder) {
       builder
          .addMatcher(isFulfilled(loginAccount), (state, action) => {
-            state.login.data = action.payload.data.metadata;
-            state.login.mess = action.payload.data.message;
-            state.login.error = false;
+            state.user.data = action.payload.data.metadata;
+            state.user.mess = action.payload.data.message;
+            state.user.error = false;
+            state.user.status = action.payload.data.status
             localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
             // console.log(action.payload.data.metadata);
             // console.log(action.payload.data.metadata.user);
             // console.log(action.payload.data.metadata.user.useProfile);
             localStorage.setItem(
                'userName',
-               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
+               JSON.stringify(action.payload.data.metadata.user.useProfile.name),
             );
             localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
          .addMatcher(isPending(loginAccount), (state) => {
-            state.login.loading = true;
-            state.login.status = '';
-            state.login.mess = '';
-            state.login.error = false;
+            state.user.loading = true;
+            state.user.status = '';
+            state.user.mess = '';
+            state.user.error = false;
          })
          .addMatcher(isRejected(loginAccount), (state, action) => {
-            state.login.loading = false;
-            state.login.error = true;
+            state.user.loading = false;
+            state.user.error = true;
 
             if (action?.error) {
                const { response } = action.error as { response: any };
-               state.login.status = response.data.statusCode;
-               state.login.mess = response.data.message;
+               state.user.status = response.data.statusCode;
+               state.user.mess = response.data.message;
             }
          })
          .addMatcher(isFulfilled(registerAccount), (state, action) => {
-            state.register.data = action.payload.data.metadata;
-            state.register.mess = action.payload.data.message;
-            state.register.error = false;
+            state.user.data = action.payload.data.metadata;
+            state.user.mess = action.payload.data.message;
+            state.user.error = false;
             localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
             localStorage.setItem(
                'userName',
-               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
+               JSON.stringify(action.payload.data.metadata.user.useProfile.name),
             );
             localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
          .addMatcher(isPending(registerAccount), (state) => {
-            state.register.loading = true;
-            state.register.status = '';
-            state.register.mess = '';
-            state.register.error = false;
+            state.user.loading = true;
+            state.user.status = '';
+            state.user.mess = '';
+            state.user.error = false;
          })
          .addMatcher(isRejected(registerAccount), (state, action) => {
-            state.register.loading = false;
-            state.register.error = true;
+            state.user.loading = false;
+            state.user.error = true;
 
             if (action?.error) {
                const { response } = action.error as { response: any };
-               state.register.status = response.data.statusCode;
-               state.register.mess = response.data.message;
+               state.user.status = response.data.statusCode;
+               state.user.mess = response.data.message;
             }
          });
    },
    reducers: {
       resetLogin(state) {
-         state.login.loading = false;
-         state.login.status = '';
-         state.login.mess = '';
-         state.login.error = false;
+         state.user.loading = false;
+         state.user.status = '';
+         state.user.mess = '';
+         state.user.error = false;
       },
    },
 });
