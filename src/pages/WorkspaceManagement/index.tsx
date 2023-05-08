@@ -2,33 +2,53 @@ import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import './workspaceManagement.scss';
 import { Input } from 'antd';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '~/services/redux/store';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { getDetailWorkspace } from '../Workspace/workspace.reducer';
+import { useCallback, useEffect, useState } from 'react';
+import {
+   editWorkSpace,
+   getDetailWorkspace,
+   setDescriptionWorkspace,
+   setNameWorkspace,
+} from '../Workspace/workspace.reducer';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
    const dispatch = useAppDispatch();
-   const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
-   const getIDWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?._id);
+   // const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
+   // const descriptionWorkspace = useAppSelector(
+   //    (state) => state.workspaceSlice.currWorkspace.data?.description,
+   // );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
+   const { idWorkSpace } = useParams();
+
    useEffect(() => {
-      const getWorkspace = async () => {
-         if (getIDWorkspace) {
-            await dispatch(
+      const getWorkspace = () => {
+         if (idWorkSpace) {
+            dispatch(
                getDetailWorkspace({
-                  idWorkSpace: getIDWorkspace,
+                  idWorkSpace,
                }),
             );
          }
       };
       getWorkspace();
-   }, [nameWorkspace]);
-
+   }, []);
+   // const updateWorkspace = (field:string,value:string) => {
+   //    const data = {
+   //       idWorkSpace,
+   //       [`${field}`]: value
+   //    }
+   //    dispatch(editWorkSpace(data))
+   // }
+   // const handleRename = (e:any) => {
+   //    const {value} = e.target
+   //    updateWorkspace('name',value)
+   // }
+   // const handleReDescription = (e:any) => {
+   //    const {value} = e.target
+   //    updateWorkspace('description',value)
+   // }
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -71,7 +91,7 @@ const WorkspaceManagement = () => {
                </div>
                <div className="workspace__info-user">
                   <div className="info__user-img">
-                     <span>AN</span>
+                     <span>{currentWorkspace?.name.substring(0, 1)}</span>
                   </div>
                   <span>{currentWorkspace?.name}</span>
                </div>
@@ -85,6 +105,32 @@ const WorkspaceManagement = () => {
          disabled: true,
       },
    ];
+   const handleBlurInput = (
+      e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>,
+      fieldUpdate: 'name' | 'description',
+   ) => {
+      dispatch(
+         editWorkSpace({
+            [fieldUpdate]: e.target.value,
+            idWorkSpace,
+         }),
+      );
+   };
+
+   const handleChangeInput = useCallback(
+      (
+         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+         fieldUpdate: 'name' | 'description',
+      ) => {
+         if (fieldUpdate === 'name') {
+            dispatch(setNameWorkspace(e.target.value));
+         } else {
+            dispatch(setDescriptionWorkspace(e.target.value));
+         }
+      },
+      [],
+   );
+
    return (
       <>
          <div className="wrapper">
@@ -94,15 +140,34 @@ const WorkspaceManagement = () => {
                   alt=""
                />
             </div>
-            <Link to="/workspace/123" className="workspace__header">
+            <div className="workspace__header">
                <div className="workspace__header-avt">
-                  <span>M</span>
+                  <span>{currentWorkspace?.name.substring(0, 1)}</span>
                </div>
                <div className="workspace__header-title">
-                  <Input className="header__title-name" value={nameWorkspace} />
-                  <TextArea rows={3} defaultValue="Keep coding" className="header__title-desc" />
+                  <Input
+                     className="header__title-name"
+                     value={currentWorkspace?.name}
+                     onChange={(e) => {
+                        handleChangeInput(e, 'name');
+                     }}
+                     onBlur={(e) => {
+                        handleBlurInput(e, 'name');
+                     }}
+                  />
+                  <TextArea
+                     rows={3}
+                     defaultValue={currentWorkspace?.description}
+                     className="header__title-desc"
+                     onChange={(e) => {
+                        handleChangeInput(e, 'description');
+                     }}
+                     onBlur={(e) => {
+                        handleBlurInput(e, 'description');
+                     }}
+                  />
                </div>
-            </Link>
+            </div>
             <div className="workspace__content">
                <Tabs defaultActiveKey="1" items={items} />
             </div>

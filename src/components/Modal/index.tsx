@@ -23,7 +23,7 @@ const ModalBox = ({ label, icon }: IModalBoxProps) => {
          name,
       };
       const createWorkspace = async () => {
-         await dispatch(createWorkSpace(data));
+         dispatch(createWorkSpace(data));
       };
       createWorkspace();
       form.resetFields();

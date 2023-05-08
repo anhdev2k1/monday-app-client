@@ -6,8 +6,17 @@
       border-radius: 8px;
       background-color: white;
       padding: 10px;
+      &-list{
+         display: flex;
+         flex-wrap: wrap;
+         gap: 20px;
+         justify-content: flex-start;
+      }
       &-item {
-         margin-bottom: 50px;
+         display: block;
+         // margin-bottom: 50px;
+         width: max-content;
+         color: #333;
          .content__item-box {
             width: max-content;
             padding: 8px;

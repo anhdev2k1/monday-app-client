@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { Input } from 'antd';
 import './card.scss';
-import AddPeople from '../AddPeple';
+import AddPeople from '~/components/AddPeple';
 import ChangeStatus from '../ChangeStatus';
 const Card = () => {
    const [isOpen, setIsOpen] = useState(false)

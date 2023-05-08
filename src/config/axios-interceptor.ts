@@ -6,14 +6,14 @@ axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = SERVER_API_URL;
 
 const setupAxiosInterceptors = () => {
-   console.log('chay vao day');
 
    const onRequestSuccess = (config: any) => {
       let token: string | null = localStorage.getItem('token');
       let userID: string | null = localStorage.getItem('userId');
-      if (typeof token === 'string') {
+      if (typeof token === 'string' && typeof userID === 'string') {
          token = JSON.parse(token);
-         config.headers.token = `Bearer ${token}`;
+         userID = JSON.parse(userID);
+         config.headers.authorization = `Bearer ${token}`;
          config.headers['x-client-id'] = userID;
          // config.headers['Content-Type'] = 'multipart/form-data';
       }
