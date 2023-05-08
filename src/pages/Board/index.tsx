@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './board.scss';
 import { faCircleExclamation, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,21 @@ import TabCustom from '~/components/TabCustom';
 import Tippy from '~/components/Tippy';
 import MainTable from '~/components/MainTable';
 import Cards from '~/components/Cards';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch } from '~/config/store';
+import { getBoardDetail } from './board.reducer';
 const Board = () => {
+   const { idBoard } = useParams();
+   const dispatch = useAppDispatch();
+   useEffect(() => {
+      if (idBoard) {
+         dispatch(
+            getBoardDetail({
+               id: idBoard,
+            }),
+         );
+      }
+   }, [idBoard]);
    return (
       <div className="board__wrapper">
          <p className="board__title">

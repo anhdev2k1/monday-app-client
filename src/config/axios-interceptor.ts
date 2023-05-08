@@ -6,7 +6,6 @@ axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = SERVER_API_URL;
 
 const setupAxiosInterceptors = () => {
-   console.log('chay vao day');
 
    const onRequestSuccess = (config: any) => {
       let token: string | null = localStorage.getItem('token');
