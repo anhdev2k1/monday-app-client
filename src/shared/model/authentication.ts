@@ -6,7 +6,7 @@ export interface IUserWithToken {
 export interface IUser {
    _id: string;
    email: string;
-   useProfile: IUserProfile;
+   userProfile: IUserProfile;
 }
 
 export interface IUserProfile {
