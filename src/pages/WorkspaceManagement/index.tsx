@@ -2,13 +2,14 @@ import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import './workspaceManagement.scss';
 import { Input } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/services/redux/store';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
+import { getListBoards } from '../Board/board.reducer';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
@@ -28,7 +29,16 @@ const WorkspaceManagement = () => {
       };
       getWorkspace();
    }, [nameWorkspace]);
-
+   const { idWorkspace } = useParams();
+   useEffect(() => {
+      if (idWorkspace) {
+         dispatch(
+            getListBoards({
+               id: idWorkspace,
+            }),
+         );
+      }
+   }, []);
    const items: TabsProps['items'] = [
       {
          key: '1',

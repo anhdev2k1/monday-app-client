@@ -16,6 +16,8 @@ const Sidebar: React.FC = () => {
    const dispatch = useAppDispatch();
    const workspaceName = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
 
+   const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
+
    // get current workspace in store
 
    const handleRenameWorkspace = () => {
@@ -132,6 +134,7 @@ const Sidebar: React.FC = () => {
          label: <ModalBox label="Add new workspace" icon="" />,
       },
    ];
+
    return (
       <>
          <div className="sidebar__wrapper">
@@ -241,8 +244,10 @@ const Sidebar: React.FC = () => {
                   <span>Search</span>
                </div>
             </div>
-
-            <BoardSidebar />
+            {dataListBoard &&
+               dataListBoard.map((dataBoard, index) => {
+                  return <BoardSidebar dataBoard={dataBoard} key={index} />;
+               })}
          </div>
       </>
    );
