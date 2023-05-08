@@ -20,6 +20,10 @@ const WorkspaceManagement = () => {
    //    (state) => state.workspaceSlice.currWorkspace.data?.description,
    // );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
+   const descriptionWorkspace = useAppSelector(
+      (state) => state.workspaceSlice.currWorkspace.data?.description,
+   );
+
    const { idWorkSpace } = useParams();
 
    useEffect(() => {
@@ -157,7 +161,7 @@ const WorkspaceManagement = () => {
                   />
                   <TextArea
                      rows={3}
-                     defaultValue={currentWorkspace?.description}
+                     value={descriptionWorkspace}
                      className="header__title-desc"
                      onChange={(e) => {
                         handleChangeInput(e, 'description');
