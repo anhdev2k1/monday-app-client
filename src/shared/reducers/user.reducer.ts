@@ -18,6 +18,15 @@ export interface IAuthen {
       status: string | number;
       mess: string;
    };
+   token: string;
+}
+export interface workspaceState {
+   token: string;
+}
+
+let token = localStorage.getItem('token');
+if (token) {
+   token = JSON.parse(token);
 }
 
 const baseUrl = SERVER_API_URL;
@@ -29,6 +38,7 @@ const initialState: IAuthen = {
       status: '',
       mess: '',
    },
+   token: token || '',
 };
 
 // data create
@@ -70,6 +80,7 @@ export const userSlice = createSlice({
       builder
          .addMatcher(isFulfilled(loginAccount), (state, action) => {
             state.user.data = action.payload.data.metadata;
+            state.token = action.payload.data.metadata.accessToken;
             state.user.mess = action.payload.data.message;
             state.user.error = false;
             state.user.status = action.payload.data.status;
@@ -101,6 +112,7 @@ export const userSlice = createSlice({
          })
          .addMatcher(isFulfilled(registerAccount), (state, action) => {
             state.user.data = action.payload.data.metadata;
+            state.token = action.payload.data.metadata.accessToken;
             state.user.mess = action.payload.data.message;
             state.user.error = false;
             localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));

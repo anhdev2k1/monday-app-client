@@ -5,11 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '~/assets/_globalStyle.scss';
 import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
-import { useSelector } from 'react-redux';
-import { RootState } from './services/redux/store';
 import { useAppSelector } from './config/store';
 function App() {
-   const token = useAppSelector((state) => state.tokenSlice.token);
+   const token = useAppSelector((state) => state.userSlice.token);
    console.log(token);
 
    return (

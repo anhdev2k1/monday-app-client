@@ -8,12 +8,10 @@ import { IDataLogin, IInfoNotifi } from '../Register';
 import Notification from '~/components/Notification';
 import { loginAccount, resetLogin } from '~/shared/reducers/user.reducer';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { setToken } from '~/shared/reducers/token.reducer';
 
 const LoginStep2 = () => {
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
-   const user = useAppSelector((state) => state.userSlice.user.status);
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
       info: Info.Open,
@@ -21,15 +19,12 @@ const LoginStep2 = () => {
       placement: 'topRight',
    });
 
-   const token = useAppSelector((state) => state.tokenSlice.token);
    const messageLogin = useAppSelector((state) => state.userSlice.user.mess);
    const errLogin = useAppSelector((state) => state.userSlice.user.error);
 
    useEffect(() => {
       if (messageLogin) {
          if (messageLogin !== '' && !errLogin) {
-            dispatch(setToken(token));
-            console.log(localStorage.getItem('token'));
             setTimeout(() => {
                navigate('/');
             }, 1000);

@@ -11,7 +11,6 @@ import { NotificationPlacement } from 'antd/es/notification/interface';
 import { IResponseData } from '~/shared/model/global';
 import { IResponseUser } from '~/shared/model/authentication';
 import { useDispatch } from 'react-redux';
-import { setToken } from '~/shared/reducers/token.reducer';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { registerAccount } from '~/shared/reducers/user.reducer';
 
@@ -34,7 +33,6 @@ const Register = () => {
    const baseUrl = process.env.REACT_APP_SERVER_API_URL;
    const navigate = useNavigate();
    const dispatch = useAppDispatch();
-   const token = useAppSelector((state) => state.tokenSlice.token);
    const messageRegister = useAppSelector((state) => state.userSlice.user.mess);
    const errRegister = useAppSelector((state) => state.userSlice.user.error);
 
@@ -56,7 +54,6 @@ const Register = () => {
          setTimeout(() => {
             navigate('/');
          }, 1000);
-         dispatch(setToken(token));
       } else if (messageRegister !== '' && errRegister) {
          setInfoNotifi({
             isOpen: true,
@@ -69,7 +66,7 @@ const Register = () => {
 
    const onFinish = async (values: IDataRegister) => {
       if (values.email && values.password && values.name) {
-          dispatch(registerAccount(values));
+         dispatch(registerAccount(values));
       }
    };
    return (
