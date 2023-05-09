@@ -12,17 +12,14 @@ import {
    setNameWorkspace,
 } from '../Workspace/workspace.reducer';
 import { getListBoards } from '../Board/board.reducer';
+import BoardSidebar from '~/components/BoardSidebar';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
    const dispatch = useAppDispatch();
-   // const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
-   // const descriptionWorkspace = useAppSelector(
-   //    (state) => state.workspaceSlice.currWorkspace.data?.description,
-   // );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkSpace } = useParams();
-
+   const listBoards = useAppSelector(state => state.boardSlice.listBoard.datas)
    useEffect(() => {
       const getWorkspace = () => {
          if (idWorkSpace) {
@@ -53,7 +50,7 @@ const WorkspaceManagement = () => {
             <>
                <span>Boards and dashboards you visited recently in this workspace</span>
                <div className="workspace__boards">
-                  <Link to="/board/123" className="workspace__boards-item">
+                  {/* <Link to="/board/123" className="workspace__boards-item">
                      <svg
                         viewBox="0 0 20 20"
                         fill="currentColor"
@@ -71,7 +68,12 @@ const WorkspaceManagement = () => {
                         ></path>
                      </svg>
                      <span>Test</span>
-                  </Link>
+                  </Link> */}
+                  {listBoards && listBoards.map((board, index) => {
+                     return (
+                        <BoardSidebar dataBoard={board} key={index} />
+                     )
+                  })}
                </div>
             </>
          ),

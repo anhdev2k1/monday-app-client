@@ -33,28 +33,7 @@ interface IInitState {
 
 const initialState: IInitState = {
    listBoard: {
-      datas: [
-         {
-            _id: '64534d69fd2f03a9517deb95',
-            workspace: '645329765a9adf79b0dde47y',
-            name: 'Monday',
-         },
-         {
-            _id: '64534d69fd2f03a9517dec86',
-            workspace: '645329765a9adf79b0dde6f8',
-            name: 'Dự án sao hoả',
-         },
-         {
-            _id: '64534d69fd2f03a9517dec87',
-            workspace: '645329765a9adf79b0dde6n3',
-            name: 'Hack NASA',
-         },
-         {
-            _id: '64534d69fd2f03a9517dec88',
-            workspace: '645329765a9adf79b0dde6f1',
-            name: 'Đồ Án Tốt Nghiệp',
-         },
-      ],
+      datas: [],
       loading: false,
       error: false,
       status: '',
@@ -115,6 +94,8 @@ export const getBoardDetail = createAsyncThunk(
 export const createBoard = createAsyncThunk(
    'create-board-slice',
    async (bodyRequest: ICreateBoard) => {
+      console.log(bodyRequest);
+      
       const requestUrl = `${apiUrl}v1/api/workspace/${bodyRequest.idWorkspace}/board`;
       return await axios.post<IResponseData<IBoard>>(requestUrl, {
          name: bodyRequest.name,

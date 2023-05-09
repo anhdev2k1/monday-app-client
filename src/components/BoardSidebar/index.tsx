@@ -16,6 +16,7 @@ interface IPropsBoardSidebar {
 }
 
 const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
+
    const [valueInput, setValueInput] = useState<string>(dataBoard.name);
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
    const navigate = useNavigate();
@@ -24,6 +25,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const handleEditBoard = (
       e: React.FocusEvent<HTMLInputElement, Element> | React.KeyboardEvent<HTMLInputElement>,
    ) => {
+      e.preventDefault()
       const target = e.target as HTMLInputElement;
       if (!target.value) {
          setValueInput('Monday');
