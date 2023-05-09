@@ -18,20 +18,18 @@ const Sidebar: React.FC = () => {
    const [isRename, setIsRename] = useState(false);
    const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
-   const { idWorkSpace } = useParams();
-   console.log(currentWorkSpace?._id);
-   
-   const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
-   const getBoards = async () => {
-      if (currentWorkSpace?._id) {
-         dispatch(getListBoards({ id: currentWorkSpace?._id }));
-      }
-   };
-   useEffect(() => {
-      getBoards();
-   }, [currentWorkSpace?._id]);
+   const { idWorkspace } = useParams();
 
-  
+   const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
+
+   // const getBoards = async () => {
+   //    if (idWorkspace) {
+   //       dispatch(getListBoards({ id: idWorkspace }));
+   //    }
+   // };
+   // useEffect(() => {
+   //    getBoards();
+   // }, []);
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
@@ -41,7 +39,7 @@ const Sidebar: React.FC = () => {
       const updateWorkspace = async () => {
          const data = {
             name: value,
-            idWorkSpace: currentWorkSpace?._id,
+            idWorkspace,
          };
          dispatch(editWorkSpace(data));
       };
@@ -50,8 +48,8 @@ const Sidebar: React.FC = () => {
    };
    const handleDelete = () => {
       const deleteWorkSpace = async () => {
-         if (currentWorkSpace?._id) {
-            dispatch(deleteWorkspace({ idWorkSpace: currentWorkSpace?._id }));
+         if (idWorkspace) {
+            dispatch(deleteWorkspace({ idWorkspace }));
             messageApi.success('Đã xoá thành công');
          }
       };

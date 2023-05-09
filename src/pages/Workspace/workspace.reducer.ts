@@ -59,11 +59,11 @@ const initialState: IInitWorkSpace = {
 
 // interface Data
 interface IUpdateWorkSpace extends IWorkspace {
-   idWorkSpace: string;
+   idWorkspace: string;
 }
 
 interface IDetailWorkspace {
-   idWorkSpace: string;
+   idWorkspace: string;
 }
 
 // actions
@@ -72,10 +72,10 @@ interface IDetailWorkspace {
 export const editWorkSpace = createAsyncThunk(
    'edit-workspace-slice',
    async (infoEditWorkSpace: Partial<IUpdateWorkSpace>) => {
-      const { idWorkSpace, ...infoUpdate } = infoEditWorkSpace;
-      console.log(idWorkSpace);
-      
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
+      const { idWorkspace, ...infoUpdate } = infoEditWorkSpace;
+      console.log(idWorkspace);
+
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace}`;
       return await axios.patch<IResponseWorkSpace<IWorkspace>>(requestUrl, infoUpdate);
    },
    { serializeError: serializeAxiosError },
@@ -84,13 +84,15 @@ export const editWorkSpace = createAsyncThunk(
 // get detail
 export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
-   async (idWorkSpace: IDetailWorkspace) => {
-      console.log(idWorkSpace);
-      
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkSpace}`;
-      return await axios.get<IResponseWorkSpace<{
-         workspace: IWorkspace
-      }>>(requestUrl);
+   async (idWorkspace: IDetailWorkspace) => {
+      console.log(idWorkspace);
+
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace.idWorkspace}`;
+      return await axios.get<
+         IResponseWorkSpace<{
+            workspace: IWorkspace;
+         }>
+      >(requestUrl);
    },
    { serializeError: serializeAxiosError },
 );
@@ -127,8 +129,8 @@ export const createWorkSpace = createAsyncThunk(
 
 export const deleteWorkspace = createAsyncThunk(
    'delete-workspace-slice',
-   async (idWorkSpace: IDetailWorkspace) => {
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkSpace}`;
+   async (idWorkspace: IDetailWorkspace) => {
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace.idWorkspace}`;
       return await axios.delete<IResponseWorkSpace<undefined>>(requestUrl);
    },
    { serializeError: serializeAxiosError },
