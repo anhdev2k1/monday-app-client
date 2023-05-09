@@ -47,6 +47,7 @@ const Workspace = () => {
                                     onClick={(e) => handleRedirect(e, item._id!)}
                                     data-path="workspace"
                                     key={index}
+                                    
                                  >
                                     <div className="content__item-box workspace__item-flex">
                                        <div className="content__item-icon">

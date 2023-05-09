@@ -5,12 +5,18 @@ import App from './App';
 import { Provider } from 'react-redux';
 import config from './config';
 import setupAxiosInterceptors from './config/axios-interceptor';
+import {
+   NotificationContext,
+   NotificationProvider,
+} from './components/NotificationProvider/notificationProvider';
 
 const store = config.getStore();
 setupAxiosInterceptors();
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
    <Provider store={store}>
-      <App />
+      <NotificationProvider>
+         <App />
+      </NotificationProvider>
    </Provider>,
 );

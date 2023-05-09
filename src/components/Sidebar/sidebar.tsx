@@ -9,6 +9,8 @@ import { DeleteOutlined, SearchOutlined, PlusOutlined, AppstoreOutlined } from '
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { deleteWorkspace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
 import { useParams } from 'react-router-dom';
+import ShowNotification from '~/utils/showNotification';
+import Notification from '../NotificationProvider/Notification/notification';
 
 const Sidebar: React.FC = () => {
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
