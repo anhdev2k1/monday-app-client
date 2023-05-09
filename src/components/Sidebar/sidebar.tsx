@@ -12,23 +12,26 @@ import { useParams } from 'react-router-dom';
 import { getListBoards } from '~/pages/Board/board.reducer';
 import { useEffect } from 'react';
 import icons from '../../assets/svg/index';
+import { getDetailWorkspace } from '~/pages/Workspace/workspace.reducer';
 const Sidebar: React.FC = () => {
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const [isRename, setIsRename] = useState(false);
    const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
    const { idWorkSpace } = useParams();
-
+   console.log(currentWorkSpace?._id);
+   
    const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
-
    const getBoards = async () => {
-      if (idWorkSpace) {
-         dispatch(getListBoards({ id: idWorkSpace }));
+      if (currentWorkSpace?._id) {
+         dispatch(getListBoards({ id: currentWorkSpace?._id }));
       }
    };
    useEffect(() => {
       getBoards();
-   }, []);
+   }, [currentWorkSpace?._id]);
+
+  
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
@@ -38,7 +41,7 @@ const Sidebar: React.FC = () => {
       const updateWorkspace = async () => {
          const data = {
             name: value,
-            idWorkSpace,
+            idWorkSpace: currentWorkSpace?._id,
          };
          dispatch(editWorkSpace(data));
       };
@@ -47,8 +50,8 @@ const Sidebar: React.FC = () => {
    };
    const handleDelete = () => {
       const deleteWorkSpace = async () => {
-         if (idWorkSpace) {
-            dispatch(deleteWorkspace({ idWorkSpace }));
+         if (currentWorkSpace?._id) {
+            dispatch(deleteWorkspace({ idWorkSpace: currentWorkSpace?._id }));
             messageApi.success('Đã xoá thành công');
          }
       };
@@ -143,7 +146,7 @@ const Sidebar: React.FC = () => {
       },
       {
          key: '5',
-         label: <ModalBox label="Add new workspace" icon="" />,
+         label: <ModalBox label="Add new workspace" icon="" cate="workspace" />,
       },
    ];
 
@@ -238,7 +241,7 @@ const Sidebar: React.FC = () => {
                )}
             </div>
             <div className="sidebar__features">
-               <ModalBox label="Create new Board" icon="" cate="board"/>
+               <ModalBox label="Create new Board" icon="" cate="board" />
                <div className="sidebar__features-item">
                   <svg
                      viewBox="0 0 20 20"
