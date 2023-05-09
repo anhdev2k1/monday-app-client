@@ -18,30 +18,34 @@ const { TextArea } = Input;
 const WorkspaceManagement = () => {
    const dispatch = useAppDispatch();
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
-   const { idWorkSpace } = useParams();
-   const listBoards = useAppSelector(state => state.boardSlice.listBoard.datas)
+   const { idWorkspace } = useParams();
+
+   const listBoards = useAppSelector((state) => state.boardSlice.listBoard.datas);
    useEffect(() => {
       const getWorkspace = () => {
-         if (idWorkSpace) {
+         if (idWorkspace) {
             dispatch(
                getDetailWorkspace({
-                  idWorkSpace,
+                  idWorkspace,
                }),
             );
          }
       };
       getWorkspace();
    }, []);
-   const { idWorkspace } = useParams();
+   console.log(idWorkspace);
+
    useEffect(() => {
       if (idWorkspace) {
+         console.log(idWorkspace);
+
          dispatch(
             getListBoards({
                id: idWorkspace,
             }),
          );
       }
-   }, []);
+   }, [idWorkspace]);
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -69,11 +73,10 @@ const WorkspaceManagement = () => {
                      </svg>
                      <span>Test</span>
                   </Link> */}
-                  {listBoards && listBoards.map((board, index) => {
-                     return (
-                        <BoardSidebar dataBoard={board} key={index} />
-                     )
-                  })}
+                  {listBoards &&
+                     listBoards.map((board, index) => {
+                        return <BoardSidebar dataBoard={board} key={index} />;
+                     })}
                </div>
             </>
          ),
@@ -110,7 +113,7 @@ const WorkspaceManagement = () => {
       dispatch(
          editWorkSpace({
             [fieldUpdate]: e.target.value,
-            idWorkSpace,
+            idWorkspace,
          }),
       );
    };

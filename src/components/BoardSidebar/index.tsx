@@ -1,7 +1,7 @@
 import { Dropdown, MenuProps } from 'antd';
 import './boardSidebar.scss';
 import Tippy from '../Tippy';
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 
 import images from '~/assets/svg';
 import { useAppDispatch, useAppSelector } from '~/config/store';
@@ -16,16 +16,22 @@ interface IPropsBoardSidebar {
 }
 
 const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
-
    const [valueInput, setValueInput] = useState<string>(dataBoard.name);
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
+   const [visible, setVisible] = useState(false);
+
+   const handleOpenChange = (open: boolean) => {
+      console.log(open);
+
+      setVisible((prev) => !prev);
+   };
    const navigate = useNavigate();
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
    const handleEditBoard = (
       e: React.FocusEvent<HTMLInputElement, Element> | React.KeyboardEvent<HTMLInputElement>,
    ) => {
-      e.preventDefault()
+      e.preventDefault();
       const target = e.target as HTMLInputElement;
       if (!target.value) {
          setValueInput('Monday');
@@ -43,6 +49,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
       // call api change name workpace
    };
    const handleDeleteBoard = () => {
+      setVisible(false);
       dispatch(deleteBoard({ id: dataBoard._id }));
    };
    const items: MenuProps['items'] = [
@@ -51,6 +58,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
          label: <span>Rename Board</span>,
          icon: <img src={edit} alt="icon-board" />,
          onClick: () => {
+            setVisible(false);
             setIsEditInput(true);
          },
       },
@@ -81,8 +89,11 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    return (
       <Tippy position="topRight" html={<p>Đây là board</p>}>
          <div
-            onClick={() => {
-               navigate(`/board/${dataBoard._id}`);
+            onClick={(e) => {
+               if (!visible) {
+                  navigate(`/board/${dataBoard._id}`);
+                  setVisible(false);
+               }
             }}
             className={`item__board ${dataBoard._id === idBoard ? 'board__info--active' : ''}`}
          >
@@ -122,8 +133,15 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
                   <span className="board__title">{valueInput}</span>
                )}
             </div>
-            <Dropdown menu={{ items }}>
-               <button className="board__btn--dot">...</button>
+            <Dropdown onOpenChange={handleOpenChange} menu={{ items }}>
+               <button
+                  onClick={(e) => {
+                     e.stopPropagation();
+                  }}
+                  className="board__btn--dot"
+               >
+                  ...
+               </button>
             </Dropdown>
          </div>
       </Tippy>

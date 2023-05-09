@@ -17,18 +17,18 @@ const Sidebar: React.FC = () => {
    const [isRename, setIsRename] = useState(false);
    const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
-   const { idWorkSpace } = useParams();
+   const { idWorkspace } = useParams();
 
    const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
 
-   const getBoards = async () => {
-      if (idWorkSpace) {
-         dispatch(getListBoards({ id: idWorkSpace }));
-      }
-   };
-   useEffect(() => {
-      getBoards();
-   }, []);
+   // const getBoards = async () => {
+   //    if (idWorkspace) {
+   //       dispatch(getListBoards({ id: idWorkspace }));
+   //    }
+   // };
+   // useEffect(() => {
+   //    getBoards();
+   // }, []);
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
       const updateWorkspace = async () => {
          const data = {
             name: value,
-            idWorkSpace,
+            idWorkspace,
          };
          dispatch(editWorkSpace(data));
       };
@@ -47,8 +47,8 @@ const Sidebar: React.FC = () => {
    };
    const handleDelete = () => {
       const deleteWorkSpace = async () => {
-         if (idWorkSpace) {
-            dispatch(deleteWorkspace({ idWorkSpace }));
+         if (idWorkspace) {
+            dispatch(deleteWorkspace({ idWorkspace }));
             messageApi.success('Đã xoá thành công');
          }
       };
@@ -238,7 +238,7 @@ const Sidebar: React.FC = () => {
                )}
             </div>
             <div className="sidebar__features">
-               <ModalBox label="Create new Board" icon="" cate="board"/>
+               <ModalBox label="Create new Board" icon="" cate="board" />
                <div className="sidebar__features-item">
                   <svg
                      viewBox="0 0 20 20"

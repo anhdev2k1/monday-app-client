@@ -17,7 +17,7 @@ const ModalBox = ({ label, icon, cate }: IModalBoxProps) => {
    const dispatch = useAppDispatch();
    const [isModalOpen, setIsModalOpen] = useState(false);
    const [name, setName] = useState('');
-   const { idWorkSpace } = useParams();
+   const { idWorkspace } = useParams();
    const [messageApi, contextHolder] = message.useMessage();
    const [form] = useForm();
    const messageBoard = useAppSelector((state) => state.boardSlice.currBoard.status);
@@ -33,12 +33,12 @@ const ModalBox = ({ label, icon, cate }: IModalBoxProps) => {
          if (cate === 'workspace') {
             dispatch(createWorkSpace(data));
          }
-         if (idWorkSpace) {
-            dispatch(createBoard({ idWorkspace: idWorkSpace, name }));
+         if (idWorkspace) {
+            dispatch(createBoard({ idWorkspace: idWorkspace, name }));
          }
       };
       console.log(messageBoard);
-      
+
       createWorkspace();
       form.resetFields();
       setIsModalOpen(false);
