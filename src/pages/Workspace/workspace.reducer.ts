@@ -24,6 +24,12 @@ export interface IInitWorkSpace {
       error: boolean;
       status: string | number;
       mess: string;
+      boards:
+         | {
+              _id: string;
+              name: string;
+           }[]
+         | [];
    };
    deleteWorkspace: {
       loading: boolean;
@@ -48,6 +54,7 @@ const initialState: IInitWorkSpace = {
       error: false,
       status: '',
       mess: '',
+      boards: [],
    },
    deleteWorkspace: {
       loading: false,
@@ -74,7 +81,7 @@ export const editWorkSpace = createAsyncThunk(
    async (infoEditWorkSpace: Partial<IUpdateWorkSpace>) => {
       const { idWorkSpace, ...infoUpdate } = infoEditWorkSpace;
       console.log(idWorkSpace);
-      
+
       const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
       return await axios.patch<IResponseWorkSpace<IWorkspace>>(requestUrl, infoUpdate);
    },
@@ -86,11 +93,13 @@ export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
    async (idWorkSpace: IDetailWorkspace) => {
       console.log(idWorkSpace);
-      
+
       const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkSpace}`;
-      return await axios.get<IResponseWorkSpace<{
-         workspace: IWorkspace
-      }>>(requestUrl);
+      return await axios.get<
+         IResponseWorkSpace<{
+            workspace: IWorkspace;
+         }>
+      >(requestUrl);
    },
    { serializeError: serializeAxiosError },
 );
@@ -181,13 +190,27 @@ export const workspaceSlice = createSlice({
                state.infoListWorkSpace.mess = response.data.message;
             }
          })
-         .addMatcher(isFulfilled(createWorkSpace), (state, action) => {
-            state.currWorkspace.data = action.payload.data.metadata?.workspace;
-         })
-         .addMatcher(isPending(createWorkSpace), (state) => {})
-         .addMatcher(isRejected(createWorkSpace), (state, action) => {})
+
          .addMatcher(isFulfilled(getDetailWorkspace), (state, action) => {
             state.currWorkspace.data = action.payload.data.metadata?.workspace;
+            state.currWorkspace.mess = action.payload.data.message;
+            state.currWorkspace.status = action.payload.data.status;
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isPending(getDetailWorkspace), (state) => {
+            state.currWorkspace.loading = true;
+            state.currWorkspace.status = '';
+            state.currWorkspace.mess = '';
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isRejected(getDetailWorkspace), (state, action) => {
+            state.currWorkspace.loading = false;
+            state.currWorkspace.error = true;
+            if (action?.error) {
+               const { response } = action.error as { response: any };
+               state.currWorkspace.status = response.data.statusCode;
+               state.currWorkspace.mess = response.data.message;
+            }
          });
    },
    reducers: {
