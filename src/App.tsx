@@ -52,7 +52,7 @@ function App() {
                         path={route.path}
                         element={
                            <PrivateRoute
-                              isAuthenticated={!!token}
+                              isAuthenticated={true}
                               component={Layout}
                               children={<Page />}
                            />
