@@ -11,48 +11,41 @@ import {
    setDescriptionWorkspace,
    setNameWorkspace,
 } from '../Workspace/workspace.reducer';
+import { getListBoards } from '../Board/board.reducer';
+import BoardSidebar from '~/components/BoardSidebar';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
    const dispatch = useAppDispatch();
-   // const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
-   // const descriptionWorkspace = useAppSelector(
-   //    (state) => state.workspaceSlice.currWorkspace.data?.description,
-   // );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
-   const descriptionWorkspace = useAppSelector(
-      (state) => state.workspaceSlice.currWorkspace.data?.description,
-   );
+   const { idWorkspace } = useParams();
 
-   const { idWorkSpace } = useParams();
-
+   const listBoards = useAppSelector((state) => state.boardSlice.listBoard.datas);
    useEffect(() => {
       const getWorkspace = () => {
-         if (idWorkSpace) {
+         if (idWorkspace) {
             dispatch(
                getDetailWorkspace({
-                  idWorkSpace,
+                  idWorkspace,
                }),
             );
          }
       };
       getWorkspace();
    }, []);
-   // const updateWorkspace = (field:string,value:string) => {
-   //    const data = {
-   //       idWorkSpace,
-   //       [`${field}`]: value
-   //    }
-   //    dispatch(editWorkSpace(data))
-   // }
-   // const handleRename = (e:any) => {
-   //    const {value} = e.target
-   //    updateWorkspace('name',value)
-   // }
-   // const handleReDescription = (e:any) => {
-   //    const {value} = e.target
-   //    updateWorkspace('description',value)
-   // }
+   console.log(idWorkspace);
+
+   useEffect(() => {
+      if (idWorkspace) {
+         console.log(idWorkspace);
+
+         dispatch(
+            getListBoards({
+               id: idWorkspace,
+            }),
+         );
+      }
+   }, [idWorkspace]);
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -61,7 +54,7 @@ const WorkspaceManagement = () => {
             <>
                <span>Boards and dashboards you visited recently in this workspace</span>
                <div className="workspace__boards">
-                  <Link to="/board/123" className="workspace__boards-item">
+                  {/* <Link to="/board/123" className="workspace__boards-item">
                      <svg
                         viewBox="0 0 20 20"
                         fill="currentColor"
@@ -79,7 +72,11 @@ const WorkspaceManagement = () => {
                         ></path>
                      </svg>
                      <span>Test</span>
-                  </Link>
+                  </Link> */}
+                  {listBoards &&
+                     listBoards.map((board, index) => {
+                        return <BoardSidebar dataBoard={board} key={index} />;
+                     })}
                </div>
             </>
          ),
@@ -116,7 +113,7 @@ const WorkspaceManagement = () => {
       dispatch(
          editWorkSpace({
             [fieldUpdate]: e.target.value,
-            idWorkSpace,
+            idWorkspace,
          }),
       );
    };
@@ -161,7 +158,7 @@ const WorkspaceManagement = () => {
                   />
                   <TextArea
                      rows={3}
-                     value={descriptionWorkspace}
+                     value={currentWorkspace?.description}
                      className="header__title-desc"
                      onChange={(e) => {
                         handleChangeInput(e, 'description');

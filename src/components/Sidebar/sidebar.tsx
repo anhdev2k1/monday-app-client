@@ -5,21 +5,34 @@ import './sidebar.scss';
 import { useState } from 'react';
 import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
-import { DeleteOutlined, SearchOutlined, PlusOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { deleteWorkspace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
 import { useParams } from 'react-router-dom';
 import ShowNotification from '~/utils/showNotification';
 import Notification from '../NotificationProvider/Notification/notification';
 
+import { getListBoards } from '~/pages/Board/board.reducer';
+import { useEffect } from 'react';
+import icons from '../../assets/svg/index';
+import { getDetailWorkspace } from '~/pages/Workspace/workspace.reducer';
 const Sidebar: React.FC = () => {
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const [isRename, setIsRename] = useState(false);
-   // const [dataRename, setDataRename] = useState<any>(currentWorkSpace?.name);
    const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
-   const { idWorkSpace } = useParams();
+   const { idWorkspace } = useParams();
 
+   const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
+
+   const getBoards = async () => {
+      if (currentWorkSpace?._id) {
+         await dispatch(getListBoards({ id: currentWorkSpace?._id }));
+      }
+   };
+   useEffect(() => {
+      getBoards();
+   }, [currentWorkSpace?._id]);
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
@@ -29,7 +42,7 @@ const Sidebar: React.FC = () => {
       const updateWorkspace = async () => {
          const data = {
             name: value,
-            idWorkSpace,
+            idWorkspace: currentWorkSpace?._id,
          };
          dispatch(editWorkSpace(data));
       };
@@ -38,8 +51,8 @@ const Sidebar: React.FC = () => {
    };
    const handleDelete = () => {
       const deleteWorkSpace = async () => {
-         if (idWorkSpace) {
-            dispatch(deleteWorkspace({ idWorkSpace }));
+         if (currentWorkSpace?._id) {
+            dispatch(deleteWorkspace({ idWorkspace: currentWorkSpace?._id }));
             messageApi.success('Đã xoá thành công');
          }
       };
@@ -48,8 +61,8 @@ const Sidebar: React.FC = () => {
    const [toggleWorkspace, setToggleWorkspace] = useState(false);
    const ToggleWorkspaces = () => {
       setToggleWorkspace((pre) => !pre);
-         
    };
+
    const items: MenuProps['items'] = [
       {
          key: '1',
@@ -134,9 +147,10 @@ const Sidebar: React.FC = () => {
       },
       {
          key: '5',
-         label: <ModalBox label="Add new workspace" icon="" />,
+         label: <ModalBox label="Add new workspace" icon="" cate="workspace" />,
       },
    ];
+
    return (
       <>
          {contextHolder}
@@ -228,24 +242,7 @@ const Sidebar: React.FC = () => {
                )}
             </div>
             <div className="sidebar__features">
-               <div className="sidebar__features-item">
-                  <svg
-                     viewBox="0 0 20 20"
-                     fill="currentColor"
-                     width="19"
-                     height="19"
-                     aria-hidden="true"
-                     className="icon_component icon_component--no-focus-style"
-                  >
-                     <path
-                        d="M10.75 3C10.75 2.58579 10.4142 2.25 10 2.25C9.58579 2.25 9.25 2.58579 9.25 3V9.25H3C2.58579 9.25 2.25 9.58579 2.25 10C2.25 10.4142 2.58579 10.75 3 10.75H9.25V17C9.25 17.4142 9.58579 17.75 10 17.75C10.4142 17.75 10.75 17.4142 10.75 17V10.75H17C17.4142 10.75 17.75 10.4142 17.75 10C17.75 9.58579 17.4142 9.25 17 9.25H10.75V3Z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                     ></path>
-                  </svg>
-                  <span>Add</span>
-               </div>
+               <ModalBox label="Create new Board" icon="" cate="board" />
                <div className="sidebar__features-item">
                   <svg
                      viewBox="0 0 20 20"
@@ -283,8 +280,10 @@ const Sidebar: React.FC = () => {
                   <span>Search</span>
                </div>
             </div>
-
-            <BoardSidebar />
+            {dataListBoard &&
+               dataListBoard.map((dataBoard, index) => {
+                  return <BoardSidebar dataBoard={dataBoard} key={index} />;
+               })}
          </div>
       </>
    );

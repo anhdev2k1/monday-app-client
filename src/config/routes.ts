@@ -4,8 +4,8 @@ const routes = {
    login: '/login',
    register: '/register',
    // private router
-   board: '/board/:id',
-   workspace: '/workspace/:idWorkSpace',
+   board: '/board/:idBoard',
+   workspace: '/workspace/:idWorkspace',
 };
 
 export default routes;
