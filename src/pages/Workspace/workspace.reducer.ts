@@ -73,8 +73,6 @@ export const editWorkSpace = createAsyncThunk(
    'edit-workspace-slice',
    async (infoEditWorkSpace: Partial<IUpdateWorkSpace>) => {
       const { idWorkspace, ...infoUpdate } = infoEditWorkSpace;
-      console.log(idWorkspace);
-
       const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace}`;
       return await axios.patch<IResponseWorkSpace<IWorkspace>>(requestUrl, infoUpdate);
    },
@@ -85,8 +83,6 @@ export const editWorkSpace = createAsyncThunk(
 export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
    async (idWorkspace: IDetailWorkspace) => {
-      console.log(idWorkspace);
-
       const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace.idWorkspace}`;
       return await axios.get<
          IResponseWorkSpace<{

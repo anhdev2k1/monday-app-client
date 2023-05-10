@@ -22,14 +22,14 @@ const Sidebar: React.FC = () => {
 
    const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
 
-   // const getBoards = async () => {
-   //    if (idWorkspace) {
-   //       dispatch(getListBoards({ id: idWorkspace }));
-   //    }
-   // };
-   // useEffect(() => {
-   //    getBoards();
-   // }, []);
+   const getBoards = async () => {
+      if (currentWorkSpace?._id) {
+         await dispatch(getListBoards({ id: currentWorkSpace?._id }));
+      }
+   };
+   useEffect(() => {
+      getBoards();
+   }, [currentWorkSpace?._id]);
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
       const updateWorkspace = async () => {
          const data = {
             name: value,
-            idWorkspace,
+            idWorkspace: currentWorkSpace?._id,
          };
          dispatch(editWorkSpace(data));
       };
@@ -48,8 +48,8 @@ const Sidebar: React.FC = () => {
    };
    const handleDelete = () => {
       const deleteWorkSpace = async () => {
-         if (idWorkspace) {
-            dispatch(deleteWorkspace({ idWorkspace }));
+         if (currentWorkSpace?._id) {
+            dispatch(deleteWorkspace({ idWorkspace: currentWorkSpace?._id }));
             messageApi.success('Đã xoá thành công');
          }
       };

@@ -21,8 +21,6 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const [visible, setVisible] = useState(false);
 
    const handleOpenChange = (open: boolean) => {
-      console.log(open);
-
       setVisible((prev) => !prev);
    };
    const navigate = useNavigate();
