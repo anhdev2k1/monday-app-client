@@ -5,6 +5,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import config from './config';
 import setupAxiosInterceptors from './config/axios-interceptor';
+import Overlay from './components/Overlay';
 
 const store = config.getStore();
 setupAxiosInterceptors();
@@ -12,5 +13,6 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
    <Provider store={store}>
       <App />
+      <Overlay />
    </Provider>,
 );
