@@ -9,6 +9,8 @@ import { SERVER_API_URL } from '~/config/constants';
 import axios from 'axios';
 import { IResponseWorkSpace, IWorkspace } from '~/shared/model/workSpace';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
+import { IResponseData } from '~/shared/model/global';
+import { IBoard } from '~/shared/model/board';
 
 export interface IInitWorkSpace {
    infoListWorkSpace: {
@@ -24,14 +26,15 @@ export interface IInitWorkSpace {
       error: boolean;
       status: string | number;
       mess: string;
-      boards:
-         | {
-              _id: string;
-              name: string;
-           }[]
-         | [];
    };
    deleteWorkspace: {
+      loading: boolean;
+      error: boolean;
+      status: string | number;
+      mess: string;
+   };
+   createBoard: {
+      data?: IWorkspace[];
       loading: boolean;
       error: boolean;
       status: string | number;
@@ -54,9 +57,15 @@ const initialState: IInitWorkSpace = {
       error: false,
       status: '',
       mess: '',
-      boards: [],
    },
    deleteWorkspace: {
+      loading: false,
+      error: false,
+      status: '',
+      mess: '',
+   },
+   createBoard: {
+      data: undefined,
       loading: false,
       error: false,
       status: '',
@@ -66,23 +75,25 @@ const initialState: IInitWorkSpace = {
 
 // interface Data
 interface IUpdateWorkSpace extends IWorkspace {
-   idWorkSpace: string;
+   idWorkspace: string;
 }
 
 interface IDetailWorkspace {
-   idWorkSpace: string;
+   idWorkspace: string;
 }
-
+interface ICreateBoard {
+   idWorkspace: string;
+   name: string;
+}
 // actions
 
 // edit
 export const editWorkSpace = createAsyncThunk(
    'edit-workspace-slice',
    async (infoEditWorkSpace: Partial<IUpdateWorkSpace>) => {
-      const { idWorkSpace, ...infoUpdate } = infoEditWorkSpace;
-      console.log(idWorkSpace);
+      const { idWorkspace, ...infoUpdate } = infoEditWorkSpace;
 
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace}`;
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace}`;
       return await axios.patch<IResponseWorkSpace<IWorkspace>>(requestUrl, infoUpdate);
    },
    { serializeError: serializeAxiosError },
@@ -91,10 +102,8 @@ export const editWorkSpace = createAsyncThunk(
 // get detail
 export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
-   async (idWorkSpace: IDetailWorkspace) => {
-      console.log(idWorkSpace);
-
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkSpace}`;
+   async (idWorkspace: IDetailWorkspace) => {
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace.idWorkspace}`;
       return await axios.get<
          IResponseWorkSpace<{
             workspace: IWorkspace;
@@ -136,13 +145,26 @@ export const createWorkSpace = createAsyncThunk(
 
 export const deleteWorkspace = createAsyncThunk(
    'delete-workspace-slice',
-   async (idWorkSpace: IDetailWorkspace) => {
-      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkSpace}`;
+   async (idWorkspace: IDetailWorkspace) => {
+      const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace.idWorkspace}`;
       return await axios.delete<IResponseWorkSpace<undefined>>(requestUrl);
    },
    { serializeError: serializeAxiosError },
 );
-
+export const createBoard = createAsyncThunk(
+   'create-board-workspace-slice',
+   async (bodyRequest: ICreateBoard) => {
+      const requestUrl = `${baseUrl}v1/api/workspace/${bodyRequest.idWorkspace}/board`;
+      return await axios.post<
+         IResponseData<{
+            board: IBoard;
+         }>
+      >(requestUrl, {
+         name: bodyRequest.name,
+      });
+   },
+   { serializeError: serializeAxiosError },
+);
 export const workspaceSlice = createSlice({
    name: 'WorkspaceSlice',
    initialState,
@@ -193,6 +215,7 @@ export const workspaceSlice = createSlice({
 
          .addMatcher(isFulfilled(getDetailWorkspace), (state, action) => {
             state.currWorkspace.data = action.payload.data.metadata?.workspace;
+
             state.currWorkspace.mess = action.payload.data.message;
             state.currWorkspace.status = action.payload.data.status;
             state.currWorkspace.error = false;
@@ -220,13 +243,19 @@ export const workspaceSlice = createSlice({
             state.currWorkspace.status = action.payload.data.status;
             state.currWorkspace.error = false;
          })
-         .addMatcher(isPending(deleteWorkspace), (state) => {
+         .addMatcher(isFulfilled(createBoard), (state, action) => {
+            // let listBoard = state.currWorkspace.data?.boards
+            if (state.currWorkspace.data && action.payload.data.metadata) {
+               state.currWorkspace.data.boards?.unshift(action.payload.data.metadata.board);
+            }
+         })
+         .addMatcher(isPending(createBoard), (state) => {
             state.currWorkspace.loading = true;
             state.currWorkspace.status = '';
             state.currWorkspace.mess = '';
             state.currWorkspace.error = false;
          })
-         .addMatcher(isRejected(deleteWorkspace), (state, action) => {
+         .addMatcher(isRejected(createBoard), (state, action) => {
             state.currWorkspace.loading = false;
             state.currWorkspace.error = true;
             if (action?.error) {
@@ -237,6 +266,13 @@ export const workspaceSlice = createSlice({
          });
    },
    reducers: {
+      deleteItemBoard: (state, action) => {
+         if (state.currWorkspace.data) {
+            state.currWorkspace.data.boards = state.currWorkspace.data?.boards?.filter(
+               (item) => item._id !== action.payload,
+            );
+         }
+      },
       setNameWorkspace: (state, action) => {
          return {
             ...state,
@@ -287,9 +323,11 @@ export const workspaceSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
+
 export const {
    resetCurrWorkspace,
    setCurrWorkspaceDefault,
+   deleteItemBoard,
    setNameWorkspace,
    setDescriptionWorkspace,
 } = workspaceSlice.actions;

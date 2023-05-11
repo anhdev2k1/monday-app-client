@@ -11,16 +11,6 @@ const Group = () => {
       const target = e.target as HTMLInputElement;
       setValueNameInput(target.value);
    };
-
-   //    const dataGroup = [
-   //     {
-   //         col : 'item',
-   //         data : [
-
-   //         ]
-   //     }
-   //    ]
-
    return (
       <div className="group">
          <div className="group__head">

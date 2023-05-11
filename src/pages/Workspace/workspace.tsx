@@ -69,7 +69,7 @@ const Workspace = () => {
                      </section>
                   ) : (
                      <div className="workspace__content">
-                        <ModalBox label="Add new workspace" icon="" />
+                        <ModalBox label="Add new workspace" icon="" cate='workspace'/>
                      </div>
                   ))}
             </div>

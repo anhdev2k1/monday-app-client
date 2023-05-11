@@ -2,6 +2,7 @@
    //    display: flex;
    background-color: #fff;
    min-height: 50vh;
+   // max-height: 50vh;
    min-width: 30vw;
    margin: auto;
    border-radius: 10px;
@@ -10,6 +11,7 @@
    .modal__title {
       font-size: 2.8rem;
       margin-top: 40px;
+      margin-bottom: 20px;
    }
    .workspace__color {
       width: 100px;

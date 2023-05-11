@@ -12,6 +12,8 @@ import {
    setDescriptionWorkspace,
    setNameWorkspace,
 } from '../Workspace/workspace.reducer';
+import { getListBoards } from '../Board/board.reducer';
+import BoardSidebar from '~/components/BoardSidebar';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
@@ -26,19 +28,19 @@ const WorkspaceManagement = () => {
       (state) => state.workspaceSlice.currWorkspace.data?.description,
    );
 
-   const { idWorkSpace } = useParams();
+   const { idWorkspace } = useParams();
    useEffect(() => {
-      if (currentWorkspace && currentWorkspace._id !== idWorkSpace) {
+      if (currentWorkspace && currentWorkspace._id !== idWorkspace) {
          navigate(`/workspace/${currentWorkspace._id}`);
       }
    }, [currentWorkspace]);
 
    useEffect(() => {
       const getWorkspace = () => {
-         if (idWorkSpace) {
+         if (idWorkspace) {
             dispatch(
                getDetailWorkspace({
-                  idWorkSpace,
+                  idWorkspace,
                }),
             );
          }
@@ -74,7 +76,7 @@ const WorkspaceManagement = () => {
             <>
                <span>Boards and dashboards you visited recently in this workspace</span>
                <div className="workspace__boards">
-                  <Link to="/board/123" className="workspace__boards-item">
+                  {/* <Link to="/board/123" className="workspace__boards-item">
                      <svg
                         viewBox="0 0 20 20"
                         fill="currentColor"
@@ -92,7 +94,11 @@ const WorkspaceManagement = () => {
                         ></path>
                      </svg>
                      <span>Test</span>
-                  </Link>
+                  </Link> */}
+                  {currentWorkspace?.boards &&
+                     currentWorkspace.boards.map((board, index) => {
+                        return <BoardSidebar dataBoard={board} key={index} />;
+                     })}
                </div>
             </>
          ),
@@ -129,7 +135,7 @@ const WorkspaceManagement = () => {
       dispatch(
          editWorkSpace({
             [fieldUpdate]: e.target.value,
-            idWorkSpace,
+            idWorkspace,
          }),
       );
    };
@@ -174,7 +180,7 @@ const WorkspaceManagement = () => {
                   />
                   <TextArea
                      rows={3}
-                     value={descriptionWorkspace}
+                     value={currentWorkspace?.description}
                      className="header__title-desc"
                      onChange={(e) => {
                         handleChangeInput(e, 'description');

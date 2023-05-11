@@ -1,0 +1,25 @@
+.trash_wrap {
+   display: flex;
+   height: 90vh;
+   .trash {
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 4s00px;
+      height: 300px;
+      .trash__img {
+         background-repeat: no-repeat;
+         padding-top: 100%;
+         background-size: contain;
+         background-position: center;
+         width: 300px;
+         height: 300px;
+      }
+      .trash__title {
+         font-size: 2.6rem;
+         margin-bottom: 30px;
+      }
+   }
+}
