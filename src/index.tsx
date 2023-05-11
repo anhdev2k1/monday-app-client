@@ -9,6 +9,7 @@ import {
    NotificationContext,
    NotificationProvider,
 } from './components/NotificationProvider/notificationProvider';
+import Overlay from './components/Overlay';
 
 const store = config.getStore();
 setupAxiosInterceptors();
@@ -18,5 +19,6 @@ root.render(
       <NotificationProvider>
          <App />
       </NotificationProvider>
+      <Overlay />
    </Provider>,
 );

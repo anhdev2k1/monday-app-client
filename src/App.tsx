@@ -5,11 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '~/assets/_globalStyle.scss';
 import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
-import { useAppSelector } from './config/store';
 function App() {
-   const token = useAppSelector((state) => state.userSlice.token);
-   console.log(token);
-
    return (
       <Router>
          <div className="App">
@@ -51,7 +47,7 @@ function App() {
                         path={route.path}
                         element={
                            <PrivateRoute
-                              isAuthenticated={!!token}
+                              isAuthenticated={true}
                               component={Layout}
                               children={<Page />}
                            />

@@ -148,27 +148,27 @@ export const workspaceSlice = createSlice({
    initialState,
    extraReducers(builder) {
       builder
-         // .addMatcher(isFulfilled(editWorkSpace), (state, action) => {
-         //    state.currWorkspace.data = action.payload.data.metadata;
-         //    state.currWorkspace.mess = action.payload.data.message;
-         //    state.currWorkspace.status = action.payload.data.status;
-         //    state.currWorkspace.error = false;
-         // })
-         // .addMatcher(isPending(editWorkSpace), (state) => {
-         //    state.currWorkspace.loading = true;
-         //    state.currWorkspace.status = '';
-         //    state.currWorkspace.mess = '';
-         //    state.currWorkspace.error = false;
-         // })
-         // .addMatcher(isRejected(editWorkSpace), (state, action) => {
-         //    state.currWorkspace.loading = false;
-         //    state.currWorkspace.error = true;
-         //    if (action?.error) {
-         //       const { response } = action.error as { response: any };
-         //       state.currWorkspace.status = response.data.statusCode;
-         //       state.currWorkspace.mess = response.data.message;
-         //    }
-         // })
+         .addMatcher(isFulfilled(createWorkSpace), (state, action) => {
+            state.currWorkspace.data = action.payload.data.metadata?.workspace;
+            state.currWorkspace.mess = action.payload.data.message;
+            state.currWorkspace.status = action.payload.data.status;
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isPending(createWorkSpace), (state) => {
+            state.currWorkspace.loading = true;
+            state.currWorkspace.status = '';
+            state.currWorkspace.mess = '';
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isRejected(createWorkSpace), (state, action) => {
+            state.currWorkspace.loading = false;
+            state.currWorkspace.error = true;
+            if (action?.error) {
+               const { response } = action.error as { response: any };
+               state.currWorkspace.status = response.data.statusCode;
+               state.currWorkspace.mess = response.data.message;
+            }
+         })
          .addMatcher(isFulfilled(getListlWorkspace), (state, action) => {
             state.infoListWorkSpace.data = action.payload.data.metadata?.workspaces;
             state.infoListWorkSpace.mess = action.payload.data.message;
@@ -211,6 +211,29 @@ export const workspaceSlice = createSlice({
                state.currWorkspace.status = response.data.statusCode;
                state.currWorkspace.mess = response.data.message;
             }
+         })
+         .addMatcher(isFulfilled(deleteWorkspace), (state, action) => {
+            if (state.infoListWorkSpace.data) {
+               state.currWorkspace.data = state.infoListWorkSpace.data[0];
+            }
+            state.currWorkspace.mess = action.payload.data.message;
+            state.currWorkspace.status = action.payload.data.status;
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isPending(deleteWorkspace), (state) => {
+            state.currWorkspace.loading = true;
+            state.currWorkspace.status = '';
+            state.currWorkspace.mess = '';
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isRejected(deleteWorkspace), (state, action) => {
+            state.currWorkspace.loading = false;
+            state.currWorkspace.error = true;
+            if (action?.error) {
+               const { response } = action.error as { response: any };
+               state.currWorkspace.status = response.data.statusCode;
+               state.currWorkspace.mess = response.data.message;
+            }
          });
    },
    reducers: {
@@ -225,6 +248,17 @@ export const workspaceSlice = createSlice({
                },
             },
          };
+      },
+      setCurrWorkspaceDefault: (state, action) => {
+         if (state.infoListWorkSpace.data) {
+            return {
+               ...state,
+               currWorkspace: {
+                  ...state.currWorkspace,
+                  data: state.infoListWorkSpace.data[0],
+               },
+            };
+         }
       },
       setDescriptionWorkspace: (state, action) => {
          // state.currWorkspace.data!.description = action.payload;
@@ -253,7 +287,11 @@ export const workspaceSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { resetCurrWorkspace, setNameWorkspace, setDescriptionWorkspace } =
-   workspaceSlice.actions;
+export const {
+   resetCurrWorkspace,
+   setCurrWorkspaceDefault,
+   setNameWorkspace,
+   setDescriptionWorkspace,
+} = workspaceSlice.actions;
 
 export default workspaceSlice.reducer;

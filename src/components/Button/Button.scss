@@ -48,6 +48,10 @@
 .primary {
    color: #fff;
    background-color: var(--background-primary-color);
+   &:hover {
+      background-color: #0555aa;
+      color: #fff;
+   }
 }
 
 .warning {
