@@ -18,7 +18,7 @@ export interface IAuthen {
       status: string | number;
       mess: string;
    };
-   token: string;
+   token?: string;
 }
 export interface workspaceState {
    token: string;
@@ -26,7 +26,7 @@ export interface workspaceState {
 
 let token = localStorage.getItem('token');
 if (token) {
-   token = JSON.parse(token);
+   token = JSON.parse(token) || "";
 }
 
 const baseUrl = SERVER_API_URL;
@@ -38,7 +38,7 @@ const initialState: IAuthen = {
       status: '',
       mess: '',
    },
-   token: token || '',
+   // token: token || '',
 };
 
 // data create
@@ -80,19 +80,19 @@ export const userSlice = createSlice({
       builder
          .addMatcher(isFulfilled(loginAccount), (state, action) => {
             state.user.data = action.payload.data.metadata;
-            state.token = action.payload.data.metadata.accessToken;
+            // state.token = action.payload.data.metadata.accessToken;
             state.user.mess = action.payload.data.message;
             state.user.error = false;
             state.user.status = action.payload.data.status;
-            localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
+            // localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
             // console.log(action.payload.data.metadata);
             // console.log(action.payload.data.metadata.user);
             // console.log(action.payload.data.metadata.user.useProfile);
-            localStorage.setItem(
-               'userName',
-               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
-            );
-            localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
+            // localStorage.setItem(
+            //    'userName',
+            //    JSON.stringify(action.payload.data.metadata.user.userProfile.name),
+            // );
+            // localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
          .addMatcher(isPending(loginAccount), (state) => {
             state.user.loading = true;
@@ -112,15 +112,15 @@ export const userSlice = createSlice({
          })
          .addMatcher(isFulfilled(registerAccount), (state, action) => {
             state.user.data = action.payload.data.metadata;
-            state.token = action.payload.data.metadata.accessToken;
+            // state.token = action.payload.data.metadata.accessToken;
             state.user.mess = action.payload.data.message;
             state.user.error = false;
-            localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
-            localStorage.setItem(
-               'userName',
-               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
-            );
-            localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
+            // localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
+            // localStorage.setItem(
+            //    'userName',
+            //    JSON.stringify(action.payload.data.metadata.user.userProfile.name),
+            // );
+            // localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
          .addMatcher(isPending(registerAccount), (state) => {
             state.user.loading = true;

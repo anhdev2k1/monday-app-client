@@ -94,7 +94,6 @@ export const getBoardDetail = createAsyncThunk(
 export const createBoard = createAsyncThunk(
    'create-board-slice',
    async (bodyRequest: ICreateBoard) => {
-      console.log(bodyRequest);
 
       const requestUrl = `${apiUrl}v1/api/workspace/${bodyRequest.idWorkspace}/board`;
       return await axios.post<IResponseData<IBoard>>(requestUrl, {
@@ -178,6 +177,9 @@ const boardSlice = createSlice({
             state.currBoard.loading = false;
             state.currBoard.status = action.payload.data.status;
             state.currBoard.mess = action.payload.data.message;
+         })
+         .addMatcher(isFulfilled(getBoardDetail), (state, action) => {
+            state.currBoard.data = action.payload.data.metadata?.board
          })
          .addMatcher(isPending(getBoardDetail), (state, action) => {
             state.currBoard.loading = true;

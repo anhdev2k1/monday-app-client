@@ -7,7 +7,10 @@ import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
 import { DeleteOutlined, SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { deleteWorkspace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
+import {
+   deleteWorkspace,
+   editWorkSpace,
+} from '~/pages/Workspace/workspace.reducer';
 import { useParams } from 'react-router-dom';
 import ShowNotification from '~/utils/showNotification';
 import Notification from '../NotificationProvider/Notification/notification';
@@ -16,27 +19,25 @@ import { getListBoards } from '~/pages/Board/board.reducer';
 import { useEffect } from 'react';
 import icons from '../../assets/svg/index';
 import { getDetailWorkspace } from '~/pages/Workspace/workspace.reducer';
+import { IBoard } from '~/shared/model/board';
 const Sidebar: React.FC = () => {
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const [isRename, setIsRename] = useState(false);
+   const [isReload, setIsReload] = useState<boolean>(false);
    const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
-   const { idWorkspace } = useParams();
-
-   const dataListBoard = useAppSelector((state) => state.boardSlice.listBoard.datas);
-
-   const getBoards = async () => {
-      if (currentWorkSpace?._id) {
-         await dispatch(getListBoards({ id: currentWorkSpace?._id }));
-      }
-   };
+   // Get board from workspace
+   // const getBoards = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.boards);
    useEffect(() => {
-      getBoards();
-   }, [currentWorkSpace?._id]);
+      if (currentWorkSpace?._id) {
+         dispatch(getDetailWorkspace({ idWorkspace: currentWorkSpace?._id }));
+      }
+   }, [isReload]);
    // get current workspace in store
    const handleRenameWorkspace = () => {
       setIsRename((pre) => !pre);
    };
+
    const focusInput = (e: any) => {
       const { value } = e.target;
       const updateWorkspace = async () => {
@@ -62,7 +63,6 @@ const Sidebar: React.FC = () => {
    const ToggleWorkspaces = () => {
       setToggleWorkspace((pre) => !pre);
    };
-
    const items: MenuProps['items'] = [
       {
          key: '1',
@@ -142,7 +142,7 @@ const Sidebar: React.FC = () => {
       },
       {
          key: '4',
-         label: <span onClick={handleDelete}>Delete</span>,
+         label: <span onClick={() => handleDelete()}>Delete</span>,
          icon: <DeleteOutlined />,
       },
       {
@@ -150,7 +150,8 @@ const Sidebar: React.FC = () => {
          label: <ModalBox label="Add new workspace" icon="" cate="workspace" />,
       },
    ];
-
+   console.log(currentWorkSpace?.boards);
+   
    return (
       <>
          {contextHolder}
@@ -242,7 +243,13 @@ const Sidebar: React.FC = () => {
                )}
             </div>
             <div className="sidebar__features">
-               <ModalBox label="Create new Board" icon="" cate="board" />
+               <div
+                  onClick={() => {
+                     setIsReload((pre) => !pre);
+                  }}
+               >
+                  <ModalBox label="Create new Board" icon="" cate="board" />
+               </div>
                <div className="sidebar__features-item">
                   <svg
                      viewBox="0 0 20 20"
@@ -280,8 +287,8 @@ const Sidebar: React.FC = () => {
                   <span>Search</span>
                </div>
             </div>
-            {dataListBoard &&
-               dataListBoard.map((dataBoard, index) => {
+            {currentWorkSpace?.boards &&
+               currentWorkSpace.boards.map((dataBoard, index) => {
                   return <BoardSidebar dataBoard={dataBoard} key={index} />;
                })}
          </div>

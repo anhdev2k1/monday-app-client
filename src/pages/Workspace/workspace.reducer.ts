@@ -9,6 +9,8 @@ import { SERVER_API_URL } from '~/config/constants';
 import axios from 'axios';
 import { IResponseWorkSpace, IWorkspace } from '~/shared/model/workSpace';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
+import { IResponseData } from '~/shared/model/global';
+import { IBoard } from '~/shared/model/board';
 
 export interface IInitWorkSpace {
    infoListWorkSpace: {
@@ -24,14 +26,15 @@ export interface IInitWorkSpace {
       error: boolean;
       status: string | number;
       mess: string;
-      boards:
-         | {
-              _id: string;
-              name: string;
-           }[]
-         | [];
    };
    deleteWorkspace: {
+      loading: boolean;
+      error: boolean;
+      status: string | number;
+      mess: string;
+   };
+   createBoard: {
+      data?: IWorkspace[];
       loading: boolean;
       error: boolean;
       status: string | number;
@@ -54,7 +57,6 @@ const initialState: IInitWorkSpace = {
       error: false,
       status: '',
       mess: '',
-      boards: [],
    },
    deleteWorkspace: {
       loading: false,
@@ -62,6 +64,13 @@ const initialState: IInitWorkSpace = {
       status: '',
       mess: '',
    },
+   createBoard: {
+      data: undefined,
+      loading: false,
+      error: false,
+      status: '',
+      mess: '',
+   }
 };
 
 // interface Data
@@ -72,7 +81,10 @@ interface IUpdateWorkSpace extends IWorkspace {
 interface IDetailWorkspace {
    idWorkspace: string;
 }
-
+interface ICreateBoard {
+   idWorkspace: string;
+   name: string;
+}
 // actions
 
 // edit
@@ -91,8 +103,6 @@ export const editWorkSpace = createAsyncThunk(
 export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
    async (idWorkSpace: IDetailWorkspace) => {
-      console.log(idWorkSpace);
-
       const requestUrl = `${baseUrl}v1/api/workspace/${idWorkSpace.idWorkspace}`;
       return await axios.get<
          IResponseWorkSpace<{
@@ -141,7 +151,17 @@ export const deleteWorkspace = createAsyncThunk(
    },
    { serializeError: serializeAxiosError },
 );
+export const createBoard = createAsyncThunk(
+   'create-board-workspace-slice',
+   async (bodyRequest: ICreateBoard) => {
 
+      const requestUrl = `${baseUrl}v1/api/workspace/${bodyRequest.idWorkspace}/board`;
+      return await axios.post<IResponseData<IBoard>>(requestUrl, {
+         name: bodyRequest.name,
+      });
+   },
+   { serializeError: serializeAxiosError },
+);
 export const workspaceSlice = createSlice({
    name: 'WorkspaceSlice',
    initialState,
@@ -192,6 +212,7 @@ export const workspaceSlice = createSlice({
 
          .addMatcher(isFulfilled(getDetailWorkspace), (state, action) => {
             state.currWorkspace.data = action.payload.data.metadata?.workspace;
+
             state.currWorkspace.mess = action.payload.data.message;
             state.currWorkspace.status = action.payload.data.status;
             state.currWorkspace.error = false;
@@ -210,7 +231,33 @@ export const workspaceSlice = createSlice({
                state.currWorkspace.status = response.data.statusCode;
                state.currWorkspace.mess = response.data.message;
             }
-         });
+         })
+         .addMatcher(isFulfilled(createWorkSpace), (state, action) => {
+            state.currWorkspace.data = action.payload.data.metadata?.workspace
+            state.currWorkspace.mess = action.payload.data.message;
+            state.currWorkspace.status = action.payload.data.status;
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isFulfilled(createBoard), (state, action) => {
+            // let listBoard = state.currWorkspace.data?.boards
+            if (state.currWorkspace.data &&  action.payload.data.metadata) {
+               state.currWorkspace.data.boards?.push( action.payload.data.metadata)
+            }
+         }).addMatcher(isPending(createBoard), (state) => {
+            state.currWorkspace.loading = true;
+            state.currWorkspace.status = '';
+            state.currWorkspace.mess = '';
+            state.currWorkspace.error = false;
+         })
+         .addMatcher(isRejected(createBoard), (state, action) => {
+            state.currWorkspace.loading = false;
+            state.currWorkspace.error = true;
+            if (action?.error) {
+               const { response } = action.error as { response: any };
+               state.currWorkspace.status = response.data.statusCode;
+               state.currWorkspace.mess = response.data.message;
+            }
+         })
    },
    reducers: {
       setNameWorkspace: (state, action) => {

@@ -7,8 +7,8 @@ import PrivateRoute from './routes/PrivateRoute';
 import { IRoutes } from './shared/model/global';
 import { useAppDispatch, useAppSelector } from './config/store';
 function App() {
-   const token = useAppSelector((state) => state.userSlice.token);
-   console.log(token);
+   // const token = useAppSelector((state) => state.userSlice.token);
+   // console.log(token);
 
    return (
       <Router>

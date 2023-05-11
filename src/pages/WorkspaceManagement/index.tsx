@@ -20,7 +20,6 @@ const WorkspaceManagement = () => {
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkspace } = useParams();
 
-   const listBoards = useAppSelector((state) => state.boardSlice.listBoard.datas);
    useEffect(() => {
       const getWorkspace = () => {
          if (idWorkspace) {
@@ -33,19 +32,6 @@ const WorkspaceManagement = () => {
       };
       getWorkspace();
    }, []);
-   console.log(idWorkspace);
-
-   useEffect(() => {
-      if (idWorkspace) {
-         console.log(idWorkspace);
-
-         dispatch(
-            getListBoards({
-               id: idWorkspace,
-            }),
-         );
-      }
-   }, [idWorkspace]);
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -73,8 +59,8 @@ const WorkspaceManagement = () => {
                      </svg>
                      <span>Test</span>
                   </Link> */}
-                  {listBoards &&
-                     listBoards.map((board, index) => {
+                  {currentWorkspace?.boards &&
+                     currentWorkspace.boards.map((board, index) => {
                         return <BoardSidebar dataBoard={board} key={index} />;
                      })}
                </div>

@@ -4,7 +4,7 @@ import { Input, Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createWorkSpace } from '~/pages/Workspace/workspace.reducer';
-import { createBoard } from '~/pages/Board/board.reducer';
+import { createBoard } from '~/pages/Workspace/workspace.reducer';
 import { useParams } from 'react-router-dom';
 import './modal.scss';
 interface IModalBoxProps {
@@ -33,7 +33,7 @@ const ModalBox = ({ label, icon, cate }: IModalBoxProps) => {
          if (cate === 'workspace') {
             dispatch(createWorkSpace(data));
          }
-         if (idWorkspace) {
+         else if (idWorkspace) {
             dispatch(createBoard({ idWorkspace: idWorkspace, name }));
          }
       };

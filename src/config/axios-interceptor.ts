@@ -4,7 +4,7 @@ import { SERVER_API_URL } from './constants';
 const TIMEOUT = 1 * 60 * 1000;
 axios.defaults.timeout = TIMEOUT;
 axios.defaults.baseURL = SERVER_API_URL;
-
+axios.defaults.withCredentials = true
 const setupAxiosInterceptors = () => {
 
    const onRequestSuccess = (config: any) => {
