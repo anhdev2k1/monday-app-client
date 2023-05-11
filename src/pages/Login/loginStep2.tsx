@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import './_login.scss';
@@ -19,35 +19,36 @@ const LoginStep2 = () => {
       placement: 'topRight',
    });
 
-   const messageLogin = useAppSelector((state) => state.userSlice.user.mess);
-   const errLogin = useAppSelector((state) => state.userSlice.user.error);
-
+   // const messageLogin = useAppSelector((state) => state.userSlice.user.mess);
+   // const errLogin = useAppSelector((state) => state.userSlice.user.error);
+   const userLogin = useAppSelector((state) => state.userSlice.user);
    useEffect(() => {
-      if (messageLogin) {
-         if (messageLogin !== '' && !errLogin) {
-            setTimeout(() => {
-               navigate('/');
-            }, 1000);
+      if (userLogin.mess) {
+         if (userLogin.mess !== '' && !userLogin.error) {
             setInfoNotifi({
                isOpen: true,
                info: Info.Success,
-               description: messageLogin,
-               placement: 'topLeft',
+               description: userLogin.mess,
+               placement: 'topRight',
             });
-         } else if (messageLogin !== '' && errLogin) {
+            setTimeout(() => {
+               navigate('/');
+            }, 1000);
+
+         } else if (userLogin.mess !== '' && userLogin.error) {
             setInfoNotifi({
                isOpen: true,
                info: Info.Error,
-               description: messageLogin,
-               placement: 'topLeft',
+               description: userLogin.mess,
+               placement: 'topRight',
             });
          }
          dispatch(resetLogin());
       }
-   }, [messageLogin, errLogin]);
+   }, [userLogin.mess, userLogin.error]);
    const onFinish = async (values: IDataLogin) => {
       if (values.email && values.password) {
-         dispatch(loginAccount(values));
+         await dispatch(loginAccount(values));
       }
    };
 

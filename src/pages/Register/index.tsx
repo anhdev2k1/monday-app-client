@@ -8,9 +8,6 @@ import axios from 'axios';
 import Notification, { Info } from '~/components/Notification';
 import { useEffect, useState } from 'react';
 import { NotificationPlacement } from 'antd/es/notification/interface';
-import { IResponseData } from '~/shared/model/global';
-import { IResponseUser } from '~/shared/model/authentication';
-import { useDispatch } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { registerAccount } from '~/shared/reducers/user.reducer';
 

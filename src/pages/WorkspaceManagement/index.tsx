@@ -2,12 +2,13 @@ import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import './workspaceManagement.scss';
 import { Input } from 'antd';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { useCallback, useEffect, useState } from 'react';
 import {
    editWorkSpace,
    getDetailWorkspace,
+   resetCurrWorkspace,
    setDescriptionWorkspace,
    setNameWorkspace,
 } from '../Workspace/workspace.reducer';
@@ -17,8 +18,22 @@ const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
    const dispatch = useAppDispatch();
+   const navigate = useNavigate();
+   // const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
+   // const descriptionWorkspace = useAppSelector(
+   //    (state) => state.workspaceSlice.currWorkspace.data?.description,
+   // );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
+   const descriptionWorkspace = useAppSelector(
+      (state) => state.workspaceSlice.currWorkspace.data?.description,
+   );
+
    const { idWorkspace } = useParams();
+   useEffect(() => {
+      if (currentWorkspace && currentWorkspace._id !== idWorkspace) {
+         navigate(`/workspace/${currentWorkspace._id}`);
+      }
+   }, [currentWorkspace]);
 
    const listBoards = useAppSelector((state) => state.boardSlice.listBoard.datas);
    useEffect(() => {
@@ -33,19 +48,27 @@ const WorkspaceManagement = () => {
       };
       getWorkspace();
    }, []);
-   console.log(idWorkspace);
 
    useEffect(() => {
-      if (idWorkspace) {
-         console.log(idWorkspace);
-
-         dispatch(
-            getListBoards({
-               id: idWorkspace,
-            }),
-         );
-      }
-   }, [idWorkspace]);
+      return () => {
+         dispatch(resetCurrWorkspace());
+      };
+   }, []);
+   // const updateWorkspace = (field:string,value:string) => {
+   //    const data = {
+   //       idWorkspace,
+   //       [`${field}`]: value
+   //    }
+   //    dispatch(editWorkSpace(data))
+   // }
+   // const handleRename = (e:any) => {
+   //    const {value} = e.target
+   //    updateWorkspace('name',value)
+   // }
+   // const handleReDescription = (e:any) => {
+   //    const {value} = e.target
+   //    updateWorkspace('description',value)
+   // }
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -67,8 +90,8 @@ const WorkspaceManagement = () => {
                         <path
                            d="M7.5 4.5H16C16.2761 4.5 16.5 4.72386 16.5 5V15C16.5 15.2761 16.2761 15.5 16 15.5H7.5L7.5 4.5ZM6 4.5H4C3.72386 4.5 3.5 4.72386 3.5 5V15C3.5 15.2761 3.72386 15.5 4 15.5H6L6 4.5ZM2 5C2 3.89543 2.89543 3 4 3H16C17.1046 3 18 3.89543 18 5V15C18 16.1046 17.1046 17 16 17H4C2.89543 17 2 16.1046 2 15V5Z"
                            fill="currentColor"
-                           fill-rule="evenodd"
-                           clip-rule="evenodd"
+                           fillRule="evenodd"
+                           clipRule="evenodd"
                         ></path>
                      </svg>
                      <span>Test</span>

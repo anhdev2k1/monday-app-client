@@ -5,10 +5,8 @@ import App from './App';
 import { Provider } from 'react-redux';
 import config from './config';
 import setupAxiosInterceptors from './config/axios-interceptor';
-import {
-   NotificationContext,
-   NotificationProvider,
-} from './components/NotificationProvider/notificationProvider';
+import { NotificationProvider } from './components/NotificationProvider/notificationProvider';
+import Overlay from './components/Overlay';
 
 const store = config.getStore();
 setupAxiosInterceptors();
@@ -18,5 +16,6 @@ root.render(
       <NotificationProvider>
          <App />
       </NotificationProvider>
+      <Overlay />
    </Provider>,
 );

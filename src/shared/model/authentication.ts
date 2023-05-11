@@ -2,7 +2,9 @@ export interface IUserWithToken {
    user: IUser;
    accessToken: string;
 }
-
+export interface IUserNotToken{
+   user:IUser
+}
 export interface IUser {
    _id: string;
    email: string;
@@ -19,4 +21,10 @@ export interface IResponseUser {
    status: string;
    statusCode: number;
    metadata: IUserWithToken;
+}
+export interface IResponseGetMe{
+   message: string;
+   status: string;
+   statusCode: number;
+   metadata: IUserNotToken;
 }

@@ -1,0 +1,14 @@
+.overlay {
+   position: fixed;
+   top: 0;
+   right: 0;
+   left: 0;
+   bottom: 0;
+   background-color: rgb(180, 180, 180, 0.5);
+   display: flex;
+   z-index: 999999999999;
+   .overlay__wrappChildren {
+      display: flex;
+      width: 100%;
+   }
+}

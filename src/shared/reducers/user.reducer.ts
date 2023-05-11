@@ -6,27 +6,19 @@ import {
    isRejected,
 } from '@reduxjs/toolkit';
 import { SERVER_API_URL } from '~/config/constants';
-import { IUserWithToken, IResponseUser } from '../model/authentication';
+import { IUserWithToken, IResponseUser, IResponseGetMe, IUserNotToken } from '../model/authentication';
 import { serializeAxiosError } from './reducer.utils';
 import axios from 'axios';
 
 export interface IAuthen {
    user: {
-      data?: IUserWithToken;
+      data?: IUserNotToken;
       loading: boolean;
       error: boolean;
       status: string | number;
       mess: string;
-   };
-   token: string;
-}
-export interface workspaceState {
-   token: string;
-}
 
-let token = localStorage.getItem('token');
-if (token) {
-   token = JSON.parse(token);
+   };
 }
 
 const baseUrl = SERVER_API_URL;
@@ -38,7 +30,6 @@ const initialState: IAuthen = {
       status: '',
       mess: '',
    },
-   token: token || '',
 };
 
 // data create
@@ -72,6 +63,14 @@ export const registerAccount = createAsyncThunk(
    },
    { serializeError: serializeAxiosError },
 );
+export const currenUser = createAsyncThunk(
+   'current-user-slice',
+   async () => {
+      const requestUrl = `${baseUrl}v1/api/auth/me`;
+      return await axios.post<IResponseGetMe>(requestUrl);
+   },
+   { serializeError: serializeAxiosError },
+);
 
 export const userSlice = createSlice({
    name: 'UserSlice',
@@ -80,19 +79,9 @@ export const userSlice = createSlice({
       builder
          .addMatcher(isFulfilled(loginAccount), (state, action) => {
             state.user.data = action.payload.data.metadata;
-            state.token = action.payload.data.metadata.accessToken;
             state.user.mess = action.payload.data.message;
             state.user.error = false;
             state.user.status = action.payload.data.status;
-            localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
-            // console.log(action.payload.data.metadata);
-            // console.log(action.payload.data.metadata.user);
-            // console.log(action.payload.data.metadata.user.useProfile);
-            localStorage.setItem(
-               'userName',
-               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
-            );
-            localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
          .addMatcher(isPending(loginAccount), (state) => {
             state.user.loading = true;
@@ -112,15 +101,8 @@ export const userSlice = createSlice({
          })
          .addMatcher(isFulfilled(registerAccount), (state, action) => {
             state.user.data = action.payload.data.metadata;
-            state.token = action.payload.data.metadata.accessToken;
             state.user.mess = action.payload.data.message;
             state.user.error = false;
-            localStorage.setItem('token', JSON.stringify(action.payload.data.metadata.accessToken));
-            localStorage.setItem(
-               'userName',
-               JSON.stringify(action.payload.data.metadata.user.userProfile.name),
-            );
-            localStorage.setItem('userId', JSON.stringify(action.payload.data.metadata.user._id));
          })
          .addMatcher(isPending(registerAccount), (state) => {
             state.user.loading = true;
@@ -129,6 +111,28 @@ export const userSlice = createSlice({
             state.user.error = false;
          })
          .addMatcher(isRejected(registerAccount), (state, action) => {
+            state.user.loading = false;
+            state.user.error = true;
+
+            if (action?.error) {
+               const { response } = action.error as { response: any };
+               state.user.status = response.data.statusCode;
+               state.user.mess = response.data.message;
+            }
+         })
+         .addMatcher(isFulfilled(currenUser), (state, action) => {
+            state.user.data = action.payload.data.metadata;
+            state.user.mess = action.payload.data.message;
+            state.user.status = action.payload.data.statusCode
+            state.user.error = false;
+         })
+         .addMatcher(isPending(currenUser), (state) => {
+            state.user.loading = true;
+            state.user.status = '';
+            state.user.mess = '';
+            state.user.error = false;
+         })
+         .addMatcher(isRejected(currenUser), (state, action) => {
             state.user.loading = false;
             state.user.error = true;
 
