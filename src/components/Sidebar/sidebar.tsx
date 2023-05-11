@@ -13,14 +13,12 @@ import {
    setNameWorkspace,
 } from '~/pages/Workspace/workspace.reducer';
 import { useParams } from 'react-router-dom';
-import ShowNotification from '~/utils/showNotification';
-import Notification from '../NotificationProvider/Notification/notification';
 import ToggleWorkspace from './toggleWorkspace';
 
 import { getListBoards } from '~/pages/Board/board.reducer';
 import { useEffect } from 'react';
 import icons from '../../assets/svg/index';
-import { getDetailWorkspace } from '~/pages/Workspace/workspace.reducer';
+
 const Sidebar: React.FC = () => {
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const listWorkspace = useAppSelector((state) => state.workspaceSlice.infoListWorkSpace.data);

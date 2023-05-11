@@ -17,7 +17,6 @@ export interface IAuthen {
       error: boolean;
       status: string | number;
       mess: string;
-
    };
 }
 
