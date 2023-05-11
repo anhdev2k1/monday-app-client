@@ -5,9 +5,10 @@ import { MouseEvent, useState } from 'react';
 
 import images from '~/assets/svg';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { deleteBoard, editBoard } from '~/pages/Board/board.reducer';
+import { deleteBoard, editBoard, resetCurrBoard } from '~/pages/Board/board.reducer';
 import { IBoard } from '~/shared/model/board';
 import { useNavigate, useParams } from 'react-router-dom';
+import { deleteItemBoard } from '~/pages/Workspace/workspace.reducer';
 
 const { edit, coppy, deleteIcon, move, iconBoard } = images;
 
@@ -19,6 +20,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const [valueInput, setValueInput] = useState<string>(dataBoard.name);
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
    const [visible, setVisible] = useState(false);
+   console.log(dataBoard);
 
    const handleOpenChange = (open: boolean) => {
       setVisible((prev) => !prev);
@@ -26,6 +28,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const navigate = useNavigate();
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
+
    const handleEditBoard = (
       e: React.FocusEvent<HTMLInputElement, Element> | React.KeyboardEvent<HTMLInputElement>,
    ) => {
@@ -49,6 +52,10 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const handleDeleteBoard = () => {
       setVisible(false);
       dispatch(deleteBoard({ id: dataBoard._id }));
+      dispatch(deleteItemBoard(dataBoard._id));
+      if (dataBoard._id === idBoard) {
+         dispatch(resetCurrBoard());
+      }
    };
    const items: MenuProps['items'] = [
       {
@@ -83,13 +90,14 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
          onClick: handleDeleteBoard,
       },
    ];
+   console.log(dataBoard.name);
 
    return (
       <Tippy position="topRight" html={<p>Đây là board</p>}>
          <div
             onClick={(e) => {
                if (!visible) {
-                  navigate(`/board/${dataBoard._id}`);
+                  navigate(`/board/${dataBoard._id}/workspace/${dataBoard.belongWorkspace}`);
                   setVisible(false);
                }
             }}

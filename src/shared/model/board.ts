@@ -1,10 +1,11 @@
 export interface IBoard {
    _id: string;
    name: string;
-   workspace?: string;
+   belongWorkspace?: string;
    description?: string;
+   group?: [];
+   columns?: [];
 }
-
 export interface IBoardsResponse<T> {
    boards: T;
 }

@@ -6,6 +6,7 @@ import Register from '~/pages/Register';
 import Workspace from '~/pages/Workspace/workspace';
 import { IRoutes } from '~/shared/model/global';
 import WorkspaceManagement from '~/pages/WorkspaceManagement';
+import Trash from '~/pages/Trash/trash';
 
 // Public routes
 const publicRoutes: IRoutes[] = [

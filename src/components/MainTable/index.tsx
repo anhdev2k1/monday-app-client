@@ -3,11 +3,14 @@ import ButtonCustom from '../Button/ButtonCustom';
 import Group from '../Group';
 import HeadView from '../HeadView';
 import './mainTable.scss';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { StatusType } from '~/shared/model/global';
 const MainTable = () => {
    return (
       <div className="main-table">
+         <p className="board__title">
+            <span>Monday</span> <FontAwesomeIcon icon={faCircleExclamation} />
+         </p>
          <HeadView />
          <div className="main__group__wrap">
             <Group />

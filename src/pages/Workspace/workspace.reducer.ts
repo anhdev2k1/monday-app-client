@@ -70,7 +70,7 @@ const initialState: IInitWorkSpace = {
       error: false,
       status: '',
       mess: '',
-   }
+   },
 };
 
 // interface Data
@@ -154,9 +154,12 @@ export const deleteWorkspace = createAsyncThunk(
 export const createBoard = createAsyncThunk(
    'create-board-workspace-slice',
    async (bodyRequest: ICreateBoard) => {
-
       const requestUrl = `${baseUrl}v1/api/workspace/${bodyRequest.idWorkspace}/board`;
-      return await axios.post<IResponseData<IBoard>>(requestUrl, {
+      return await axios.post<
+         IResponseData<{
+            board: IBoard;
+         }>
+      >(requestUrl, {
          name: bodyRequest.name,
       });
    },
@@ -233,17 +236,18 @@ export const workspaceSlice = createSlice({
             }
          })
          .addMatcher(isFulfilled(createWorkSpace), (state, action) => {
-            state.currWorkspace.data = action.payload.data.metadata?.workspace
+            state.currWorkspace.data = action.payload.data.metadata?.workspace;
             state.currWorkspace.mess = action.payload.data.message;
             state.currWorkspace.status = action.payload.data.status;
             state.currWorkspace.error = false;
          })
          .addMatcher(isFulfilled(createBoard), (state, action) => {
             // let listBoard = state.currWorkspace.data?.boards
-            if (state.currWorkspace.data &&  action.payload.data.metadata) {
-               state.currWorkspace.data.boards?.push( action.payload.data.metadata)
+            if (state.currWorkspace.data && action.payload.data.metadata) {
+               state.currWorkspace.data.boards?.unshift(action.payload.data.metadata.board);
             }
-         }).addMatcher(isPending(createBoard), (state) => {
+         })
+         .addMatcher(isPending(createBoard), (state) => {
             state.currWorkspace.loading = true;
             state.currWorkspace.status = '';
             state.currWorkspace.mess = '';
@@ -257,9 +261,16 @@ export const workspaceSlice = createSlice({
                state.currWorkspace.status = response.data.statusCode;
                state.currWorkspace.mess = response.data.message;
             }
-         })
+         });
    },
    reducers: {
+      deleteItemBoard: (state, action) => {
+         if (state.currWorkspace.data) {
+            state.currWorkspace.data.boards = state.currWorkspace.data?.boards?.filter(
+               (item) => item._id !== action.payload,
+            );
+         }
+      },
       setNameWorkspace: (state, action) => {
          return {
             ...state,
@@ -299,7 +310,7 @@ export const workspaceSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { resetCurrWorkspace, setNameWorkspace, setDescriptionWorkspace } =
+export const { resetCurrWorkspace, deleteItemBoard, setNameWorkspace, setDescriptionWorkspace } =
    workspaceSlice.actions;
 
 export default workspaceSlice.reducer;

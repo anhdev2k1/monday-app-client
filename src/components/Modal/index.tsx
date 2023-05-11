@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, message } from 'antd';
 import { Input, Form } from 'antd';
 import { useForm } from 'antd/es/form/Form';
@@ -32,8 +32,7 @@ const ModalBox = ({ label, icon, cate }: IModalBoxProps) => {
       const createWorkspace = () => {
          if (cate === 'workspace') {
             dispatch(createWorkSpace(data));
-         }
-         else if (idWorkspace) {
+         } else if (idWorkspace) {
             dispatch(createBoard({ idWorkspace: idWorkspace, name }));
          }
       };

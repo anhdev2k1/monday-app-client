@@ -7,10 +7,7 @@ import BoardSidebar from '../BoardSidebar';
 import ModalBox from '../Modal';
 import { DeleteOutlined, SearchOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import {
-   deleteWorkspace,
-   editWorkSpace,
-} from '~/pages/Workspace/workspace.reducer';
+import { deleteWorkspace, editWorkSpace } from '~/pages/Workspace/workspace.reducer';
 import { useParams } from 'react-router-dom';
 import ShowNotification from '~/utils/showNotification';
 import Notification from '../NotificationProvider/Notification/notification';
@@ -20,6 +17,7 @@ import { useEffect } from 'react';
 import icons from '../../assets/svg/index';
 import { getDetailWorkspace } from '~/pages/Workspace/workspace.reducer';
 import { IBoard } from '~/shared/model/board';
+import ButtonCustom from '../Button/ButtonCustom';
 const Sidebar: React.FC = () => {
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const [isRename, setIsRename] = useState(false);
@@ -63,6 +61,8 @@ const Sidebar: React.FC = () => {
    const ToggleWorkspaces = () => {
       setToggleWorkspace((pre) => !pre);
    };
+   console.log(currentWorkSpace?.boards);
+
    const items: MenuProps['items'] = [
       {
          key: '1',
@@ -151,7 +151,7 @@ const Sidebar: React.FC = () => {
       },
    ];
    console.log(currentWorkSpace?.boards);
-   
+
    return (
       <>
          {contextHolder}
@@ -289,7 +289,7 @@ const Sidebar: React.FC = () => {
             </div>
             {currentWorkSpace?.boards &&
                currentWorkSpace.boards.map((dataBoard, index) => {
-                  return <BoardSidebar dataBoard={dataBoard} key={index} />;
+                  return <BoardSidebar dataBoard={dataBoard} key={dataBoard._id} />;
                })}
          </div>
       </>

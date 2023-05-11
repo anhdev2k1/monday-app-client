@@ -40,11 +40,7 @@ const initialState: IInitState = {
       mess: '',
    },
    currBoard: {
-      data: {
-         _id: '64534d69fd2f03a9517deb95',
-         workspace: '645329765a9adf79b0dde47y',
-         name: 'Monday',
-      },
+      data: undefined,
       loading: false,
       error: false,
       status: '',
@@ -94,7 +90,6 @@ export const getBoardDetail = createAsyncThunk(
 export const createBoard = createAsyncThunk(
    'create-board-slice',
    async (bodyRequest: ICreateBoard) => {
-
       const requestUrl = `${apiUrl}v1/api/workspace/${bodyRequest.idWorkspace}/board`;
       return await axios.post<IResponseData<IBoard>>(requestUrl, {
          name: bodyRequest.name,
@@ -179,7 +174,7 @@ const boardSlice = createSlice({
             state.currBoard.mess = action.payload.data.message;
          })
          .addMatcher(isFulfilled(getBoardDetail), (state, action) => {
-            state.currBoard.data = action.payload.data.metadata?.board
+            state.currBoard.data = action.payload.data.metadata?.board;
          })
          .addMatcher(isPending(getBoardDetail), (state, action) => {
             state.currBoard.loading = true;

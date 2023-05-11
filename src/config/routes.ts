@@ -4,7 +4,7 @@ const routes = {
    login: '/login',
    register: '/register',
    // private router
-   board: '/board/:idBoard',
+   board: '/board/:idBoard/workspace/:idWorkspace',
    workspace: '/workspace/:idWorkspace',
 };
 
