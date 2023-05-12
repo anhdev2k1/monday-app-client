@@ -5,15 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { getListlWorkspace } from './workspace.reducer';
 import { useEffect } from 'react';
-import ModalBox from '~/components/Modal';
+import ButtonCustom from '~/components/Button/ButtonCustom';
+import { StatusType } from '~/shared/model/global';
 const Workspace = () => {
    const [messageApi, contextHolder] = message.useMessage();
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
    // const currentUser = useAppSelector((state) => state.userSlice.login.data?.user);
    const listWorkspaces = useAppSelector((state) => state.workspaceSlice.infoListWorkSpace.data);
-   
-   
+
    const handleRedirect = (e: any, workspaceID: string) => {
       e.preventDefault();
       const pathName = e.currentTarget.getAttribute('data-path');
@@ -24,7 +24,6 @@ const Workspace = () => {
    };
    const getWorkspaces = () => {
       dispatch(getListlWorkspace());
-      
    };
    useEffect(() => {
       getWorkspaces();
@@ -47,7 +46,6 @@ const Workspace = () => {
                                     onClick={(e) => handleRedirect(e, item._id!)}
                                     data-path="workspace"
                                     key={index}
-                                    
                                  >
                                     <div className="content__item-box workspace__item-flex">
                                        <div className="content__item-icon">
@@ -69,7 +67,7 @@ const Workspace = () => {
                      </section>
                   ) : (
                      <div className="workspace__content">
-                        <ModalBox label="Add new workspace" icon="" cate='workspace'/>
+                        <ButtonCustom statusType={StatusType.Primary} title="Add new workspace" />
                      </div>
                   ))}
             </div>

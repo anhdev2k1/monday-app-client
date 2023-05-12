@@ -10,21 +10,8 @@ const Row = () => {
             {/* <label htmlFor="checked"></label> */}
             <input type="checkbox" id="checked" />
          </li>
-         <ResizableBox right={false} id={0}>
-            {/* <span>Items</span> */}
-         </ResizableBox>
-         <ResizableBox right={false} id={1}>
-            {/* <span>Status</span> */}
-         </ResizableBox>
-         <ResizableBox right={false} id={2}>
-            {/* <span>Date</span> */}
-         </ResizableBox>
-         <ResizableBox right={false} id={3}>
-            {/* <span>Numbers</span> */}
-         </ResizableBox>
-         <ResizableBox right={false} id={4}>
-            {/* <span>Numbers</span> */}
-         </ResizableBox>
+         {/* <ResizableBox right={false} id={0}>
+         </ResizableBox> */}
       </ul>
    );
 };

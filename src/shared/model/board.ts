@@ -3,8 +3,8 @@ export interface IBoard {
    name: string;
    belongWorkspace?: string;
    description?: string;
-   group?: [];
-   columns?: [];
+   groups: [];
+   columns: [];
 }
 export interface IBoardsResponse<T> {
    boards: T;

@@ -5,8 +5,14 @@ import { useState } from 'react';
 import Tippy from '../Tippy';
 import HeaderTable from './headerTable';
 import Row from '../Row';
-const Group = () => {
-   const [valueNameInput, setValueNameInput] = useState<string>('Group Title');
+import { IGroup } from '~/shared/model/group';
+import { IColumn } from '~/shared/model/column';
+interface IPropsGroup {
+   data: IGroup;
+   columns: IColumn[];
+}
+const Group = ({ data, columns }: IPropsGroup) => {
+   const [valueNameInput, setValueNameInput] = useState<string>(data.name);
    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
       const target = e.target as HTMLInputElement;
       setValueNameInput(target.value);
@@ -35,7 +41,7 @@ const Group = () => {
             </div>
          </div>
          <div className="group__table">
-            <HeaderTable />
+            <HeaderTable columns={columns} />
             <Row />
             <Row />
             <Row />

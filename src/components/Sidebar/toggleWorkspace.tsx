@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { DeleteOutlined, SearchOutlined, PlusOutlined, AppstoreOutlined } from '@ant-design/icons';
 import './sidebar.scss';
-import ModalBox from '../Modal';
 import ButtonCustom from '../Button/ButtonCustom';
 import { SizeType } from '~/shared/model/global';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

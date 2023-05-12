@@ -6,11 +6,13 @@ import './mainTable.scss';
 import { faCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { StatusType } from '~/shared/model/global';
 import { IBoard } from '~/shared/model/board';
+import { IGroup } from '~/shared/model/group';
 interface IPropMainTable {
    currBoard?: IBoard;
 }
 
 const MainTable = ({ currBoard }: IPropMainTable) => {
+   if (currBoard) console.log(currBoard.groups);
    console.log(currBoard);
 
    return (
@@ -20,11 +22,10 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          </p>
          <HeadView />
          <div className="main__group__wrap">
-            <Group />
-
-            <Group />
-            <Group />
-            <Group />
+            {currBoard &&
+               currBoard.groups?.map((item: IGroup, index) => {
+                  return <Group columns={currBoard.columns} key={item._id} data={item} />;
+               })}
          </div>
 
          <ButtonCustom

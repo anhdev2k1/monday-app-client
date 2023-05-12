@@ -4,7 +4,6 @@ import { Dropdown, Space } from 'antd';
 import './sidebar.scss';
 import { useState } from 'react';
 import BoardSidebar from '../BoardSidebar';
-import ModalBox from '../Modal';
 import { DeleteOutlined, SearchOutlined, PlusOutlined, AppstoreOutlined } from '@ant-design/icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import {

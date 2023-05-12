@@ -4,7 +4,7 @@ import { IChildrenComponentProps } from '~/shared/model/global';
 import './resizable.scss';
 
 interface IResizableBox extends IChildrenComponentProps {
-   id?: number;
+   id: string;
    right?: false;
 }
 
