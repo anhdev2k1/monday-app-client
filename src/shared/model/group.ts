@@ -1,7 +1,11 @@
 export interface IGroup {
    _id: string;
+   position: number;
+   belongBoard: string;
    name: string;
-   position:number,
-   board?:string,
-   columns: [],
+   tasks: {
+      _id: string;
+      name: string;
+      position: number;
+   }[];
 }

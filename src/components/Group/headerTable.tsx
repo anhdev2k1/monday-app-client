@@ -15,9 +15,9 @@ const HeaderTable = ({ columns }: IPropsHeaderTable) => {
             <label htmlFor="checked"></label>
             <input type="checkbox" id="checked" />
          </li>
-         <li className="col__group__item">
-           <span>Task</span>
-         </li>
+         <ResizableBox id={'0'}>
+            <span>Item</span>
+         </ResizableBox>
          {columns.map((col, index) => {
             return (
                <ResizableBox key={col._id} id={col._id}>

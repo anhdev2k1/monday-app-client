@@ -14,6 +14,7 @@ import {
 } from '../Workspace/workspace.reducer';
 import { getListBoards } from '../Board/board.reducer';
 import BoardSidebar from '~/components/BoardSidebar';
+import { IWorkspace } from '~/shared/model/workSpace';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
@@ -132,6 +133,14 @@ const WorkspaceManagement = () => {
       e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>,
       fieldUpdate: 'name' | 'description',
    ) => {
+      const payload = dispatch(
+         editWorkSpace({
+            [fieldUpdate]: e.target.value,
+            idWorkspace,
+         }),
+      );
+      console.log(payload);
+
       dispatch(
          editWorkSpace({
             [fieldUpdate]: e.target.value,
