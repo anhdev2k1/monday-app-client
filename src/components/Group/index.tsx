@@ -7,16 +7,24 @@ import HeaderTable from './headerTable';
 import Row from '../Row';
 import { IGroup } from '~/shared/model/group';
 import { IColumn } from '~/shared/model/column';
+import { useAppDispatch } from '~/config/store';
 interface IPropsGroup {
    data: IGroup;
    columns: IColumn[];
 }
 const Group = ({ data, columns }: IPropsGroup) => {
+   
    const [valueNameInput, setValueNameInput] = useState<string>(data.name);
+   const dispatch = useAppDispatch()
    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const target = e.target as HTMLInputElement;
-      setValueNameInput(target.value);
+      const {value} = e.target as HTMLInputElement;
+      setValueNameInput(value);
+      
    };
+   const handleBlur = (e:any) => {
+      const {value} = e.target as HTMLInputElement;
+
+   }
    return (
       <div className="group">
          <div className="group__head">
@@ -33,6 +41,7 @@ const Group = ({ data, columns }: IPropsGroup) => {
                      onChange={(e) => {
                         handleChangeValue(e);
                      }}
+                     onBlur={(e) => handleBlur(e)}
                      className="input__group"
                      type="text"
                      value={valueNameInput}

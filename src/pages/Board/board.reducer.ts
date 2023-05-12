@@ -228,6 +228,7 @@ const boardSlice = createSlice({
       // });
    },
    reducers: {
+      
       resetCurrBoard(state) {
          state.currBoard = {
             data: undefined,
@@ -237,6 +238,7 @@ const boardSlice = createSlice({
             mess: '',
          };
       },
+
    },
 });
 

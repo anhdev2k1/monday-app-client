@@ -10,7 +10,7 @@ const Row = () => {
             {/* <label htmlFor="checked"></label> */}
             <input type="checkbox" id="checked" />
          </li>
-         {/* <ResizableBox right={false} id={0}>
+         {/* <ResizableBox right={false} id="0">
          </ResizableBox> */}
       </ul>
    );

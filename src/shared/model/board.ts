@@ -1,9 +1,11 @@
+import { IGroup } from "./group";
+
 export interface IBoard {
    _id: string;
    name: string;
    belongWorkspace?: string;
    description?: string;
-   groups: [];
+   groups: IGroup[];
    columns: [];
 }
 export interface IBoardsResponse<T> {

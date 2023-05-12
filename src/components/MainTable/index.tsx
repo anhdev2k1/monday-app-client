@@ -7,14 +7,17 @@ import { faCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { StatusType } from '~/shared/model/global';
 import { IBoard } from '~/shared/model/board';
 import { IGroup } from '~/shared/model/group';
+import { useAppDispatch } from '~/config/store';
+import { createGroup } from '../Group/group.reducer';
+import { useParams } from 'react-router-dom';
 interface IPropMainTable {
    currBoard?: IBoard;
 }
 
 const MainTable = ({ currBoard }: IPropMainTable) => {
-   if (currBoard) console.log(currBoard.groups);
-   console.log(currBoard);
-
+   const {idBoard} = useParams()
+   const dispatch = useAppDispatch()
+   
    return (
       <div className="main-table">
          <p className="board__title">

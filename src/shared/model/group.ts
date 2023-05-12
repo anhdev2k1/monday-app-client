@@ -1,5 +1,7 @@
 export interface IGroup {
-   name: string;
    _id: string;
-   position: number;
+   name: string;
+   position:number,
+   board?:string,
+   columns: [],
 }
