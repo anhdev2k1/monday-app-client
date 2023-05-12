@@ -38,6 +38,8 @@ const Board = () => {
          );
       }
    }, [idBoard]);
+   console.log(currBoard);
+
    return (
       <div className="board__wrapper">
          {!currBoard ? (
@@ -54,7 +56,7 @@ const Board = () => {
                            </span>
                         </Tippy>
                      ),
-                     info: <MainTable />,
+                     info: <MainTable currBoard={currBoard} />,
                   },
                   {
                      label: (

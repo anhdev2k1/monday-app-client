@@ -5,7 +5,14 @@ import HeadView from '../HeadView';
 import './mainTable.scss';
 import { faCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { StatusType } from '~/shared/model/global';
-const MainTable = () => {
+import { IBoard } from '~/shared/model/board';
+interface IPropMainTable {
+   currBoard?: IBoard;
+}
+
+const MainTable = ({ currBoard }: IPropMainTable) => {
+   console.log(currBoard);
+
    return (
       <div className="main-table">
          <p className="board__title">
