@@ -35,7 +35,6 @@ const WorkspaceManagement = () => {
       }
    }, [currentWorkspace]);
 
-   const listBoards = useAppSelector((state) => state.boardSlice.listBoard.datas);
    useEffect(() => {
       const getWorkspace = () => {
          if (idWorkspace) {
@@ -96,8 +95,8 @@ const WorkspaceManagement = () => {
                      </svg>
                      <span>Test</span>
                   </Link> */}
-                  {listBoards &&
-                     listBoards.map((board, index) => {
+                  {currentWorkspace?.boards &&
+                     currentWorkspace.boards.map((board, index) => {
                         return <BoardSidebar dataBoard={board} key={index} />;
                      })}
                </div>

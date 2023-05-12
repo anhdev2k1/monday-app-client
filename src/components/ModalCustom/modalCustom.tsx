@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ButtonCustom from '../Button/ButtonCustom';
 import './modalCustom.scss';
 import { StatusType } from '~/shared/model/global';
-import { useAppDispatch } from '~/config/store';
-import { createWorkSpace } from '~/pages/Workspace/workspace.reducer';
+import { useAppDispatch, useAppSelector } from '~/config/store';
+import { createBoard, createWorkSpace } from '~/pages/Workspace/workspace.reducer';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 interface IInfoModal {
    type: string;
    valueCreate: string;
    title: string;
+   idWorkspace?: string;
 }
-const ModalCustom = ({ type, valueCreate, title }: IInfoModal) => {
+const ModalCustom = ({ type, valueCreate, title, idWorkspace }: IInfoModal) => {
    const [valueCreateInput, setValueCreateInput] = useState<string>(valueCreate);
    const dispatch = useAppDispatch();
    const handleSubmitModal = async () => {
@@ -22,6 +23,25 @@ const ModalCustom = ({ type, valueCreate, title }: IInfoModal) => {
          );
          console.log(response);
 
+         if (response.payload) {
+            dispatch(
+               setDisplayOverlay({
+                  isOpenModal: false,
+                  children: <></>,
+               }),
+            );
+         }
+      } else if (type === 'Board' && valueCreate && idWorkspace) {
+         console.log(idWorkspace);
+
+         // const currentUrl = window.location.href;
+         const response = await dispatch(
+            createBoard({
+               // idWorkspace: currentUrl.substring(currentUrl.lastIndexOf('/') + 1),
+               idWorkspace,
+               name: valueCreateInput,
+            }),
+         );
          if (response.payload) {
             dispatch(
                setDisplayOverlay({

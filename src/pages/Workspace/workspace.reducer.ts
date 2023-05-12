@@ -9,6 +9,8 @@ import { SERVER_API_URL } from '~/config/constants';
 import axios from 'axios';
 import { IResponseWorkSpace, IWorkspace } from '~/shared/model/workSpace';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
+import { IResponseData } from '~/shared/model/global';
+import { IBoard } from '~/shared/model/board';
 
 export interface IInitWorkSpace {
    infoListWorkSpace: {
@@ -24,14 +26,15 @@ export interface IInitWorkSpace {
       error: boolean;
       status: string | number;
       mess: string;
-      boards:
-         | {
-              _id: string;
-              name: string;
-           }[]
-         | [];
    };
    deleteWorkspace: {
+      loading: boolean;
+      error: boolean;
+      status: string | number;
+      mess: string;
+   };
+   createBoard: {
+      data?: IWorkspace[];
       loading: boolean;
       error: boolean;
       status: string | number;
@@ -54,9 +57,15 @@ const initialState: IInitWorkSpace = {
       error: false,
       status: '',
       mess: '',
-      boards: [],
    },
    deleteWorkspace: {
+      loading: false,
+      error: false,
+      status: '',
+      mess: '',
+   },
+   createBoard: {
+      data: undefined,
       loading: false,
       error: false,
       status: '',
@@ -72,7 +81,10 @@ interface IUpdateWorkSpace extends IWorkspace {
 interface IDetailWorkspace {
    idWorkspace: string;
 }
-
+interface ICreateBoard {
+   idWorkspace: string;
+   name: string;
+}
 // actions
 
 // edit
@@ -141,7 +153,20 @@ export const deleteWorkspace = createAsyncThunk(
    },
    { serializeError: serializeAxiosError },
 );
-
+export const createBoard = createAsyncThunk(
+   'create-board-workspace-slice',
+   async (bodyRequest: ICreateBoard) => {
+      const requestUrl = `${baseUrl}v1/api/workspace/${bodyRequest.idWorkspace}/board`;
+      return await axios.post<
+         IResponseData<{
+            board: IBoard;
+         }>
+      >(requestUrl, {
+         name: bodyRequest.name,
+      });
+   },
+   { serializeError: serializeAxiosError },
+);
 export const workspaceSlice = createSlice({
    name: 'WorkspaceSlice',
    initialState,
@@ -192,6 +217,7 @@ export const workspaceSlice = createSlice({
 
          .addMatcher(isFulfilled(getDetailWorkspace), (state, action) => {
             state.currWorkspace.data = action.payload.data.metadata?.workspace;
+
             state.currWorkspace.mess = action.payload.data.message;
             state.currWorkspace.status = action.payload.data.status;
             state.currWorkspace.error = false;
@@ -219,13 +245,19 @@ export const workspaceSlice = createSlice({
             state.currWorkspace.status = action.payload.data.status;
             state.currWorkspace.error = false;
          })
-         .addMatcher(isPending(deleteWorkspace), (state) => {
+         .addMatcher(isFulfilled(createBoard), (state, action) => {
+            // let listBoard = state.currWorkspace.data?.boards
+            if (state.currWorkspace.data && action.payload.data.metadata) {
+               state.currWorkspace.data.boards?.unshift(action.payload.data.metadata.board);
+            }
+         })
+         .addMatcher(isPending(createBoard), (state) => {
             state.currWorkspace.loading = true;
             state.currWorkspace.status = '';
             state.currWorkspace.mess = '';
             state.currWorkspace.error = false;
          })
-         .addMatcher(isRejected(deleteWorkspace), (state, action) => {
+         .addMatcher(isRejected(createBoard), (state, action) => {
             state.currWorkspace.loading = false;
             state.currWorkspace.error = true;
             if (action?.error) {
@@ -236,6 +268,13 @@ export const workspaceSlice = createSlice({
          });
    },
    reducers: {
+      deleteItemBoard: (state, action) => {
+         if (state.currWorkspace.data) {
+            state.currWorkspace.data.boards = state.currWorkspace.data?.boards?.filter(
+               (item) => item._id !== action.payload,
+            );
+         }
+      },
       setNameWorkspace: (state, action) => {
          return {
             ...state,
@@ -286,9 +325,11 @@ export const workspaceSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
+
 export const {
    resetCurrWorkspace,
    setCurrWorkspaceDefault,
+   deleteItemBoard,
    setNameWorkspace,
    setDescriptionWorkspace,
 } = workspaceSlice.actions;
