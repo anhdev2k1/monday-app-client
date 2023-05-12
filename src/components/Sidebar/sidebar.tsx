@@ -18,10 +18,6 @@ import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 import ModalCustom from '../ModalCustom/modalCustom';
 import Tippy from '../Tippy';
 
-import { getListBoards } from '~/pages/Board/board.reducer';
-import { useEffect } from 'react';
-import icons from '../../assets/svg/index';
-
 const Sidebar: React.FC = () => {
    const { edit, change, manage, coppy, deleteIcon, move, iconBoard } = images;
    const currentWorkSpace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);

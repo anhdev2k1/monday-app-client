@@ -14,18 +14,21 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { IResponseData } from '~/shared/model/global';
 import { useAppDispatch } from '~/config/store';
+import { deleteGroup, updateGroup } from './group.reducer';
 interface IPropsGroup {
    data: IGroup;
    columns: IColumn[];
    handleAddNewGroup: () => Promise<void>;
+   handleDeleteGroup: (id: string) => void;
 }
-const Group = ({ data, columns, handleAddNewGroup }: IPropsGroup) => {
+const Group = ({ data, columns, handleAddNewGroup, handleDeleteGroup }: IPropsGroup) => {
    const [valueNameInput, setValueNameInput] = useState<string>(data.name);
    const dispatch = useAppDispatch();
    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target as HTMLInputElement;
       setValueNameInput(value);
    };
+
    const inputElement = useRef<HTMLInputElement>(null);
    const { edit, add, coppy, move, deleteIcon } = images;
 
@@ -60,13 +63,21 @@ const Group = ({ data, columns, handleAddNewGroup }: IPropsGroup) => {
          key: '4',
          label: <span>Delete group</span>,
          icon: <img src={deleteIcon} alt="icon-board" />,
-         // onClick: handleDeleteBoard,
+         onClick: () => {
+            handleDeleteGroup(data._id);
+         },
       },
    ];
 
-   const handleRenameInput = (e: React.FocusEvent<HTMLInputElement, Element>) => {
+   const handleRenameInput = async (e: React.FocusEvent<HTMLInputElement, Element>) => {
       const target = e.target as HTMLInputElement;
-      if (target.value) {
+      if (target.value !== data.name) {
+         dispatch(
+            updateGroup({
+               idGroup: data._id,
+               name: target.value,
+            }),
+         );
          // Call API EDIT NAME
       }
    };

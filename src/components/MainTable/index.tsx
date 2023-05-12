@@ -12,37 +12,54 @@ import { SERVER_API_URL } from '~/config/constants';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import ShowNotification from '~/utils/showNotification';
+import { useAppDispatch, useAppSelector } from '~/config/store';
+import { createGroup, deleteGroup, resetCreateGroup } from '../Group/group.reducer';
 interface IPropMainTable {
    currBoard: IBoard;
 }
 
 const MainTable = ({ currBoard }: IPropMainTable) => {
+   const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
    console.log(currBoard);
+   const dispatch = useAppDispatch();
    const { idBoard } = useParams();
 
    useEffect(() => {
       setListsGroup(currBoard.groups);
    }, [currBoard]);
-   const handleAddNewGroup = async () => {
-      const baseUrl = SERVER_API_URL;
-      ShowNotification('info', 'Đang xử lý ', 2000);
-      const { data } = await axios.post<
-         IResponseData<{
-            group: IGroup;
-         }>
-      >(`${baseUrl}v1/api/board/${idBoard}/group`, {
-         name: 'New Group',
-         position: listsGroup.length + 1,
-      });
-      if (data.metadata) {
-         setListsGroup((prev) => {
-            return [...prev, data.metadata!.group];
-         });
-      }
-      ShowNotification('success', data.message, 2000);
-   };
 
+   useEffect(() => {
+      const newGroup = dataCreateGroup.data;
+      if (newGroup) {
+         setListsGroup((prev) => {
+            return [...prev, newGroup];
+         });
+         dispatch(resetCreateGroup());
+      }
+   }, [dataCreateGroup]);
+   const handleAddNewGroup = async () => {
+      if (idBoard) {
+         dispatch(
+            createGroup({
+               idBoard,
+               name: 'New Group',
+               position: listsGroup.length + 1,
+            }),
+         );
+      }
+   };
+   const handleDeleteGroup = (id: string) => {
+      setListsGroup((prev) => {
+         const newListsGroup = [...prev].filter((group) => group._id !== id);
+         return newListsGroup;
+      });
+      dispatch(
+         deleteGroup({
+            id,
+         }),
+      );
+   };
    return (
       <div className="main-table">
          <p className="board__title">
@@ -55,6 +72,7 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
                listsGroup.map((item: IGroup, index) => {
                   return (
                      <Group
+                        handleDeleteGroup={handleDeleteGroup}
                         handleAddNewGroup={handleAddNewGroup}
                         columns={currBoard?.columns}
                         key={item._id}
