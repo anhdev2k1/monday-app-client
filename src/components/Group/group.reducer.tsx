@@ -60,7 +60,8 @@ const initialState: IInitState = {
    },
 };
 interface IParamsRequest {
-   id: string;
+   idGroup: string;
+   idBoard: string;
 }
 
 interface ICreateGroup {
@@ -102,8 +103,8 @@ export const updateGroup = createAsyncThunk(
 export const deleteGroup = createAsyncThunk(
    'delete-group-slice',
    async (params: IParamsRequest) => {
-      const { id } = params;
-      const requestUrl = `${apiUrl}v1/api/group/${id}`;
+      const { idBoard, idGroup } = params;
+      const requestUrl = `${apiUrl}v1/api/board/${idBoard}/group/${idGroup}`;
       return await axios.delete<IResponseData<undefined>>(requestUrl);
    },
    { serializeError: serializeAxiosError },

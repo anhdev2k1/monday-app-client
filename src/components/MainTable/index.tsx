@@ -54,11 +54,13 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          const newListsGroup = [...prev].filter((group) => group._id !== id);
          return newListsGroup;
       });
-      dispatch(
-         deleteGroup({
-            id,
-         }),
-      );
+      if (idBoard)
+         dispatch(
+            deleteGroup({
+               idGroup: id,
+               idBoard,
+            }),
+         );
    };
    return (
       <div className="main-table">
@@ -83,6 +85,7 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          </div>
 
          <ButtonCustom
+            onClick={handleAddNewGroup}
             statusType={StatusType.Boder}
             title="Add new group"
             leftIcon={<FontAwesomeIcon icon={faPlus} />}
