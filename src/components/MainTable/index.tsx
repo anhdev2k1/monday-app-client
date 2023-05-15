@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import ShowNotification from '~/utils/showNotification';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, deleteGroup, resetCreateGroup } from '../Group/group.reducer';
+import { getListTypes } from '../ListTypes/listTypes.reducer';
 interface IPropMainTable {
    currBoard: IBoard;
 }
@@ -25,6 +26,9 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
 
+   useEffect(() => {
+      dispatch(getListTypes());
+   }, []);
    useEffect(() => {
       setListsGroup(currBoard.groups);
    }, [currBoard]);
