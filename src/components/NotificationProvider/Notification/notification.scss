@@ -21,11 +21,13 @@
 }
 .error {
    background-color: #ff4d4f;
-   display: flex;
-   justify-content: space-between;
 }
 .warning {
    background-color: #faad14;
+}
+.loading{
+   background-color: white;
+   color: #333;
 }
 .info {
    background-color: #0285ff;

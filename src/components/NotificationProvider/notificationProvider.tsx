@@ -16,7 +16,6 @@ interface INotificationProviderProps {
 
 export const NotificationProvider: FC<INotificationProviderProps> = ({ children }) => {
   const [notifications, setNotifications] = useState<any[]>([]);
-
   return (
     <NotificationContext.Provider value={{ notifications, setNotifications }}>
       {children}

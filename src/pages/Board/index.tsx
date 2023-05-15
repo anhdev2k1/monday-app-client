@@ -18,7 +18,6 @@ const Board = () => {
    const cuurWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkspace } = useParams();
    const navigate = useNavigate();
-   console.log(idWorkspace);
    useEffect(() => {
       if (!cuurWorkspace && idWorkspace) {
          dispatch(
@@ -28,7 +27,6 @@ const Board = () => {
          );
       }
    }, [cuurWorkspace]);
-   console.log(idBoard);
    useEffect(() => {
       if (idBoard) {
          dispatch(
@@ -38,8 +36,6 @@ const Board = () => {
          );
       }
    }, [idBoard]);
-   console.log(currBoard);
-
    return (
       <div className="board__wrapper">
          {!currBoard ? (

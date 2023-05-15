@@ -11,9 +11,10 @@ import { useEffect, useState } from 'react';
 import { SERVER_API_URL } from '~/config/constants';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import ShowNotification from '~/utils/showNotification';
+// import ShowNotification from '~/utils/showNotification';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, deleteGroup, resetCreateGroup } from '../Group/group.reducer';
+import { isNotification } from '../Notification/notification.reducer';
 interface IPropMainTable {
    currBoard: IBoard;
 }
@@ -21,10 +22,10 @@ interface IPropMainTable {
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
-   console.log(currBoard);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
-
+   const notifi = useAppSelector((state)=> state.groupSlice.createGroup)
+   
    useEffect(() => {
       setListsGroup(currBoard.groups);
    }, [currBoard]);
@@ -40,13 +41,26 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    }, [dataCreateGroup]);
    const handleAddNewGroup = async () => {
       if (idBoard) {
-         dispatch(
+         dispatch(isNotification({
+            type: 'loading',
+            message: 'Đang xử lý...',
+            autoClose: 1000,
+            isOpen: true
+         }))
+         await dispatch(
             createGroup({
                idBoard,
                name: 'New Group',
                position: listsGroup.length + 1,
             }),
          );
+         dispatch(isNotification({
+            type: 'success',
+            message: 'Đã thêm group thành công!',
+            autoClose: 1000,
+            isOpen: true
+         }))
+         dispatch(resetCreateGroup())
       }
    };
    const handleDeleteGroup = (id: string) => {
@@ -54,6 +68,12 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          const newListsGroup = [...prev].filter((group) => group._id !== id);
          return newListsGroup;
       });
+      dispatch(isNotification({
+         type: 'success',
+         message: 'Đã xoá group thành công!',
+         autoClose: 1000,
+         isOpen: true
+      }))
       if (idBoard)
          dispatch(
             deleteGroup({

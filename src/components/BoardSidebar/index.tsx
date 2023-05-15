@@ -90,7 +90,6 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
          onClick: handleDeleteBoard,
       },
    ];
-   console.log(dataBoard.name);
 
    return (
       <Tippy position="topRight" html={<p>Đây là board</p>}>

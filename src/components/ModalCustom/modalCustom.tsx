@@ -5,6 +5,7 @@ import { StatusType } from '~/shared/model/global';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createBoard, createWorkSpace } from '~/pages/Workspace/workspace.reducer';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
+import { isNotification } from '../Notification/notification.reducer';
 interface IInfoModal {
    type: string;
    valueCreate: string;
@@ -21,8 +22,7 @@ const ModalCustom = ({ type, valueCreate, title, idWorkspace }: IInfoModal) => {
                name: valueCreateInput,
             }),
          );
-         console.log(response);
-
+         
          if (response.payload) {
             dispatch(
                setDisplayOverlay({
@@ -31,8 +31,8 @@ const ModalCustom = ({ type, valueCreate, title, idWorkspace }: IInfoModal) => {
                }),
             );
          }
+         
       } else if (type === 'Board' && valueCreate && idWorkspace) {
-         console.log(idWorkspace);
 
          // const currentUrl = window.location.href;
          const response = await dispatch(
@@ -50,6 +50,12 @@ const ModalCustom = ({ type, valueCreate, title, idWorkspace }: IInfoModal) => {
                }),
             );
          }
+         dispatch(isNotification({
+            isOpen: true,
+            message: "Thêm mới thành công",
+            type: 'success',
+            autoClose: 1000
+         }))
       }
    };
 

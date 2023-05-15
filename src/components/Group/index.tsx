@@ -119,7 +119,7 @@ const Group = ({ data, columns, handleAddNewGroup, handleDeleteGroup }: IPropsGr
          <div className="group__table">
             <HeaderTable columns={columns} />
             {data.tasks.map((task, index) => {
-               return <Row key={task._id} />;
+               return <Row data={data} key={task._id} />;
             })}
          </div>
       </div>
