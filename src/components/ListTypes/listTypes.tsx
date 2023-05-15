@@ -3,9 +3,11 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { getListTypes } from './listTypes.reducer';
 import './listTypes.scss';
 import ButtonCustom from '../Button/ButtonCustom';
-const ListType = () => {
+interface ILisTTypesProps {
+   handleAddColumn: (id : string) => void
+}
+const ListType = ({handleAddColumn}: ILisTTypesProps) => {
    const listTypes = useAppSelector((state) => state.listTypesSlice.listTypes.datas);
-
    return (
       <div className="list__types--custom">
          <ul className="list__types">
@@ -22,6 +24,7 @@ const ListType = () => {
                               />
                            }
                            title={typeItem.name}
+                           onClick={() => handleAddColumn(typeItem._id)}
                         />
                      </li>
                   );

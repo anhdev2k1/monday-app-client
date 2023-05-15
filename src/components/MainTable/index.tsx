@@ -22,7 +22,6 @@ interface IPropMainTable {
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
-   console.log(currBoard);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
 
