@@ -4,7 +4,7 @@ import workspaceSlice from '~/pages/Workspace/workspace.reducer';
 import overlaySlice from '~/components/Overlay/overlay.reducer';
 import groupSlice from '~/components/Group/group.reducer';
 import listTypesSlice from '~/components/ListTypes/listTypes.reducer';
-
+import mainTableSlice from '~/components/MainTable/mainTable.reducer';
 const rootReducer = {
    boardSlice,
    userSlice,
@@ -12,6 +12,7 @@ const rootReducer = {
    overlaySlice,
    groupSlice,
    listTypesSlice,
+   mainTableSlice,
 };
 
 export default rootReducer;

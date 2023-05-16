@@ -117,7 +117,7 @@ const Group = ({ data, columns, handleAddNewGroup, handleDeleteGroup }: IPropsGr
             </div>
          </div>
          <div className="group__table">
-            <HeaderTable columns={columns} />
+            <HeaderTable />
             {data.tasks.map((task, index) => {
                return <Row key={task._id} />;
             })}

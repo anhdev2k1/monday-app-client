@@ -5,38 +5,47 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ResizableBox from '../Resizable';
 import { IColumn } from '~/shared/model/column';
 import ListType from '../ListTypes/listTypes';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useAppSelector } from '~/config/store';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import { message } from 'antd';
+import Column from '../Column/column';
+import { createColumn } from '../MainTable/mainTable.reducer';
 
-interface IPropsHeaderTable {
-   columns: IColumn[];
-}
-const HeaderTable = ({ columns }: IPropsHeaderTable) => {
+// interface IPropsHeaderTable {
+//    columns: IColumn[];
+// }
+const HeaderTable = () => {
    const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
+   const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
    const { idBoard } = useParams();
-   const [listColumn, setListColumn] = useState<IColumn[]>([]);
+   // const [listColumn, setListColumn] = useState<IColumn[]>([]);
+   const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
-   useEffect(() => {
-      setListColumn(columns);
-   }, [columns]);
-   const handleAddColumn= (id:string) => {
+   // useEffect(() => {
+   //    setListColumn(columns);
+   // }, [columns]);
+   const handleAddColumn = (id: string) => {
       const addColumn = async () => {
          try {
             messageApi.loading('Đợi xý nhé...!');
-            const res = await axios.post(`http://localhost:3001/v1/api/board/${idBoard}/column`, {
-               typeId: id,
-               position: columns.length + 1,
-            });
-            messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
-            setListColumn((pre) => [...pre, res.data.metadata.column]);
+            if (idBoard)
+               await dispatch(
+                  createColumn({
+                     idBoard,
+                     typeId: id,
+                     position: listColumns.length + 1,
+                  }),
+               );
+            // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
+            messageApi.success(`Thêm mới column thành công!`);
          } catch (error) {
             messageApi.error(`${error}`);
          }
       };
       addColumn();
    };
+   console.log(listColumns);
+
    return (
       <ul className="cols__group">
          {contextHolder}
@@ -47,21 +56,30 @@ const HeaderTable = ({ columns }: IPropsHeaderTable) => {
          <ResizableBox id={'0'}>
             <span>Item</span>
          </ResizableBox>
-         {listColumn.map((col, index) => {
+         {listColumns.map((col, index) => {
             return (
-               <ResizableBox key={col._id} id={col._id}>
-                  <span>{col.name}</span>
-               </ResizableBox>
+               // <ResizableBox key={col._id} id={col._id}>
+               //    <span>{col.name}</span>
+               // </ResizableBox>
+               <Column
+                  key={col._id}
+                  position={listColumns.length + 1}
+                  _id={col._id}
+                  name={col.name}
+               />
             );
          })}
          <li className="col__group__item">
             <input className="col__group--check" type="checkbox" id="plus--col" />
             <label className="plus__lable" htmlFor="plus--col">
-               <div className="input--icon" onClick={() => {
+               <div
+                  className="input--icon"
+                  onClick={() => {
                      setIsOpenListTypes((prev) => !prev);
-                  }}>
+                  }}
+               >
                   <FontAwesomeIcon icon={faPlus} />
-                  {isOpenListTypes && <ListType handleAddColumn={handleAddColumn}  />}
+                  {isOpenListTypes && <ListType handleAddColumn={handleAddColumn} />}
                </div>
             </label>
          </li>

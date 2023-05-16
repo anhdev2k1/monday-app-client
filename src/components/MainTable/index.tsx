@@ -15,12 +15,15 @@ import ShowNotification from '~/utils/showNotification';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, deleteGroup, resetCreateGroup } from '../Group/group.reducer';
 import { getListTypes } from '../ListTypes/listTypes.reducer';
+import { setListColumnsMainTable } from './mainTable.reducer';
 interface IPropMainTable {
    currBoard: IBoard;
 }
 
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
+   const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
+
    const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
@@ -31,6 +34,10 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    useEffect(() => {
       setListsGroup(currBoard.groups);
    }, [currBoard]);
+
+   useEffect(() => {
+      dispatch(setListColumnsMainTable(currBoard.columns));
+   }, [currBoard.columns]);
 
    useEffect(() => {
       const newGroup = dataCreateGroup.data;
@@ -73,13 +80,12 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          <HeadView />
          <div className="main__group__wrap">
             {listsGroup &&
-               currBoard &&
                listsGroup.map((item: IGroup, index) => {
                   return (
                      <Group
                         handleDeleteGroup={handleDeleteGroup}
                         handleAddNewGroup={handleAddNewGroup}
-                        columns={currBoard?.columns}
+                        columns={listColumns}
                         key={item._id}
                         data={item}
                      />
