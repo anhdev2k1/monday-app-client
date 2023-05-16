@@ -8,6 +8,13 @@ const images = {
    menu: require('./menu.svg').default,
    manage: require('./manage.svg').default,
    change: require('./change.svg').default,
+   duplicate: require('./duplicate.svg').default,
+   convert: require('./convert.svg').default,
+   archive: require('./archive.svg').default,
+   export: require('./export.svg').default,
+   deleteTask: require('./deleteTask.svg').default,
+   moveTo: require('./moveTo.svg').default,
+   close: require('./close.svg').default
 };
 
 export default images;

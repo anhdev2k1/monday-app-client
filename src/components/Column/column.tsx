@@ -138,11 +138,11 @@ const Column = ({ name, _id, position }: IPropsColumn) => {
    ];
 
    return (
-      <div
+      <th
          onClick={() => {
             console.log(name);
          }}
-         className="col__item--group"
+         className="column__group"
       >
          {isEditInput ? (
             <input
@@ -182,7 +182,7 @@ const Column = ({ name, _id, position }: IPropsColumn) => {
                </button>
             </Dropdown>
          )}
-      </div>
+      </th>
    );
 };
 

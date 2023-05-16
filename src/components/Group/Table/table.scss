@@ -1,0 +1,88 @@
+.table__group {
+   border: 1px solid #edeef4;
+   margin-bottom: 50px;
+   border-radius: 8px;
+   &-header {
+      .column__group {
+         min-width: 300px;
+         border-bottom: 1px solid #edeef4;
+         border-right: 1px solid #edeef4;
+         height: 50px;
+         .col__group--check {
+            opacity: 0;
+            &:checked ~ .plus__lable {
+               .input--icon {
+                  cursor: pointer;
+                  border-radius: 3px;
+                  &:hover {
+                     background-color: var(--background-btn-default);
+                  }
+                  > svg {
+                     font-size: 1.6rem;
+                     transform: rotate(0deg);
+                     transition: transform 0.2s ease-in-out;
+                  }
+                  padding: 0 4px;
+                  border: none;
+               }
+            }
+         }
+      }
+      .column__add {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+      }
+      .column__group-check {
+         min-width: 50px;
+      }
+   }
+   .table__data {
+      .table__data-task {
+         height: 50px;
+         text-align: center;
+         cursor: pointer;
+         &:hover {
+            background-color: #e1e0e0f8;
+            transition: all 0.2s;
+         }
+      }
+      .table__data-task-value {
+         border-bottom: 1px solid #edeef4;
+         border-right: 1px solid #edeef4;
+         .data-task-rename {
+            width: max-content;
+            padding: 5px;
+            border-radius: 5px;
+            margin: 0 auto;
+            &:hover {
+               border: 1px solid #33333334;
+            }
+            .input__rename-task {
+               outline: none;
+               height: 20px;
+               text-indent: 5px;
+               border-radius: 3px;
+               &:focus {
+                  border: 1px solid blue;
+               }
+            }
+         }
+      }
+      .table__data-add-task {
+         border-right: 1px solid #edeef4;
+         input {
+            height: 20px;
+            outline: none;
+            text-indent: 5px;
+            border-radius: 3px;
+            border: 1px solid #e3e3e3;
+            font-size: 1.3rem;
+            width: 90%;
+            &:focus {
+               border: 1px solid blue;
+            }
+         }
+      }
+   }
+}

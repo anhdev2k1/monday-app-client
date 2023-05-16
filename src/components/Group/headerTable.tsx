@@ -10,20 +10,23 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { message } from 'antd';
 import Column from '../Column/column';
 import { createColumn } from '../MainTable/mainTable.reducer';
-
+import { IGroup } from '~/shared/model/group';
 // interface IPropsHeaderTable {
 //    columns: IColumn[];
 // }
-const HeaderTable = () => {
+
+interface IPropsHeaderTable {
+   columns: IColumn[];
+   data: IGroup;
+}
+const HeaderTable = ({ columns, data }: IPropsHeaderTable) => {
+   console.log('data', data);
    const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
    const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
    const { idBoard } = useParams();
    // const [listColumn, setListColumn] = useState<IColumn[]>([]);
    const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
-   // useEffect(() => {
-   //    setListColumn(columns);
-   // }, [columns]);
    const handleAddColumn = (id: string) => {
       const addColumn = async () => {
          try {
@@ -44,8 +47,6 @@ const HeaderTable = () => {
       };
       addColumn();
    };
-   console.log(listColumns);
-
    return (
       <ul className="cols__group">
          {contextHolder}

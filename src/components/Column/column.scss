@@ -1,14 +1,9 @@
-.col__item--group {
+.column__group {
    position: relative;
-   border-right: transparent;
-   display: flex;
-   align-items: center;
-   text-align: center;
-   justify-content: center;
-   padding: 6px 20px;
-   border: 0.5px solid #ccc;
-   border-right: transparent;
-   min-width: 100px;
+   // border-right: transparent;
+   // align-items: center;
+   // text-align: center;
+   // justify-content: center;
    .col__item--input {
       padding: 4px;
       width: 80%;
@@ -18,6 +13,8 @@
    }
    .btn__option--col {
       position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       right: 4px;
       display: none;
       background-color: var(--background-btn-default);

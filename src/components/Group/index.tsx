@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom';
 import { IResponseData } from '~/shared/model/global';
 import { useAppDispatch } from '~/config/store';
 import { deleteGroup, updateGroup } from './group.reducer';
+import Table from './Table/table';
 interface IPropsGroup {
    data: IGroup;
    columns: IColumn[];
@@ -56,7 +57,6 @@ const Group = ({ data, columns, handleAddNewGroup, handleDeleteGroup }: IPropsGr
          icon: <img src={edit} alt="icon-board" />,
          onClick: () => {
             inputElement.current?.focus();
-            console.log(inputElement.current);
          },
       },
       {
@@ -117,10 +117,7 @@ const Group = ({ data, columns, handleAddNewGroup, handleDeleteGroup }: IPropsGr
             </div>
          </div>
          <div className="group__table">
-            <HeaderTable />
-            {data.tasks.map((task, index) => {
-               return <Row data={data} key={task._id} />;
-            })}
+            <Table columns={columns} data={data} />
          </div>
       </div>
    );
