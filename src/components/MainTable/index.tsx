@@ -15,20 +15,31 @@ import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, deleteGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
+import { getListTypes } from '../ListTypes/listTypes.reducer';
+import { setListColumnsMainTable } from './mainTable.reducer';
 interface IPropMainTable {
    currBoard: IBoard;
 }
 
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
+   const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
+
    const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
-   const notifi = useAppSelector((state)=> state.groupSlice.createGroup)
-   
+   const notifi = useAppSelector((state) => state.groupSlice.createGroup);
+
+   useEffect(() => {
+      dispatch(getListTypes());
+   }, []);
    useEffect(() => {
       setListsGroup(currBoard.groups);
    }, [currBoard]);
+
+   useEffect(() => {
+      dispatch(setListColumnsMainTable(currBoard.columns));
+   }, [currBoard.columns]);
 
    useEffect(() => {
       const newGroup = dataCreateGroup.data;
@@ -41,12 +52,14 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    }, [dataCreateGroup]);
    const handleAddNewGroup = async () => {
       if (idBoard) {
-         dispatch(isNotification({
-            type: 'loading',
-            message: 'Đang xử lý...',
-            autoClose: 1000,
-            isOpen: true
-         }))
+         dispatch(
+            isNotification({
+               type: 'loading',
+               message: 'Đang xử lý...',
+               autoClose: 1000,
+               isOpen: true,
+            }),
+         );
          await dispatch(
             createGroup({
                idBoard,
@@ -54,13 +67,15 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
                position: listsGroup.length + 1,
             }),
          );
-         dispatch(isNotification({
-            type: 'success',
-            message: 'Đã thêm group thành công!',
-            autoClose: 1000,
-            isOpen: true
-         }))
-         dispatch(resetCreateGroup())
+         dispatch(
+            isNotification({
+               type: 'success',
+               message: 'Đã thêm group thành công!',
+               autoClose: 1000,
+               isOpen: true,
+            }),
+         );
+         dispatch(resetCreateGroup());
       }
    };
    const handleDeleteGroup = (id: string) => {
@@ -68,12 +83,14 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          const newListsGroup = [...prev].filter((group) => group._id !== id);
          return newListsGroup;
       });
-      dispatch(isNotification({
-         type: 'success',
-         message: 'Đã xoá group thành công!',
-         autoClose: 1000,
-         isOpen: true
-      }))
+      dispatch(
+         isNotification({
+            type: 'success',
+            message: 'Đã xoá group thành công!',
+            autoClose: 1000,
+            isOpen: true,
+         }),
+      );
       if (idBoard)
          dispatch(
             deleteGroup({
@@ -90,13 +107,12 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          <HeadView />
          <div className="main__group__wrap">
             {listsGroup &&
-               currBoard &&
                listsGroup.map((item: IGroup, index) => {
                   return (
                      <Group
                         handleDeleteGroup={handleDeleteGroup}
                         handleAddNewGroup={handleAddNewGroup}
-                        columns={currBoard?.columns}
+                        columns={listColumns}
                         key={item._id}
                         data={item}
                      />

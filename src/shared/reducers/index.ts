@@ -5,6 +5,8 @@ import overlaySlice from '~/components/Overlay/overlay.reducer';
 import groupSlice from '~/components/Group/group.reducer';
 
 import notificationSlice from '../../components/Notification/notification.reducer';
+import listTypesSlice from '~/components/ListTypes/listTypes.reducer';
+import mainTableSlice from '~/components/MainTable/mainTable.reducer';
 const rootReducer = {
    boardSlice,
    userSlice,
@@ -12,6 +14,8 @@ const rootReducer = {
    overlaySlice,
    groupSlice,
    notificationSlice,
+   listTypesSlice,
+   mainTableSlice,
 };
 
 export default rootReducer;
