@@ -4,11 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ResizableBox from '../Resizable';
 import { IColumn } from '~/shared/model/column';
-
+import { IGroup } from '~/shared/model/group';
 interface IPropsHeaderTable {
    columns: IColumn[];
+   data: IGroup;
 }
-const HeaderTable = ({ columns }: IPropsHeaderTable) => {
+const HeaderTable = ({ columns, data }: IPropsHeaderTable) => {
+   console.log('data', data);
+
    return (
       <ul className="cols__group">
          <li className="col__group__item">
@@ -20,9 +23,11 @@ const HeaderTable = ({ columns }: IPropsHeaderTable) => {
          </ResizableBox>
          {columns.map((col, index) => {
             return (
-               <ResizableBox key={col._id} id={col._id}>
-                  <span>{col.name}</span>
-               </ResizableBox>
+               <>
+                  <ResizableBox key={col._id} id={col._id}>
+                     <span>{col.name}</span>
+                  </ResizableBox>
+               </>
             );
          })}
          <li className="col__group__item">
@@ -34,7 +39,7 @@ const HeaderTable = ({ columns }: IPropsHeaderTable) => {
             </label>
          </li>
       </ul>
-   );
+   )
 };
 
 export default HeaderTable;
