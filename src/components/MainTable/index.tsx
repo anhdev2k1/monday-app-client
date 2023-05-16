@@ -17,11 +17,11 @@ import { createGroup, deleteGroup, resetCreateGroup } from '../Group/group.reduc
 import { isNotification } from '../Notification/notification.reducer';
 import { getListTypes } from '../ListTypes/listTypes.reducer';
 import { setListColumnsMainTable } from './mainTable.reducer';
-interface IPropMainTable {
+export interface IPropDisplayyBoard {
    currBoard: IBoard;
 }
 
-const MainTable = ({ currBoard }: IPropMainTable) => {
+const MainTable = ({ currBoard }: IPropDisplayyBoard) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
 
@@ -101,10 +101,6 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    };
    return (
       <div className="main-table">
-         <p className="board__title">
-            <span>{currBoard?.name}</span> <FontAwesomeIcon icon={faCircleExclamation} />
-         </p>
-         <HeadView />
          <div className="main__group__wrap">
             {listsGroup &&
                listsGroup.map((item: IGroup, index) => {

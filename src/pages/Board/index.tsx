@@ -6,9 +6,9 @@ import TabCustom from '~/components/TabCustom';
 import Tippy from '~/components/Tippy';
 import MainTable from '~/components/MainTable';
 import Cards from '~/components/Cards';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { getBoardDetail, getListBoards } from './board.reducer';
+import { getBoardDetail } from './board.reducer';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
 const Board = () => {
@@ -17,7 +17,6 @@ const Board = () => {
    const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data);
    const cuurWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkspace } = useParams();
-   const navigate = useNavigate();
    useEffect(() => {
       if (!cuurWorkspace && idWorkspace) {
          dispatch(
@@ -26,7 +25,7 @@ const Board = () => {
             }),
          );
       }
-   }, [cuurWorkspace]);
+   }, [cuurWorkspace, dispatch, idWorkspace]);
    useEffect(() => {
       if (idBoard) {
          dispatch(
@@ -35,7 +34,7 @@ const Board = () => {
             }),
          );
       }
-   }, [idBoard]);
+   }, [dispatch, idBoard]);
    return (
       <div className="board__wrapper">
          {!currBoard ? (
@@ -63,7 +62,7 @@ const Board = () => {
                            </span>
                         </Tippy>
                      ),
-                     info: <Cards />,
+                     info: <Cards currBoard={currBoard} />,
                   },
                ]}
             />

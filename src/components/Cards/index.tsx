@@ -1,40 +1,35 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonCustom from '../Button/ButtonCustom';
-import { faAngleDown, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 import Card from '../Card';
-import { StatusType } from '~/shared/model/global';
+import { IPropDisplayyBoard } from '../MainTable';
+import './cards.scss';
+import { IGroup } from '~/shared/model/group';
+interface ITaskCard {
+   task: {
+      _id: string;
+      name: string;
+      position: number;
+   };
+}
+const Cards = ({ currBoard }: IPropDisplayyBoard) => {
+   const [listsTask, setListsTask] = useState();
 
-const Cards = () => {
+   // currBoard.groups.forEach(group => {
+   //    group.tasks.reduce((acc, task) => {
+   //       return [...acc]
+   //    },[])
+   // })
+   const allTasks = currBoard.groups.flatMap((group) => {
+      // group.tasks.idGroup = group._id
+      const newTask = {
+         ...group.tasks,
+         idGroup: group._id,
+      };
+      return newTask;
+   });
+   console.log(allTasks);
+
    return (
       <>
-         <div className="table__head">
-            <ButtonCustom
-               statusType={StatusType.Primary}
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               leftIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-         </div>
          <div className="cards" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <Card />
             <Card />

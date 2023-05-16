@@ -12,11 +12,11 @@ import './card.scss';
 import AddPeople from '~/components/AddPeple';
 import ChangeStatus from '../ChangeStatus';
 const Card = () => {
-   const [isOpen, setIsOpen] = useState(false)
-   const [isOpenStatus, setIsOpenStatus] = useState(false)
+   const [isOpen, setIsOpen] = useState(false);
+   const [isOpenStatus, setIsOpenStatus] = useState(false);
    return (
       <>
-         <div className="card__item" style={{width: "calc(calc(100% / 3) - 20px)"}}>
+         <div className="card__item" style={{ width: 'calc(calc(100% / 3) - 20px)' }}>
             <div className="card__item-img">
                <FontAwesomeIcon icon={faCircleUser} />
             </div>
@@ -33,12 +33,15 @@ const Card = () => {
                         <FontAwesomeIcon icon={faCircleUser} />
                         <span>Person</span>
                      </div>
-                     <div className="title__feature-btn title__feature-add" onClick={() => setIsOpen(pre => !pre)}>
+                     <div
+                        className="title__feature-btn title__feature-add"
+                        onClick={() => setIsOpen((pre) => !pre)}
+                     >
                         <FontAwesomeIcon icon={faCircleUser} />
                         <div className="title__feature-btn--hover">
                            <FontAwesomeIcon icon={faPlus} />
                         </div>
-                        {isOpen && <AddPeople/>}
+                        {isOpen && <AddPeople />}
                      </div>
                   </div>
                   <div className="card__title-features-item">
@@ -46,9 +49,12 @@ const Card = () => {
                         <FontAwesomeIcon icon={faList} />
                         <span>Status</span>
                      </div>
-                     <div className="title__feature-btn title__feature-status" onClick={() => setIsOpenStatus(pre => !pre)}>
+                     <div
+                        className="title__feature-btn title__feature-status"
+                        onClick={() => setIsOpenStatus((pre) => !pre)}
+                     >
                         <span>Done</span>
-                        {isOpenStatus && <ChangeStatus/>}
+                        {isOpenStatus && <ChangeStatus />}
                      </div>
                   </div>
                </div>
