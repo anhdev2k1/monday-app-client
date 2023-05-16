@@ -119,17 +119,12 @@ const Table = ({ columns, data }: IPropsTable) => {
                   <th className="column__group">Task</th>
                   {columns.map((col) => {
                      return (
-                        <>
-                           {/* <th className="column__group" key={col._id}>
-                              {col.name}
-                           </th> */}
-                           <Column
-                              _id={col._id}
-                              name={col.name}
-                              position={col.position}
-                              key={col._id}
-                           />
-                        </>
+                        <Column
+                           _id={col._id}
+                           name={col.name}
+                           position={col.position}
+                           key={col._id}
+                        />
                      );
                   })}
                   <th className="column__group column__add">
