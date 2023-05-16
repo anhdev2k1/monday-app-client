@@ -1,36 +1,35 @@
-interface ITaskEditProps{
-task: any,
-   isRenameTask: any,
-   valueTask: any,
-   handleEditInput: any,
-   setIsRenameTask: any,
-   setValueTask: any,
-   handleRenameTask: any,
+import { useRef, useState } from 'react';
+import './taskEdit.scss';
+interface ITaskEditProps {
+   task: any;
 }
-const TaskEdit = ({
-   task,
-   isRenameTask,
-   valueTask,
-   handleEditInput,
-   setIsRenameTask,
-   setValueTask,
-   handleRenameTask,
-}:ITaskEditProps) => {
+const TaskEdit = ({ task }: ITaskEditProps) => {
+   const [isRenameTask, setIsRenameTask] = useState(false);
+   const elementInput = useRef<HTMLInputElement>(null);
+   const [valueTask, setValueTask] = useState<string>(task.name);
+   const handleRenameTask = (e: any, taskID: any) => {
+      setIsRenameTask(true);
+   };
    return (
       <td className="table__data-task-value" key={task._id}>
          {isRenameTask ? (
             <input
+               autoFocus
                className="input__rename-task"
-               value={valueTask === '' ? task.name : valueTask}
+               value={valueTask}
                type="text"
                style={{ width: '90%' }}
                onBlur={() => setIsRenameTask(false)}
-               onChange={(e) => setValueTask(e.target.value)}
-               ref={handleEditInput}
+               onChange={(e) => {
+                  if (e.target.value) {
+                     setValueTask(e.target.value);
+                  }
+               }}
+               ref={elementInput}
             />
          ) : (
             <span
-               ref={handleEditInput}
+               className="task__value--custom"
                onClick={(e) => handleRenameTask(e, task._id)}
                data-id={task._id}
             >

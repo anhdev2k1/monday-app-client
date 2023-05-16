@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseMedicalCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IColumn } from '~/shared/model/column';
 import { IGroup } from '~/shared/model/group';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Fragment } from 'react';
 import './table.scss';
 import { message } from 'antd';
 import axios from 'axios';
@@ -10,18 +10,20 @@ import { useParams } from 'react-router-dom';
 import MenuTask from '~/components/MenuTask/menuTask';
 import { useAppSelector } from '~/config/store';
 import TaskEdit from './TaskEdit/taskEdit';
+import { ITask } from '~/shared/model/task';
+import { IResponseData } from '~/shared/model/global';
 interface IPropsTable {
    columns: IColumn[];
    data: IGroup;
 }
 const Table = ({ columns, data }: IPropsTable) => {
-   const [listTask, setListTask] = useState<any[]>(data.tasks);
-   const [isRenameTask, setIsRenameTask] = useState(false);
-   const [valueTask, setValueTask] = useState('');
+   const [listTask, setListTask] = useState<ITask[]>(data.tasks);
+   // const [isRenameTask, setIsRenameTask] = useState(false);
+   // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
    const [messageApi, contextHolder] = message.useMessage();
    const handleValueAdd = useRef<any>();
-   const handleEditInput = useRef<HTMLInputElement>(null);
+   // const handleEditInput = useRef<HTMLInputElement>(null);
    const { idBoard } = useParams();
    const [idTask, setIdTask] = useState('');
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
@@ -30,9 +32,9 @@ const Table = ({ columns, data }: IPropsTable) => {
    interface ITaskChecked {
       _id: string;
    }
-   const handleRenameTask = (e: any, taskID: any) => {
-      setIsRenameTask(true);
-   };
+   // const handleRenameTask = (e: any, taskID: any) => {
+   //    setIsRenameTask(true);
+   // };
    const handleCheckboxChange = (e: any, taskID: any) => {
       setIdTask(e.target.dataset.id);
       if (e.target.checked) {
@@ -55,20 +57,22 @@ const Table = ({ columns, data }: IPropsTable) => {
       if (valueAddTask !== '') {
          const addTask = async () => {
             messageApi.loading('Đợi xý nhé !...');
-            const res = await axios.post(
-               `http://localhost:3001/v1/api/board/${idBoard}/group/${data._id}/task`,
-               {
-                  name: valueAddTask,
-                  position: data.tasks.length + 1,
-               },
-            );
-            const { position, name, _id } = res.data.metadata.task;
-            const newItem = {
-               position,
-               name,
-               _id,
-            };
-            setListTask((pre) => [...pre, newItem]);
+            const res = await axios.post<
+               IResponseData<{
+                  task: ITask;
+               }>
+            >(`http://localhost:3001/v1/api/board/${idBoard}/group/${data._id}/task`, {
+               name: valueAddTask,
+               position: data.tasks.length + 1,
+            });
+            if (res.data.metadata)
+               setListTask((pre) => {
+                  const newTask = res.data.metadata?.task;
+                  if (newTask) {
+                     return [...pre, newTask];
+                  }
+                  return pre;
+               });
             messageApi.success('Tạo task thành công!');
             setValueAddTask('');
          };
@@ -108,58 +112,37 @@ const Table = ({ columns, data }: IPropsTable) => {
             <tbody className="table__data">
                {listTask.map((task) => {
                   return (
-                     <>
-                        <tr className="table__data-task">
-                           <td className="table__data-task-value" key={task._id}>
-                              <label htmlFor="checked"></label>
-                              <input
-                                 type="checkbox"
-                                 id="checked"
-                                 onChange={(e) => handleCheckboxChange(e, task._id)}
-                                 data-id={task._id}
-                              />
-                           </td>
-                           <td className="table__data-task-value" key={task._id}>
-                              {isRenameTask ? (
-                                 <input
-                                    className="input__rename-task"
-                                    value={valueTask === '' ? task.name : valueTask}
-                                    type="text"
-                                    style={{ width: '90%' }}
-                                    onBlur={() => setIsRenameTask(false)}
-                                    onChange={(e) => setValueTask(e.target.value)}
-                                    ref={handleEditInput}
-                                 />
-                              ) : (
-                                 <span
-                                    ref={handleEditInput}
-                                    onClick={(e) => handleRenameTask(e, task._id)}
-                                    data-id={task._id}
-                                 >
-                                    {valueTask ? valueTask : task.name}
-                                 </span>
-                              )}
-                           </td>
-                           {/* <TaskEdit
-                              handleEditInput={handleEditInput}
-                              handleRenameTask={handleRenameTask}
-                              isRenameTask={isRenameTask}
-                              setIsRenameTask={setIsRenameTask}
-                              setValueTask={setValueTask}
-                              task={task}
-                              valueTask={valueTask}
-                           /> */}
-                           {columns.map((item) => {
-                              return (
-                                 <>
-                                    <td className="table__data-task-value" key={task._id}>
-                                       Default value
-                                    </td>
-                                 </>
-                              );
-                           })}
-                        </tr>
-                     </>
+                     <tr className="table__data-task" key={task._id}>
+                        <td className="table__data-task-value">
+                           <label htmlFor="checked"></label>
+                           <input
+                              type="checkbox"
+                              id="checked"
+                              onChange={(e) => handleCheckboxChange(e, task._id)}
+                              data-id={task._id}
+                           />
+                        </td>
+                        <TaskEdit task={task} />
+                        {task.values.map((itemValue) => {
+                           return (
+                              <td
+                                 key={itemValue._id}
+                                 style={{
+                                    backgroundColor: `${
+                                       itemValue.typeOfValue === 'multiple'
+                                          ? itemValue.valueId.color
+                                          : ''
+                                    }`,
+                                 }}
+                                 className="table__data-task-value"
+                              >
+                                 {itemValue.typeOfValue === 'multiple'
+                                    ? itemValue.valueId.value
+                                    : itemValue.value}
+                              </td>
+                           );
+                        })}
+                     </tr>
                   );
                })}
                <tr className="table__data-task">
@@ -180,7 +163,12 @@ const Table = ({ columns, data }: IPropsTable) => {
                </tr>
             </tbody>
          </table>
-         <MenuTask tasks={isChecked} handleDeleteTask={handleDeleteTask} task={idTask} />
+         <MenuTask
+            setIsChecked={setIsChecked}
+            tasks={isChecked}
+            handleDeleteTask={handleDeleteTask}
+            task={idTask}
+         />
       </>
    );
 };
