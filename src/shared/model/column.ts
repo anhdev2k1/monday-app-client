@@ -8,5 +8,10 @@ export interface IColumn {
    _id: string;
    name: string;
    position: number;
-   belongType: string;
+   belongType: {
+      _id: string;
+      name: string;
+      icon: string;
+      color: string;
+   };
 }

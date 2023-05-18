@@ -11,56 +11,53 @@ import { Input } from 'antd';
 import './card.scss';
 import AddPeople from '~/components/AddPeple';
 import ChangeStatus from '../ChangeStatus';
-const Card = () => {
-   const [isOpen, setIsOpen] = useState(false);
-   const [isOpenStatus, setIsOpenStatus] = useState(false);
+import { ITaskCard } from '../Cards';
+import ItemInCard from './ItemInCard/itemInCard';
+import images from '~/assets/svg';
+import Tippy from '../Tippy';
+import { useAppDispatch } from '~/config/store';
+import { setDisplayOverlay } from '../Overlay/overlay.reducer';
+import ModalCardDetail from './ModalCardDetail/modalCardDetail';
+interface IPropsCard {
+   task: ITaskCard;
+}
+const Card = ({ task }: IPropsCard) => {
+   const { iconDesTask } = images;
+   const dispatch = useAppDispatch();
+   const handleShowModalCartDetail = () => {
+      dispatch(
+         setDisplayOverlay({
+            isDisplay: true,
+            children: <ModalCardDetail task={task} />,
+         }),
+      );
+   };
    return (
-      <>
-         <div className="card__item" style={{ width: 'calc(calc(100% / 3) - 20px)' }}>
-            <div className="card__item-img">
-               <FontAwesomeIcon icon={faCircleUser} />
+      <div onClick={handleShowModalCartDetail} className="card__item">
+         {/* <div className="card__item-img">
+            <FontAwesomeIcon icon={faCircleUser} />
+         </div> */}
+         <div className="card__item-title">
+            <div className="card__title-header">
+               <span className="card__title-header--heading">{task.name}</span>
+               <Tippy position="top" html={<p>Start Conversation</p>}>
+                  <button className="card__icon--plus">
+                     <img src={iconDesTask} alt="card__icon--plus" />
+                     {/* <IconDesTask /> */}
+                  </button>
+               </Tippy>
             </div>
-            <div className="card__item-title">
-               <div className="card__title-header">
-                  <span className="card__title-header--heading">Project 2</span>
-                  <div className="card__icon">
-                     <FontAwesomeIcon icon={faPlus} />
-                  </div>
-               </div>
-               <div className="card__title-features">
-                  <div className="card__title-features-item">
-                     <div className="title__feature-name">
-                        <FontAwesomeIcon icon={faCircleUser} />
-                        <span>Person</span>
-                     </div>
-                     <div
-                        className="title__feature-btn title__feature-add"
-                        onClick={() => setIsOpen((pre) => !pre)}
-                     >
-                        <FontAwesomeIcon icon={faCircleUser} />
-                        <div className="title__feature-btn--hover">
-                           <FontAwesomeIcon icon={faPlus} />
-                        </div>
-                        {isOpen && <AddPeople />}
-                     </div>
-                  </div>
-                  <div className="card__title-features-item">
-                     <div className="title__feature-name">
-                        <FontAwesomeIcon icon={faList} />
-                        <span>Status</span>
-                     </div>
-                     <div
-                        className="title__feature-btn title__feature-status"
-                        onClick={() => setIsOpenStatus((pre) => !pre)}
-                     >
-                        <span>Done</span>
-                        {isOpenStatus && <ChangeStatus />}
-                     </div>
-                  </div>
-               </div>
+            <div className="card__title-features">
+               {task.columns.map((column, index) => {
+                  if (column.belongType.name === 'status') {
+                     return (
+                        <ItemInCard key={column._id} column={column} value={task.values[index]} />
+                     );
+                  }
+               })}
             </div>
          </div>
-      </>
+      </div>
    );
 };
 

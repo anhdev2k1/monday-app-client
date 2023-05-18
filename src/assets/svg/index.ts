@@ -8,6 +8,7 @@ const images = {
    menu: require('./menu.svg').default,
    manage: require('./manage.svg').default,
    change: require('./change.svg').default,
+   iconDesTask: require('./iconDesTask.svg').default,
 };
 
 export default images;

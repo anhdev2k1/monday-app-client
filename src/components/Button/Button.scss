@@ -24,6 +24,10 @@
       pointer-events: none;
       opacity: 0.5;
    }
+   &.nonbehavior {
+      cursor: no-drop;
+      pointer-events: none;
+   }
    &:hover {
       background-color: var(--background-btn-default);
       color: var(--text-btn-color);

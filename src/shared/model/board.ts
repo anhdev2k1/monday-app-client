@@ -1,4 +1,4 @@
-import { IGroup } from "./group";
+import { IGroup } from './group';
 
 export interface IBoard {
    _id: string;

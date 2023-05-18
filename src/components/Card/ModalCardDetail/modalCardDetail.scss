@@ -1,0 +1,78 @@
+.modal__card--detail {
+   margin: auto;
+   min-width: 542px;
+   min-height: 400px;
+   background-color: white;
+   border: 1px solid #ecedf5;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   .modal__card__item {
+      width: 100%;
+      padding: 10px 40px 40px 40px;
+      display: flex;
+      flex-direction: column;
+      .modal__card__title-header {
+         position: relative;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         font-size: 1.6rem;
+         padding: 20px 0;
+         .modal__card__title--input {
+            margin: 10px 0;
+            padding: 6px 0px;
+            width: 100%;
+            font-size: 2.4rem;
+            border: 1px solid transparent;
+            &:hover {
+               border: dashed 1px #ccc;
+            }
+            &:focus {
+               border: none;
+               outline: 1px solid blue;
+            }
+         }
+         .modal__card__icon--plus {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            cursor: pointer;
+            > img {
+               opacity: 0.5;
+               &:hover {
+                  opacity: 1;
+               }
+            }
+         }
+      }
+   }
+}
+.modal__card--detail {
+   .card__title-features {
+      .item__in__card {
+         margin: 10px 0;
+         width: 100%;
+         display: flex;
+         align-items: center;
+         .item__card--btn {
+            width: 58%;
+            margin-right: 40px;
+            display: flex;
+            font-size: 1.8rem;
+            justify-content: flex-start;
+            .item__card__btn--icon {
+               display: block;
+               // padding-right: 20px;
+            }
+            .title {
+               margin-left: 20px;
+            }
+         }
+         .item__value {
+            flex: 1;
+         }
+      }
+   }
+}
