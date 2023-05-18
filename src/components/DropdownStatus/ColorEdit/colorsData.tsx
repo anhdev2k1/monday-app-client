@@ -1,0 +1,133 @@
+export interface IColors {
+   color: string;
+   title?: string;
+}
+export const colorsData: IColors[] = [
+    {
+        color:'#9cd326',
+        title:'BrightGreen'
+    },
+    {
+        color:'#cab641',
+        title:'Saladish'
+    },
+    {
+        color:'#ffcb00',
+        title:'Egg Yolk'
+    },
+    {
+        color:'#fdab3d',
+        title:'Working Orange'
+    },
+    {
+        color:'#ff642e',
+        title:'Dark Orange'
+    },{
+        color:'#ffadad',
+        title:'Peach'
+    },
+    {
+        color:'#ff7575',
+        title:'Sunset'
+    },
+    {
+        color:'#bb3354',
+        title:'Dark Red'
+    },
+    {
+        color:'#ff158a',
+        title:'Sofia Pink'
+    },
+    {
+        color:'#ff5ac4',
+        title:'Lipstick'
+    },
+    {
+        color:'#faa1f1',
+        title:'Bubble'
+    },
+    {
+        color:'#784bd1',
+        title:'Dark Bubble'
+    },
+    {
+        color:'#7e3b8a',
+        title:'Berry'
+    },
+    {
+        color:'#401694',
+        title:'Dark Indigo'
+    },
+    {
+        color:'#5559df',
+        title:'Indigo'
+    },
+    {
+        color:'#225091',
+        title:'Navi'
+    },
+    {
+        color:'#4eccc6',
+        title:'Aquamarine'
+    },
+    {
+        color:'#68a1bd',
+        title:'River'
+    },
+    {
+        color:'#9aadbd',
+        title:'Winter'
+    },
+    {
+        color:'#808080',
+        title:'American Gray'
+    },
+    {
+        color:'#333333',
+        title:'Blackish'
+    },
+    {
+        color:'#7f5347',
+        title:'Brown'
+    },
+    {
+        color:'#d974b0',
+        title:'Orchid'
+    },
+    {
+        color:'#ad967a',
+        title:'Tan'
+    },
+    {
+        color:'#a1e3f6',
+        title:'Sky'
+    },
+    {
+        color:'#bd816e',
+        title:'Coffee'
+    },
+    {
+        color:'#2b76e5',
+        title:'Royal'
+    },
+    {
+        color:'#175a63',
+        title:'Teal'
+    },
+    {
+        color:'#bda8f9',
+        title:'Lavender'
+    },
+    {
+        color:'#a9bee8',
+        title:'Steel'
+    },
+    {
+        color:'#9d99b9',
+        title:'Lilac'
+    },
+    {
+        color:'#563e3e',
+        title:'Pecan'
+    }
+];

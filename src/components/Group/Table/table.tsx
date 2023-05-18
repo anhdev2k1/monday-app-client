@@ -12,6 +12,8 @@ import { useAppSelector } from '~/config/store';
 import TaskEdit from './TaskEdit/taskEdit';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
+import ValueTask from './ValueTask/valueTask';
+import { SERVER_API_URL } from '~/config/constants';
 interface IPropsTable {
    columns: IColumn[];
    data: IGroup;
@@ -81,6 +83,9 @@ const Table = ({ columns, data }: IPropsTable) => {
          messageApi.error('Vui lòng nhập tên task');
       }
    };
+   console.log(listTask);
+   console.log('column',columns);
+   
    return (
       <>
          <table className="table__group">
@@ -123,24 +128,8 @@ const Table = ({ columns, data }: IPropsTable) => {
                            />
                         </td>
                         <TaskEdit task={task} />
-                        {task.values.map((itemValue) => {
-                           return (
-                              <td
-                                 key={itemValue._id}
-                                 style={{
-                                    backgroundColor: `${
-                                       itemValue.typeOfValue === 'multiple'
-                                          ? itemValue.valueId.color
-                                          : ''
-                                    }`,
-                                 }}
-                                 className="table__data-task-value"
-                              >
-                                 {itemValue.typeOfValue === 'multiple'
-                                    ? itemValue.valueId.value
-                                    : itemValue.value}
-                              </td>
-                           );
+                        {task.values.map((itemValue, index) => {
+                           return <ValueTask value={itemValue} key={index} columnID={itemValue.belongColumn} />;
                         })}
                      </tr>
                   );

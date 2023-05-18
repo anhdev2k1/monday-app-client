@@ -14,7 +14,8 @@ const images = {
    export: require('./export.svg').default,
    deleteTask: require('./deleteTask.svg').default,
    moveTo: require('./moveTo.svg').default,
-   close: require('./close.svg').default
+   close: require('./close.svg').default,
+   color: require('./color.svg').default
 };
 
 export default images;
