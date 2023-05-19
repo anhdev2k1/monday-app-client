@@ -14,7 +14,7 @@ const ValueTask = ({ value, columnID }: IValueTaskProps) => {
    const { idBoard } = useParams();
    const [listStatus, setListStatus] = useState([]);
    const handleOpenStatus = () => {
-      setOpenStatusBox((pre) => !pre);
+      setOpenStatusBox(pre => !pre);
    };
 
    useEffect(() => {
@@ -39,21 +39,22 @@ const ValueTask = ({ value, columnID }: IValueTaskProps) => {
                   : changeStatus.color
             }`,
          }}
-         className="table__data-task-value"
+         className="table__data-task-value data-status"
          onClick={handleOpenStatus}
       >
          {changeStatus.value === ''
             ? value.typeOfValue === 'multiple'
-               ? value.valueId.value
+               ? value.valueId.value 
                : value.value
             : changeStatus.value}
-         <DropdownStatus
+         {value.typeOfValue === 'multiple' ? <DropdownStatus
             isOpen={openStatusBox}
             setOpenStatusBox={setOpenStatusBox}
             setChangeStatus={setChangeStatus}
             listStatus={listStatus}
             columnID={columnID}
-         />
+            valueID = {value._id}
+         /> : null}
       </td>
    );
 };

@@ -1,16 +1,37 @@
 import { colorsData } from './colorsData';
 import './colorEdit.scss';
 import Tippy from '~/components/Tippy';
+interface IValueStatus {
+   _id: string;
+   color: string;
+   value: string;
+}
 interface IColorEditProps {
    setOpenColorBox: (isOpen: boolean) => void;
    isOpen: boolean;
-   setColor: (color:string) => void
+   setColor: (color: string) => void;
+   setListStatusState: React.Dispatch<React.SetStateAction<any[]>>;
+   valueTask: IValueStatus;
 }
-const ColorEdit = ({ setOpenColorBox, isOpen, setColor }: IColorEditProps) => {
-   const handleUpdateColor = (color:string) => {
-      setOpenColorBox(true)
-      setColor(color)
-   }
+const ColorEdit = ({
+   setOpenColorBox,
+   isOpen,
+   setColor,
+   setListStatusState,
+   valueTask,
+}: IColorEditProps) => {
+   const handleUpdateColor = (color: string) => {
+      setListStatusState((pre) => {
+         pre.forEach((itemValue) => {
+            if (itemValue._id === valueTask._id && itemValue.color !== color) {
+               itemValue.color = color;
+            }
+         });
+         return pre;
+      });
+      setOpenColorBox(true);
+      setColor(color);
+   };
    return (
       <>
          {isOpen && (
@@ -22,7 +43,7 @@ const ColorEdit = ({ setOpenColorBox, isOpen, setColor }: IColorEditProps) => {
                            <div
                               className="color__item"
                               style={{ backgroundColor: color.color }}
-                              onClick={() =>handleUpdateColor(color.color)}
+                              onClick={() => handleUpdateColor(color.color)}
                            ></div>
                         </Tippy>
                      );

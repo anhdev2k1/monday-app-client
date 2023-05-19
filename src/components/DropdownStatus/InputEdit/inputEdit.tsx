@@ -16,18 +16,16 @@ interface IInputEditProps {
 const InputEdit = ({ data, setListStatusState }: IInputEditProps) => {
    const [valueInput, setValueInput] = useState(data.value);
    const [color, setColor] = useState('');
-   const inputValue = useRef<any>();
+   const inputValue: React.MutableRefObject<any> = useRef();
    const handleChangeValue = () => {
-      console.log(inputValue.current.value);
       setValueInput(inputValue.current.value);
    };
    const [openColorBox, setOpenColorBox] = useState(false);
    const handleOpenColorBox = () => {
-      inputValue.current.focus()
+      inputValue.current.focus();
       setOpenColorBox((pre) => !pre);
    };
    const handleUpdateValue = async () => {
-      
       setListStatusState((pre) => {
          pre.forEach((itemValue) => {
             if (itemValue._id === data._id && itemValue.value !== valueInput) {
@@ -40,7 +38,6 @@ const InputEdit = ({ data, setListStatusState }: IInputEditProps) => {
          value: valueInput,
          color: color === '' ? data.color : color,
       });
-      
    };
    const handleDeleteValue = async (valueID: string) => {
       setListStatusState((pre) => pre.filter((value) => value._id !== valueID));
@@ -48,8 +45,8 @@ const InputEdit = ({ data, setListStatusState }: IInputEditProps) => {
    };
    return (
       <>
-         <div className="list__input-wrapper" >
-            <div className="item-input-wrapper" onBlur={handleUpdateValue}>
+         <div className="list__input-wrapper">
+            <div className="item-input-wrapper">
                <div
                   className="status__input-icon"
                   style={{ backgroundColor: color ? color : data.color }}
@@ -60,6 +57,8 @@ const InputEdit = ({ data, setListStatusState }: IInputEditProps) => {
                      setOpenColorBox={setOpenColorBox}
                      isOpen={openColorBox}
                      setColor={setColor}
+                     setListStatusState={setListStatusState}
+                     valueTask={data}
                   />
                </div>
                <input
@@ -68,6 +67,7 @@ const InputEdit = ({ data, setListStatusState }: IInputEditProps) => {
                   value={valueInput}
                   ref={inputValue}
                   onChange={handleChangeValue}
+                  onBlur={handleUpdateValue}
                />
             </div>
             <div className="status__input-delete" onClick={() => handleDeleteValue(data._id)}>
