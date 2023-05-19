@@ -6,9 +6,15 @@ import {
    isRejected,
 } from '@reduxjs/toolkit';
 import { SERVER_API_URL } from '~/config/constants';
-import { IUserWithToken, IResponseUser, IResponseGetMe, IUserNotToken } from '../model/authentication';
+import {
+   IUserWithToken,
+   IResponseUser,
+   IResponseGetMe,
+   IUserNotToken,
+} from '../model/authentication';
 import { serializeAxiosError } from './reducer.utils';
 import axios from 'axios';
+import { IResponseData } from '../model/global';
 
 export interface IAuthen {
    user: {
@@ -43,6 +49,10 @@ export interface IDataRegister {
    password: string;
    name: string;
 }
+export interface IDataVerifyAcc {
+   email: string;
+   code: string;
+}
 // actions
 
 export const loginAccount = createAsyncThunk(
@@ -67,6 +77,15 @@ export const currenUser = createAsyncThunk(
    async () => {
       const requestUrl = `${baseUrl}v1/api/auth/me`;
       return await axios.post<IResponseGetMe>(requestUrl);
+   },
+   { serializeError: serializeAxiosError },
+);
+
+export const verifyEmail = createAsyncThunk(
+   'verify-email-user-slice',
+   async (data: IDataVerifyAcc) => {
+      const requestUrl = `${baseUrl}v1/api/auth/verify`;
+      return await axios.post<IResponseData<{ user: IUserNotToken }>>(requestUrl, data);
    },
    { serializeError: serializeAxiosError },
 );
@@ -102,6 +121,7 @@ export const userSlice = createSlice({
             state.user.data = action.payload.data.metadata;
             state.user.mess = action.payload.data.message;
             state.user.error = false;
+            state.user.status = action.payload.data.status;
          })
          .addMatcher(isPending(registerAccount), (state) => {
             state.user.loading = true;
@@ -119,10 +139,32 @@ export const userSlice = createSlice({
                state.user.mess = response.data.message;
             }
          })
+         .addMatcher(isFulfilled(verifyEmail), (state, action) => {
+            state.user.data = action.payload.data.metadata?.user;
+            state.user.mess = action.payload.data.message;
+            state.user.error = false;
+            state.user.status = action.payload.data.status;
+         })
+         .addMatcher(isPending(verifyEmail), (state) => {
+            state.user.loading = true;
+            state.user.status = '';
+            state.user.mess = '';
+            state.user.error = false;
+         })
+         .addMatcher(isRejected(verifyEmail), (state, action) => {
+            state.user.loading = false;
+            state.user.error = true;
+
+            if (action?.error) {
+               const { response } = action.error as { response: any };
+               state.user.status = response.data.statusCode;
+               state.user.mess = response.data.message;
+            }
+         })
          .addMatcher(isFulfilled(currenUser), (state, action) => {
             state.user.data = action.payload.data.metadata;
             state.user.mess = action.payload.data.message;
-            state.user.status = action.payload.data.statusCode
+            state.user.status = action.payload.data.statusCode;
             state.user.error = false;
          })
          .addMatcher(isPending(currenUser), (state) => {
