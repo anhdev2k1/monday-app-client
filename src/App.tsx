@@ -8,6 +8,8 @@ import { IRoutes } from './shared/model/global';
 import { useAppDispatch, useAppSelector } from './config/store';
 import { currenUser } from './shared/reducers/user.reducer';
 import ProtectedRoute from './components/ProtectedRoute/protectedRoute';
+import axios from 'axios';
+import { SERVER_API_URL } from './config/constants';
 function App() {
    const dispatch = useAppDispatch();
    const currentUser = useAppSelector((state) => state.userSlice.user);
@@ -17,7 +19,13 @@ function App() {
    useEffect(() => {
       getCurrenUser();
    }, []);
-
+   // const getAllTypes = async () => {
+   //    const res = await axios.get(`${SERVER_API_URL}v1/api/column/types`)
+   //    localStorage.setItem('types',JSON.stringify(res.data.metadata.types))
+   // }
+   // useEffect(() => {
+   //    getAllTypes()
+   // },[])
    return (
       <Router>
          <div className="App">
