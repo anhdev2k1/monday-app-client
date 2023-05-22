@@ -1,17 +1,29 @@
 import { Form, Input } from 'antd';
-import React from 'react';
-import { useAppDispatch } from '~/config/store';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import { IDataVerifyAcc, verifyEmail } from '~/shared/reducers/user.reducer';
 import ButtonCustom from '../Button/ButtonCustom';
 import { StatusType } from '~/shared/model/global';
+import { useNavigate } from 'react-router-dom';
 
 const VerifyEmail = () => {
    const dispatch = useAppDispatch();
+   const currentUser = useAppSelector((state) => state.userSlice.user.data);
+   const navigate = useNavigate();
    const onFinish = async (values: IDataVerifyAcc) => {
       if (values.email && values.code && values.email) {
          dispatch(verifyEmail(values));
       }
    };
+   console.log(currentUser);
+   useEffect(() => {
+      if (currentUser && Object.keys(currentUser).length > 0) {
+         console.log('');
+
+         navigate('/');
+      }
+   }, [currentUser, navigate]);
+
    return (
       <Form
          layout="vertical"
