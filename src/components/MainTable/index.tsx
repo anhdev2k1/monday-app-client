@@ -4,49 +4,52 @@ import Group from '../Group';
 import HeadView from '../HeadView';
 import './mainTable.scss';
 import { faCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { IResponseData, StatusType } from '~/shared/model/global';
+import { StatusType } from '~/shared/model/global';
 import { IBoard } from '~/shared/model/board';
 import { IGroup } from '~/shared/model/group';
-import { useEffect, useState } from 'react';
-import { SERVER_API_URL } from '~/config/constants';
-import axios from 'axios';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // import ShowNotification from '~/utils/showNotification';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { createGroup, deleteGroup, resetCreateGroup } from '../Group/group.reducer';
+import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
+import { handleAddGroup } from '~/pages/Board/board.reducer';
 interface IPropMainTable {
    currBoard: IBoard;
 }
 
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
-   const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
+   const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups);
+   // const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
-   const notifi = useAppSelector((state)=> state.groupSlice.createGroup)
-   
-   useEffect(() => {
-      setListsGroup(currBoard.groups);
-   }, [currBoard]);
+
+   // useEffect(() => {
+   //    setListsGroup(currBoard.groups);
+   // }, [currBoard]);
+   console.log(listsGroup);
 
    useEffect(() => {
       const newGroup = dataCreateGroup.data;
       if (newGroup) {
-         setListsGroup((prev) => {
-            return [...prev, newGroup];
-         });
+         // setListsGroup((prev) => {
+         //    return [...prev, newGroup];
+         // });
+         dispatch(handleAddGroup(newGroup));
          dispatch(resetCreateGroup());
       }
    }, [dataCreateGroup]);
    const handleAddNewGroup = async () => {
-      if (idBoard) {
-         dispatch(isNotification({
-            type: 'loading',
-            message: 'Đang xử lý...',
-            autoClose: 1000,
-            isOpen: true
-         }))
+      if (idBoard && listsGroup) {
+         dispatch(
+            isNotification({
+               type: 'loading',
+               message: 'Đang xử lý...',
+               autoClose: 1000,
+               isOpen: true,
+            }),
+         );
          await dispatch(
             createGroup({
                idBoard,
@@ -54,34 +57,35 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
                position: listsGroup.length + 1,
             }),
          );
-         dispatch(isNotification({
-            type: 'success',
-            message: 'Đã thêm group thành công!',
-            autoClose: 1000,
-            isOpen: true
-         }))
-         dispatch(resetCreateGroup())
-      }
-   };
-   const handleDeleteGroup = (id: string) => {
-      setListsGroup((prev) => {
-         const newListsGroup = [...prev].filter((group) => group._id !== id);
-         return newListsGroup;
-      });
-      dispatch(isNotification({
-         type: 'success',
-         message: 'Đã xoá group thành công!',
-         autoClose: 1000,
-         isOpen: true
-      }))
-      if (idBoard)
          dispatch(
-            deleteGroup({
-               idGroup: id,
-               idBoard,
+            isNotification({
+               type: 'success',
+               message: 'Đã thêm group thành công!',
+               autoClose: 1000,
+               isOpen: true,
             }),
          );
+         dispatch(resetCreateGroup());
+      }
    };
+   // const handleDeleteGroup = (id: string) => {
+   //    dispatch(handleDelGroup(id));
+   //    dispatch(
+   //       isNotification({
+   //          type: 'success',
+   //          message: 'Đã xoá group thành công!',
+   //          autoClose: 1000,
+   //          isOpen: true,
+   //       }),
+   //    );
+   //    if (idBoard)
+   //       dispatch(
+   //          deleteGroup({
+   //             idGroup: id,
+   //             idBoard,
+   //          }),
+   //       );
+   // };
    return (
       <div className="main-table">
          <p className="board__title">
@@ -94,9 +98,9 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
                listsGroup.map((item: IGroup, index) => {
                   return (
                      <Group
-                        handleDeleteGroup={handleDeleteGroup}
+                        // handleDeleteGroup={handleDeleteGroup}
                         handleAddNewGroup={handleAddNewGroup}
-                        columns={currBoard?.columns}
+                        // columns={currBoard?.columns}
                         key={item._id}
                         data={item}
                      />

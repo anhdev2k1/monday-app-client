@@ -6,112 +6,115 @@ import { IColors, colorsData } from './ColorEdit/colorsData';
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { useParams } from 'react-router-dom';
-interface IDropdownStatusProps {
+import { IValueOfTask } from '~/shared/model/task';
+import { IDefaultValue } from '~/shared/model/column';
+import { useAppDispatch } from '~/config/store';
+import { handleAddValueListStatus } from '~/pages/Board/board.reducer';
+import { ISetInfoValueTask } from '../Group/Table/ValueTask/valueTask';
+interface IDropdownStatusProps extends ISetInfoValueTask {
    isOpen: boolean;
    setOpenStatusBox: React.Dispatch<React.SetStateAction<boolean>>;
-   setChangeStatus: React.Dispatch<any>;
-   listStatus: any[];
-   columnID:string;
-   valueID: string
-}
-interface IValueTask {
-   _id:string;
-   value:string;
-   color:string
+   listStatus: IDefaultValue[];
+   columnId: string;
+   valueID: string;
 }
 const DropdownStatus = ({
    isOpen,
    setOpenStatusBox,
    setChangeStatus,
    listStatus,
-   columnID,
-   valueID
-
+   columnId,
+   valueID,
 }: IDropdownStatusProps) => {
-   const {idBoard} = useParams()
-   
-   
+   const { idBoard } = useParams();
+
    const [isEdit, setIsEdit] = useState(false);
-   const [listStatusState, setListStatusState] = useState(listStatus);
-   const [colorsIsSamp, setColorsIsSamp] = useState(listStatus);
-   useEffect(() => {
-      setListStatusState(listStatus);
-      setColorsIsSamp(listStatus);
-   }, [listStatus]);
+   const dispatch = useAppDispatch();
+   // const [listStatusState, setListStatusState] = useState(listStatus);
+   const [colorsIsSamp, setColorsIsSamp] = useState(listStatus.map((value) => value.color));
+   // useEffect(() => {
+   //    setListStatusState(listStatus);
+   //    setColorsIsSamp(listStatus);
+   // }, [listStatus]);
    const handleEditStatus = () => {
       setOpenStatusBox(false);
       setIsEdit((pre) => !pre);
    };
-   const handleChangeStatus = async (e: any, values:IValueTask) => {
+   const handleChangeStatus = async (values: IDefaultValue) => {
       setChangeStatus({
+         _id: values._id,
          value: values.value,
-         color: e.currentTarget.dataset.color,
+         color: values.color,
       });
-      const res = await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueID}`,{
+      await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueID}`, {
          value: values.value,
-         valueId: values._id
-      })
+         valueId: values._id,
+      });
       setOpenStatusBox(false);
    };
    const handleAddValueStatus = async () => {
-      
-      const ColorsNoSame = colorsData.filter((color) => !colorsIsSamp.includes(color));
+      const ColorsNoSame = colorsData.filter((data) => !colorsIsSamp.includes(data.color));
       const randomColor = ColorsNoSame[Math.floor(Math.random() * ColorsNoSame.length)];
-      setColorsIsSamp((pre) => [...pre, randomColor]);
+      setColorsIsSamp((pre) => [...pre, randomColor.color]);
       const { color } = randomColor;
 
       //Add value request
       const res = await axios.post(
-         `${SERVER_API_URL}v1/api/board/${idBoard}/column/${columnID}/values`,
+         `${SERVER_API_URL}v1/api/board/${idBoard}/column/${columnId}/values`,
          { value: null, color },
       );
-      setListStatusState((pre) => [
-         ...pre,
-         {
-            _id: res.data.metadata.value._id,
-            color,
-            value: '',
-         },
-      ]);
-
-      
-      
+      dispatch(
+         handleAddValueListStatus({
+            columnId,
+            newValueStatus: {
+               _id: res.data.metadata.value._id,
+               color: res.data.metadata.value.color,
+               value: '',
+            },
+         }),
+      );
    };
    return (
       <>
          {isOpen && (
             <div className="status__wrapper" onClick={() => setOpenStatusBox(false)}>
                <div className="status__wrapper-flex">
-                  <div
-                     className="list__status"
-                     style={isEdit ? { display: 'none' } : { display: 'block' }}
-                  >
-                     {listStatusState.map((item) => {
-                        return (
-                           <div
-                              className="status__item"
-                              style={{ backgroundColor: item.color ? item.color :'#797e93'}}
-                              data-color={item.color ? item.color : '#797e93'}
-                              onClick={(e) => handleChangeStatus(e, item)}
-                           >
-                              <span className="status__item-title">{item.value}</span>
+                  {!isEdit ? (
+                     <div className="list__status">
+                        {listStatus.map((item) => {
+                           return (
+                              <div
+                                 key={item._id}
+                                 className="status__item"
+                                 style={{ backgroundColor: item.color }}
+                                 data-color={item.color}
+                                 onClick={(e) => handleChangeStatus(item)}
+                              >
+                                 <span className="status__item-title">{item.value}</span>
+                              </div>
+                           );
+                        })}
+                     </div>
+                  ) : (
+                     <div className="list__status-input">
+                        {listStatus.map((item) => {
+                           return (
+                              <InputEdit
+                                 data={item}
+                                 key={item._id}
+                                 columnId={columnId}
+                                 setChangeStatus={setChangeStatus}
+                                 // setListStatusState={setListStatusState}
+                              />
+                           );
+                        })}
+                        {isEdit && (
+                           <div className="item__add-status" onClick={handleAddValueStatus}>
+                              <span>+ Add new label</span>
                            </div>
-                        );
-                     })}
-                  </div>
-                  <div
-                     className="list__status-input"
-                     style={isEdit ? { display: 'block' } : { display: 'none' }}
-                  >
-                     {listStatusState.map((item) => {
-                        return <InputEdit data={item} key={item._id} setListStatusState={setListStatusState}/>;
-                     })}
-                     {isEdit && (
-                        <div className="item__add-status" onClick={handleAddValueStatus}>
-                           <span>+ Add new label</span>
-                        </div>
-                     )}
-                  </div>
+                        )}
+                     </div>
+                  )}
                </div>
                <div className="status__edit-wrapper" onClick={handleEditStatus}>
                   {!isEdit ? (
