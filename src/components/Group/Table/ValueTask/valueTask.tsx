@@ -5,17 +5,20 @@ import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { useParams } from 'react-router-dom';
 import { IColumn } from '~/shared/model/column';
+import { useAppSelector } from '~/config/store';
 interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
    colIncludeListValue: IColumn;
 }
+
 export interface ISetInfoValueTask {
    setChangeStatus: React.Dispatch<React.SetStateAction<IItemInListValueSelect>>;
 }
 const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
-   console.log(valueOfTask.value, valueOfTask);
-
+   const valuesSelect = useAppSelector(state => state.boardSlice.currBoard.data?.columns.map(item => item.defaultValues))
+   // console.log('valuesSelect',valuesSelect[0]!);
+   
    const [openStatusBox, setOpenStatusBox] = useState(false);
    const [changeStatus, setChangeStatus] = useState<{
       _id: string | null;
@@ -52,13 +55,23 @@ const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
    //    };
    //    getValueStatus();
    // }, []);
-
+   // console.log('changeStatus', changeStatus);
+   const changeValueSelected = () => {
+      if(valuesSelect){
+         const temp = valuesSelect[0].find(value => value._id === changeStatus._id)
+         return temp
+      }
+   }
+   // useEffect(() => {
+   //    window.addEventListener('click',setOpenStatusBox(pre => !pre))
+   // },[])
+   
    return (
       <td
          key={valueOfTask._id}
          style={{
             backgroundColor: `${
-               changeStatus.color
+               changeValueSelected()?.color ? changeValueSelected()?.color : changeStatus.color
                // changeStatus.color || (value.typeOfValue === 'multiple' ? value.valueId.color : null)
             }`,
          }}
@@ -66,7 +79,7 @@ const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
          onClick={handleOpenStatus}
       >
          {
-            changeStatus.value
+           changeValueSelected()?.value ? changeValueSelected()?.value : changeStatus.value
             // ||(value.typeOfValue === 'multiple' ? value.valueId?.value : value.value)
          }
          {valueOfTask.typeOfValue === 'multiple' ? (

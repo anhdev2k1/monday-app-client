@@ -92,7 +92,7 @@ interface IPropsTable {
 const Table = ({ data }: IPropsTable) => {
    const [listTask, setListTask] = useState<ITask[]>(data.tasks);
    const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
-   console.log(columns, data.name);
+   console.log("columns",columns, data.name);
    // const [isRenameTask, setIsRenameTask] = useState(false);
    // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
@@ -156,8 +156,6 @@ const Table = ({ data }: IPropsTable) => {
          messageApi.error('Vui lòng nhập tên task');
       }
    };
-   console.log(listTask);
-   console.log('column', columns);
 
    return (
       <>

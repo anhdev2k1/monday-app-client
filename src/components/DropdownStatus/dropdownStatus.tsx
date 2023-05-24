@@ -27,11 +27,12 @@ const DropdownStatus = ({
    valueID,
 }: IDropdownStatusProps) => {
    const { idBoard } = useParams();
-
+   console.log("list status", listStatus);
+   
    const [isEdit, setIsEdit] = useState(false);
    const dispatch = useAppDispatch();
    // const [listStatusState, setListStatusState] = useState(listStatus);
-   const [colorsIsSamp, setColorsIsSamp] = useState(listStatus.map((value) => value.color));
+   const [colorsIsSamp, setColorsIsSamp] = useState(listStatus?.map((value) => value.color));
    // useEffect(() => {
    //    setListStatusState(listStatus);
    //    setColorsIsSamp(listStatus);
