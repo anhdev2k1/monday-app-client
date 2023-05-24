@@ -1,5 +1,5 @@
 export interface IItemInListValueSelect {
-   _id: string | null;
+   _id: string;
    value: string | null;
    color: string | null;
 }

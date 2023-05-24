@@ -13,7 +13,7 @@
    left: 50px;
    z-index: 99;
    border: 1px solid #e3e3e3;
-    &::after {
+   &::after {
       content: '';
       display: block;
       position: absolute;
@@ -30,7 +30,7 @@
       display: flex;
       align-items: center;
       .list__status {
-        width: 100%;
+         width: 100%;
          transition: all 0.2s;
          // overflow: hidden;
       }
@@ -56,7 +56,7 @@
          flex-shrink: 0;
          width: 100%;
          .item__add-status {
-            width: 90%;
+            width: 100%;
             height: 35px;
             border: 1px solid #e3e3e3;
             display: flex;
@@ -68,16 +68,15 @@
             font-weight: 500;
             color: #333;
          }
-         .list__input-wrapper{
+         .list__input-wrapper {
             display: flex;
             align-items: center;
             gap: 7px;
             margin-bottom: 10px;
-            &:hover .status__input-delete{
+            &:hover .status__input-delete {
                display: block;
             }
             .item-input-wrapper {
-               height: 35px;
                padding: 4px;
                display: flex;
                align-items: center;
@@ -104,20 +103,18 @@
                }
                .status__item-input {
                   width: 100%;
-                  height: 30px;
+                  height: 100%;
                   outline: none;
                   text-indent: 10px;
                   border: none;
                }
-               
             }
-            .status__input-delete{
+            .status__input-delete {
                width: 15px;
                height: 15px;
                display: none;
             }
          }
-         
       }
    }
    .status__edit-wrapper {

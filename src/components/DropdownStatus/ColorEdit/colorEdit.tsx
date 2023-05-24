@@ -28,7 +28,7 @@ const ColorEdit = ({ isOpen, handleUpdateValue }: IColorEditProps) => {
                            <div
                               className="color__item"
                               style={{ backgroundColor: data.color }}
-                              onClick={() => handleUpdateValue('color', data.color)}
+                              onClick={() => handleUpdateValue('color',data.color)}
                            ></div>
                         </Tippy>
                      );

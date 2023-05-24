@@ -303,7 +303,7 @@ const boardSlice = createSlice({
       ) => {
          // update tất cả các value trong group nếu thay đổi value đang được selected?
          const { valueId, key, value } = action.payload;
-
+         
          const updatedGroups = state.currBoard.data?.groups.map((group) => {
             const updatedTasks = group.tasks.map((task) => {
                const updatedValues = task.values.map((val) => {
@@ -330,8 +330,6 @@ const boardSlice = createSlice({
                tasks: updatedTasks,
             };
          });
-         console.log(updatedGroups);
-
          if (updatedGroups && state.currBoard.data) {
             return {
                ...state,

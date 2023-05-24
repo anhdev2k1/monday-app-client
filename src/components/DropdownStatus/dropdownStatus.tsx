@@ -27,24 +27,49 @@ const DropdownStatus = ({
    valueID,
 }: IDropdownStatusProps) => {
    const { idBoard } = useParams();
+   console.log('list status', listStatus);
 
    const [isEdit, setIsEdit] = useState(false);
+   const [isApply, setIsApply] = useState(false);
+   useEffect(() => {
+      console.log('isApply', isApply);
+      if (isApply) {
+         console.log('isApply');
+
+         setOpenStatusBox(false);
+      }
+   }, [isApply]);
    const dispatch = useAppDispatch();
+   const dropdownElement = useRef<HTMLDivElement>(null);
+   const applyElement = useRef<HTMLDivElement>(null);
+
    // const [listStatusState, setListStatusState] = useState(listStatus);
-   const [colorsIsSamp, setColorsIsSamp] = useState(listStatus.map((value) => value.color));
+   const [colorsIsSamp, setColorsIsSamp] = useState(listStatus?.map((value) => value.color));
    // useEffect(() => {
    //    setListStatusState(listStatus);
    //    setColorsIsSamp(listStatus);
    // }, [listStatus]);
    const handleEditStatus = () => {
-      setOpenStatusBox(false);
-      setIsEdit((pre) => !pre);
+      console.log('ASdsd');
+
+      setIsEdit(true);
    };
+   useEffect(() => {
+      if (!isOpen) setIsEdit(false);
+   }, [isOpen]);
+   useEffect(() => {
+      return () => {
+         setIsApply(false);
+      };
+   }, []);
    const handleChangeStatus = async (values: IDefaultValue) => {
-      setChangeStatus({
-         _id: values._id,
-         value: values.value,
-         color: values.color,
+      setChangeStatus((prev) => {
+         return {
+            ...prev,
+            idSelected: values._id,
+            value: values.value,
+            color: values.color,
+         };
       });
       await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueID}`, {
          value: values.value,
@@ -74,10 +99,44 @@ const DropdownStatus = ({
          }),
       );
    };
+   useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+         const targetElement = event.target as HTMLElement;
+         const parentElement = dropdownElement.current?.closest('.table__data-task-value');
+         // const childrenElemt = targetElement.closest('.status__wrapper-flex');
+
+         if (
+            dropdownElement.current &&
+            !dropdownElement.current.contains(event.target as Node) &&
+            targetElement !== parentElement
+            // &&
+            // childrenElemt === parentElement
+         ) {
+            console.log('isClose');
+
+            setOpenStatusBox(false);
+         }
+      };
+
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+         document.removeEventListener('click', handleClickOutside);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
+   console.log(isOpen);
+
    return (
       <>
          {isOpen && (
-            <div className="status__wrapper" onClick={() => setOpenStatusBox(false)}>
+            <div
+               ref={dropdownElement}
+               className="status__wrapper"
+               onClick={(e) => {
+                  // e.stopPropagation();
+                  setOpenStatusBox(false);
+               }}
+            >
                <div className="status__wrapper-flex">
                   {!isEdit ? (
                      <div className="list__status">
@@ -96,7 +155,13 @@ const DropdownStatus = ({
                         })}
                      </div>
                   ) : (
-                     <div className="list__status-input">
+                     <div
+                        onClick={(e) => {
+                           e.stopPropagation();
+                           // setOpenStatusBox(false);
+                        }}
+                        className="list__status-input"
+                     >
                         {listStatus.map((item) => {
                            return (
                               <InputEdit
@@ -104,7 +169,6 @@ const DropdownStatus = ({
                                  key={item._id}
                                  columnId={columnId}
                                  setChangeStatus={setChangeStatus}
-                                 // setListStatusState={setListStatusState}
                               />
                            );
                         })}
@@ -116,14 +180,19 @@ const DropdownStatus = ({
                      </div>
                   )}
                </div>
-               <div className="status__edit-wrapper" onClick={handleEditStatus}>
+               <div ref={applyElement} className="status__edit-wrapper">
                   {!isEdit ? (
-                     <div className="status__edit-btn">
+                     <div onClick={handleEditStatus} className="status__edit-btn">
                         <img src={icons.edit} alt="" />
                         <span className="status__item-title">Edit labels</span>
                      </div>
                   ) : (
-                     <div className="status__edit-btn" onClick={() => setOpenStatusBox(false)}>
+                     <div
+                        onClick={() => {
+                           setIsApply(true);
+                        }}
+                        className="status__edit-btn"
+                     >
                         <span className="status__item-title">Apply</span>
                      </div>
                   )}

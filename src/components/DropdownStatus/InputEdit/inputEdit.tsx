@@ -46,7 +46,13 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
                value,
             }),
          );
-
+         dispatch(
+            handleUpdateAllSelectedValue({
+               valueId: data._id,
+               key,
+               value,
+            }),
+         );
          setChangeStatus((prev) => {
             if (data._id && data._id === prev._id) {
                return {
@@ -56,13 +62,7 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
             }
             return prev;
          });
-         dispatch(
-            handleUpdateAllSelectedValue({
-               valueId: data._id,
-               key,
-               value,
-            }),
-         );
+         
       }
       await axios.patch(`${SERVER_API_URL}v1/api/values/${data._id}`, {
          [key]: value,
