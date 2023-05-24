@@ -15,7 +15,21 @@ const images = {
    deleteTask: require('./deleteTask.svg').default,
    moveTo: require('./moveTo.svg').default,
    close: require('./close.svg').default,
-   color: require('./color.svg').default
+   color: require('./color.svg').default,
+   burger: require('./burger.svg').default,
+   flower: require('./flower.svg').default,
+   notification: require('./notification.svg').default,
+   inbox: require('./inbox.svg').default,
+   invite: require('./invite.svg').default,
+   app: require('./app.svg').default,
+   search: require('./search.svg').default,
+   help: require('./help.svg').default,
+   info: require('./info.svg').default,
+   heart: require('./heart.svg').default,
+   card: require('./card.svg').default,
+   home: require('./home.svg').default,
+   work: require('./work.svg').default,
+   filter: require('./filter.svg').default
 };
 
 export default images;

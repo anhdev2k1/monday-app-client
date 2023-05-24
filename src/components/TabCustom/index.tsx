@@ -18,7 +18,7 @@ const TabCustom = ({ arr }: IPropsTabCustom) => {
 
    return (
       <>
-         <Tabs items={items} />
+         <Tabs type='card' items={items} />
       </>
    );
 };

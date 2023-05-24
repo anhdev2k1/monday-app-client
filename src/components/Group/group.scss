@@ -1,11 +1,7 @@
 .group {
    margin-top: 40px;
    max-width: calc(var(--width-default-layout) - 100px);
-   // max-width: 1200px;
-   // overflow-x: scroll;
-   -webkit-scrollbar {
-      display: none;
-   }
+   
    .group__head {
       display: flex;
       align-items: center;

@@ -1,7 +1,10 @@
 .workspace__cover{
     height: 200px;
+    position: relative;
     img{
         width: 100%;
+        border-radius: 4px;
+        
     }
     
 }
@@ -10,7 +13,7 @@
     display: flex;
     padding: 0 100px;
     gap: 10px;
-    &-avt{
+    .workspace__header-avt{
         width: 100px;
         height: 100px;
         font-size: 3rem;
@@ -23,7 +26,7 @@
         box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
         border-radius: 20px;
     }
-    &-title{
+    .workspace__header-title{
         display: flex;
         flex-direction: column;
         margin-top: auto;
@@ -32,11 +35,11 @@
         gap: 10px;
         .header__title-name{
             width: 100%;
-            height: 50px;
+            height: 40px;
             border: none;
             font-size: 2rem;
             font-weight: 500;
-            
+            margin-top: 10px;
         }
         .header__title-desc{
             border: none;
@@ -44,10 +47,10 @@
             color: #333;
         }
     }
-    
+
 }
 .workspace__content{
-    padding: 0 100px;
+    padding: 20px 100px;
     .workspace__boards{
         display: flex;
         flex-direction: column;

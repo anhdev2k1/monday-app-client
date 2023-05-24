@@ -101,9 +101,9 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    };
    return (
       <div className="main-table">
-         <p className="board__title">
+         {/* <p className="board__title">
             <span>{currBoard?.name}</span> <FontAwesomeIcon icon={faCircleExclamation} />
-         </p>
+         </p> */}
          <HeadView />
          <div className="main__group__wrap">
             {listsGroup &&
