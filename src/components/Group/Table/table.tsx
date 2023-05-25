@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseMedicalCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IColumn } from '~/shared/model/column';
@@ -16,13 +17,85 @@ import { createColumn } from '~/components/MainTable/mainTable.reducer';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask';
-import { SERVER_API_URL } from '~/config/constants';
 interface IPropsTable {
-   columns: IColumn[];
    data: IGroup;
 }
-const Table = ({ columns, data }: IPropsTable) => {
+
+// const mockDataColumns = [
+//    {
+//       _id: '6466f21069b91a0aa4b7c008',
+//       name: 'date',
+//       position: 2,
+//       belongType: {
+//          _id: '6465ecc9f59e11b0b52a9589',
+//          name: 'date',
+//          icon: 'http://localhost:3001/v1/api/images/date-column-icon.svg',
+//          color: '#11dd80',
+//       },
+//       defaultValues: [],
+//    },
+//    {
+//       _id: '6466f34669b91a0aa4b7c0d9',
+//       name: 'status',
+//       position: 2,
+//       belongType: {
+//          _id: '6465ecc9f59e11b0b52a9586',
+//          name: 'status',
+//          icon: 'http://localhost:3001/v1/api/images/status-column-icon.svg',
+//          color: '#11dd80',
+//       },
+//       defaultValues: [
+//          {
+//             _id: '6465eccaf59e11b0b52a959c',
+//             value: 'Done',
+//             color: 'green',
+//          },
+//          {
+//             _id: '6465eccaf59e11b0b52a959v',
+//             value: 'Stuck',
+//             color: 'red',
+//          },
+//          {
+//             _id: '6465eccaf59e11b0b52a959k',
+//             value: 'Working on it',
+//             color: 'orange',
+//          },
+//       ],
+//    },
+//    {
+//       _id: '64673727d4ee7467ad7ca69a',
+//       name: 'priority',
+//       position: 3,
+//       belongType: {
+//          _id: '6465ecc9f59e11b0b52a9587',
+//          name: 'priority',
+//          icon: 'http://localhost:3001/v1/api/images/priority-column-icon.png',
+//          color: '#feca00',
+//       },
+//       defaultValues: [
+//          {
+//             _id: '6465eccaf59e11b0b52a9591',
+//             value: 'Done',
+//             color: 'green',
+//          },
+//          {
+//             _id: '6465eccaf59e11b0b52a9592',
+//             value: 'Stuck',
+//             color: 'red',
+//          },
+//          {
+//             _id: '6465eccaf59e11b0b52a9593',
+//             value: 'Working on it',
+//             color: 'orange',
+//          },
+//       ],
+//    },
+// ];
+
+const Table = ({ data }: IPropsTable) => {
    const [listTask, setListTask] = useState<ITask[]>(data.tasks);
+   const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
+   console.log('columns', columns, data.name);
    // const [isRenameTask, setIsRenameTask] = useState(false);
    // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
@@ -108,9 +181,7 @@ const Table = ({ columns, data }: IPropsTable) => {
          messageApi.error('Vui lòng nhập tên task');
       }
    };
-   console.log(listTask);
-   console.log('column',columns);
-   
+
    return (
       <>
          <table className="table__group">
@@ -122,17 +193,15 @@ const Table = ({ columns, data }: IPropsTable) => {
                      <input type="checkbox" id="checked" />
                   </th>
                   <th className="column__group">Task</th>
-                  {columns.map((col) => {
-                     return (
-                        <Column
-                           _id={col._id}
-                           name={col.name}
-                           position={col.position}
-                           key={col._id}
-                        />
-                     );
-                  })}
-                  <th className="column__group column__add">
+                  {columns &&
+                     columns.map((col) => {
+                        return (
+                           <th className="column__group" key={col._id}>
+                              {col.name}
+                           </th>
+                        );
+                     })}
+                  <th className="column__group">
                      <input className="col__group--check" type="checkbox" id="plus--col" />
                      <label
                         className="plus__lable"
@@ -151,6 +220,8 @@ const Table = ({ columns, data }: IPropsTable) => {
             </thead>
             <tbody className="table__data">
                {listTask.map((task) => {
+                  console.log('task', task);
+
                   return (
                      <tr className="table__data-task" key={task._id}>
                         <td className="table__data-task-value">
@@ -164,7 +235,19 @@ const Table = ({ columns, data }: IPropsTable) => {
                         </td>
                         <TaskEdit task={task} />
                         {task.values.map((itemValue, index) => {
-                           return <ValueTask value={itemValue} key={index} columnID={itemValue.belongColumn} />;
+                           const colIncludeListValue = columns?.find(
+                              (col) => col._id === itemValue.belongColumn,
+                           );
+
+                           if (colIncludeListValue) {
+                              return (
+                                 <ValueTask
+                                    valueOfTask={itemValue}
+                                    key={index}
+                                    colIncludeListValue={colIncludeListValue}
+                                 />
+                              );
+                           }
                         })}
                      </tr>
                   );

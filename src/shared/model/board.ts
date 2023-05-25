@@ -1,4 +1,5 @@
-import { IGroup } from "./group";
+import { IColumn } from './column';
+import { IGroup } from './group';
 
 export interface IBoard {
    _id: string;
@@ -6,7 +7,7 @@ export interface IBoard {
    belongWorkspace?: string;
    description?: string;
    groups: IGroup[];
-   columns: [];
+   columns: IColumn[];
 }
 export interface IBoardsResponse<T> {
    boards: T;

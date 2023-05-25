@@ -1,4 +1,5 @@
 import {
+   PayloadAction,
    createAsyncThunk,
    createSlice,
    isFulfilled,
@@ -52,6 +53,7 @@ const initialState: IInitState = {
 
 interface IParamsRequest {
    id: string;
+   idWorkspace?: string;
 }
 
 interface ICreateBoard {
@@ -112,8 +114,8 @@ export const editBoard = createAsyncThunk(
 export const deleteBoard = createAsyncThunk(
    'delete-board-slice',
    async (params: IParamsRequest) => {
-      const { id } = params;
-      const requestUrl = `${apiUrl}v1/api/board/${id}`;
+      const { id, idWorkspace } = params;
+      const requestUrl = `${apiUrl}v1/api/workspace/${idWorkspace}/board/${id}`;
       return await axios.delete<IResponseData<undefined>>(requestUrl);
    },
    { serializeError: serializeAxiosError },
@@ -188,47 +190,160 @@ const boardSlice = createSlice({
                state.currBoard.mess = response.message;
             }
          });
-      // .addMatcher(isFulfilled(editBoard), (state, action) => {
-      //    state.currBoard.data = action.payload.data.metadata;
-      //    state.currBoard.error = false;
-      //    state.currBoard.loading = false;
-      //    state.currBoard.status = action.payload.data.status;
-      //    state.currBoard.mess = action.payload.data.message;
-      // })
-      // .addMatcher(isPending(editBoard), (state, action) => {
-      //    state.currBoard.loading = true;
-      // })
-      // .addMatcher(isRejected(editBoard), (state, action) => {
-      //    state.currBoard.error = true;
-      //    state.currBoard.loading = false;
-      //    if (action?.error) {
-      //       const { response } = action.error as { response: any };
-      //       state.currBoard.status = response.status;
-      //       state.currBoard.mess = response.message;
-      //    }
-      // })
-      // .addMatcher(isFulfilled(deleteBoard), (state, action) => {
-      //    state.currBoard.data = action.payload.data.metadata;
-      //    state.currBoard.error = false;
-      //    state.currBoard.loading = false;
-      //    state.currBoard.status = action.payload.data.status;
-      //    state.currBoard.mess = action.payload.data.message;
-      // })
-      // .addMatcher(isPending(deleteBoard), (state, action) => {
-      //    state.currBoard.loading = true;
-      // })
-      // .addMatcher(isRejected(deleteBoard), (state, action) => {
-      //    state.currBoard.error = true;
-      //    state.currBoard.loading = false;
-      //    if (action?.error) {
-      //       const { response } = action.error as { response: any };
-      //       state.currBoard.status = response.status;
-      //       state.currBoard.mess = response.message;
-      //    }
-      // });
    },
    reducers: {
-      
+      handleAddGroup: (state, action) => {
+         const newGroup = action.payload; // Thông tin của group mới cần thêm vào
+         const updatedGroups = state.currBoard.data?.groups?.concat(newGroup); // Tạo mảng mới kết hợp groups hiện tại và group mới
+         if (state.currBoard.data && state.currBoard.data.groups && updatedGroups) {
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     groups: updatedGroups, // Cập nhật mảng groups bằng mảng mới
+                  },
+               },
+            };
+         }
+      },
+      handleDelGroup: (state, action) => {
+         const groupId = action.payload; // Id của group cần xóa
+         if (state.currBoard.data && state.currBoard.data.groups && groupId) {
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     groups: state.currBoard.data?.groups.filter((group) => group._id !== groupId),
+                  },
+               },
+            };
+         }
+      },
+      handleAddValueListStatus: (state, action) => {
+         const { columnId, newValueStatus } = action.payload;
+         state.currBoard.data?.columns?.forEach((col) => {
+            if (col._id === columnId) {
+               col.defaultValues = col.defaultValues.concat(newValueStatus);
+            }
+         });
+
+         return state;
+      },
+
+      handleEditValueListStatus: (
+         state,
+         action: PayloadAction<{
+            columnId: string;
+            valueSelectId: string;
+            key: 'color' | 'value';
+            value: string;
+         }>,
+      ) => {
+         const { columnId, valueSelectId, key, value } = action.payload;
+         const newDataColumn = state.currBoard.data?.columns?.map((col) => {
+            if (col._id === columnId) {
+               const newDefaultValues = col.defaultValues.map((val) => {
+                  if (val._id === valueSelectId) {
+                     return {
+                        ...val,
+                        [key]: value,
+                     };
+                  }
+                  return val;
+               });
+               return {
+                  ...col,
+                  defaultValues: newDefaultValues,
+               };
+            }
+            return col;
+         });
+         console.log(newDataColumn);
+
+         if (newDataColumn && state.currBoard.data && state.currBoard.data.columns) {
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     columns: newDataColumn,
+                  },
+               },
+            };
+         }
+
+         return state;
+      },
+      handleDeleteValueListStatus: (
+         state,
+         action: PayloadAction<{
+            columnId: string;
+            valueSelectId: string;
+         }>,
+      ) => {
+         const { columnId, valueSelectId } = action.payload;
+         state.currBoard.data?.columns?.forEach((col) => {
+            if (col._id === columnId) {
+               col.defaultValues = col.defaultValues.filter((val) => val._id !== valueSelectId);
+            }
+         });
+         return state;
+      },
+      handleUpdateAllSelectedValue: (
+         state,
+         action: PayloadAction<{
+            valueId: string;
+            key: 'color' | 'value';
+            value: string;
+         }>,
+      ) => {
+         // update tất cả các value trong group nếu thay đổi value đang được selected?
+         const { valueId, key, value } = action.payload;
+
+         const updatedGroups = state.currBoard.data?.groups.map((group) => {
+            const updatedTasks = group.tasks.map((task) => {
+               const updatedValues = task.values.map((val) => {
+                  if (val.valueId && val.valueId._id === valueId) {
+                     return {
+                        ...val,
+                        valueId: {
+                           ...val.valueId,
+                           [key]: value,
+                        },
+                     };
+                  }
+                  return val;
+               });
+
+               return {
+                  ...task,
+                  values: updatedValues,
+               };
+            });
+
+            return {
+               ...group,
+               tasks: updatedTasks,
+            };
+         });
+         if (updatedGroups && state.currBoard.data) {
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     groups: updatedGroups,
+                  },
+               },
+            };
+         }
+      },
       resetCurrBoard(state) {
          state.currBoard = {
             data: undefined,
@@ -238,10 +353,17 @@ const boardSlice = createSlice({
             mess: '',
          };
       },
-
    },
 });
 
-export const { resetCurrBoard } = boardSlice.actions;
+export const {
+   resetCurrBoard,
+   handleAddValueListStatus,
+   handleEditValueListStatus,
+   handleDeleteValueListStatus,
+   handleAddGroup,
+   handleDelGroup,
+   handleUpdateAllSelectedValue,
+} = boardSlice.actions;
 
 export default boardSlice.reducer;

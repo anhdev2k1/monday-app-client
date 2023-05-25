@@ -13,21 +13,41 @@ import { SERVER_API_URL } from '~/config/constants';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { IResponseData } from '~/shared/model/global';
-import { useAppDispatch } from '~/config/store';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import { deleteGroup, updateGroup } from './group.reducer';
 import Table from './Table/table';
+import { handleDelGroup } from '~/pages/Board/board.reducer';
+import { isNotification } from '../Notification/notification.reducer';
 interface IPropsGroup {
    data: IGroup;
-   columns: IColumn[];
+   // columns?: IColumn[];
    handleAddNewGroup: () => Promise<void>;
-   handleDeleteGroup: (id: string) => void;
 }
-const Group = ({ data, columns, handleAddNewGroup, handleDeleteGroup }: IPropsGroup) => {
+const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
    const [valueNameInput, setValueNameInput] = useState<string>(data.name);
    const dispatch = useAppDispatch();
+   const { idBoard } = useParams();
    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target as HTMLInputElement;
       setValueNameInput(value);
+   };
+   const handleDeleteGroup = (id: string) => {
+      dispatch(handleDelGroup(id));
+      dispatch(
+         isNotification({
+            type: 'success',
+            message: 'Đã xoá group thành công!',
+            autoClose: 1000,
+            isOpen: true,
+         }),
+      );
+      if (idBoard)
+         dispatch(
+            deleteGroup({
+               idGroup: id,
+               idBoard,
+            }),
+         );
    };
 
    const inputElement = useRef<HTMLInputElement>(null);
@@ -117,7 +137,12 @@ const Group = ({ data, columns, handleAddNewGroup, handleDeleteGroup }: IPropsGr
             </div>
          </div>
          <div className="group__table">
-            <Table columns={columns} data={data} />
+            <Table data={data} />
+            {/* <HeaderTable columns={columns} data={data} /> */}
+
+            {/* {data.tasks.map((task) => {
+               return <Row task={task} key={task._id} />;
+            })} */}
          </div>
       </div>
    );

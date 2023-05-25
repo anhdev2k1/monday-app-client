@@ -1,6 +1,8 @@
 import { colorsData } from './colorsData';
 import './colorEdit.scss';
 import Tippy from '~/components/Tippy';
+import { useAppDispatch } from '~/config/store';
+import { handleEditValueListStatus } from '~/pages/Board/board.reducer';
 interface IValueStatus {
    _id: string;
    color: string;
@@ -9,41 +11,24 @@ interface IValueStatus {
 interface IColorEditProps {
    setOpenColorBox: (isOpen: boolean) => void;
    isOpen: boolean;
-   setColor: (color: string) => void;
-   setListStatusState: React.Dispatch<React.SetStateAction<any[]>>;
+   // setColor: (color: string) => void;
+   columnId: string;
    valueTask: IValueStatus;
+   handleUpdateValue: (key: 'value' | 'color', value: string) => Promise<void>;
 }
-const ColorEdit = ({
-   setOpenColorBox,
-   isOpen,
-   setColor,
-   setListStatusState,
-   valueTask,
-}: IColorEditProps) => {
-   const handleUpdateColor = (color: string) => {
-      setListStatusState((pre) => {
-         pre.forEach((itemValue) => {
-            if (itemValue._id === valueTask._id && itemValue.color !== color) {
-               itemValue.color = color;
-            }
-         });
-         return pre;
-      });
-      setOpenColorBox(true);
-      setColor(color);
-   };
+const ColorEdit = ({ isOpen, handleUpdateValue }: IColorEditProps) => {
    return (
       <>
          {isOpen && (
             <div className="color__wrapper">
                <div className="list__color">
-                  {colorsData.map((color) => {
+                  {colorsData.map((data) => {
                      return (
-                        <Tippy html={color.title} position="top">
+                        <Tippy html={<p>{data.title}</p>} position="top">
                            <div
                               className="color__item"
-                              style={{ backgroundColor: color.color }}
-                              onClick={() => handleUpdateColor(color.color)}
+                              style={{ backgroundColor: data.color }}
+                              onClick={() => handleUpdateValue('color',data.color)}
                            ></div>
                         </Tippy>
                      );
