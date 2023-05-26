@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import {
    PayloadAction,
    createAsyncThunk,
@@ -10,6 +11,7 @@ import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { IBoard, IBoardResponse, IBoardsResponse } from '~/shared/model/board';
 import { IResponseData } from '~/shared/model/global';
+import { IItemInListValueSelect, IValueOfTask } from '~/shared/model/task';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
 
 const apiUrl = SERVER_API_URL;
@@ -30,6 +32,7 @@ interface IInitState {
       status: string | number;
       mess: string;
    };
+   indexTab: number;
 }
 
 const initialState: IInitState = {
@@ -47,6 +50,7 @@ const initialState: IInitState = {
       status: '',
       mess: '',
    },
+   indexTab: 0,
 };
 
 // body request
@@ -279,6 +283,25 @@ const boardSlice = createSlice({
 
          return state;
       },
+      handleEditValueSelected: (
+         state,
+         action: PayloadAction<{
+            idValue: string | null;
+            data: IItemInListValueSelect;
+         }>,
+      ) => {
+         const { idValue, data } = action.payload;
+
+         state.currBoard.data?.groups?.forEach((group) => {
+            group.tasks.forEach((task) => {
+               task.values.forEach((value) => {
+                  if (value._id === idValue) {
+                     value.valueId = data;
+                  }
+               });
+            });
+         });
+      },
       handleDeleteValueListStatus: (
          state,
          action: PayloadAction<{
@@ -294,55 +317,68 @@ const boardSlice = createSlice({
          });
          return state;
       },
-      handleUpdateAllSelectedValue: (
+      // handleUpdateAllSelectedValue: (
+      //    state,
+      //    action: PayloadAction<{
+      //       valueId: string;
+      //       key: 'color' | 'value';
+      //       value: string;
+      //    }>,
+      // ) => {
+      //    // update tất cả các value trong group nếu thay đổi value đang được selected?
+      //    const { valueId, key, value } = action.payload;
+
+      //    const updatedGroups = state.currBoard.data?.groups.map((group) => {
+      //       const updatedTasks = group.tasks.map((task) => {
+      //          const updatedValues = task.values.map((val) => {
+      //             if (val._id && val._id === valueId) {
+      //                return {
+      //                   ...val,
+      //                   valueId: {
+      //                      ...val.valueId,
+      //                      [key]: value,
+      //                   },
+      //                };
+      //             }
+      //             return val;
+      //          });
+
+      //          return {
+      //             ...task,
+      //             values: updatedValues,
+      //          };
+      //       });
+
+      //       return {
+      //          ...group,
+      //          tasks: updatedTasks,
+      //       };
+      //    });
+      //    if (updatedGroups && state.currBoard.data) {
+      //       return {
+      //          ...state,
+      //          currBoard: {
+      //             ...state.currBoard,
+      //             data: {
+      //                ...state.currBoard.data,
+      //                groups: updatedGroups,
+      //             },
+      //          },
+      //       };
+      //    }
+      // },
+      setIndexTab: (
          state,
          action: PayloadAction<{
-            valueId: string;
-            key: 'color' | 'value';
-            value: string;
+            index: 0 | 1;
          }>,
       ) => {
-         // update tất cả các value trong group nếu thay đổi value đang được selected?
-         const { valueId, key, value } = action.payload;
+         console.log('chay vo day r');
 
-         const updatedGroups = state.currBoard.data?.groups.map((group) => {
-            const updatedTasks = group.tasks.map((task) => {
-               const updatedValues = task.values.map((val) => {
-                  if (val.valueId && val.valueId._id === valueId) {
-                     return {
-                        ...val,
-                        valueId: {
-                           ...val.valueId,
-                           [key]: value,
-                        },
-                     };
-                  }
-                  return val;
-               });
-
-               return {
-                  ...task,
-                  values: updatedValues,
-               };
-            });
-
-            return {
-               ...group,
-               tasks: updatedTasks,
-            };
-         });
-         if (updatedGroups && state.currBoard.data) {
-            return {
-               ...state,
-               currBoard: {
-                  ...state.currBoard,
-                  data: {
-                     ...state.currBoard.data,
-                     groups: updatedGroups,
-                  },
-               },
-            };
-         }
+         return {
+            ...state,
+            indexTab: action.payload.index,
+         };
       },
       resetCurrBoard(state) {
          state.currBoard = {
@@ -363,7 +399,9 @@ export const {
    handleDeleteValueListStatus,
    handleAddGroup,
    handleDelGroup,
-   handleUpdateAllSelectedValue,
+   handleEditValueSelected,
+   // handleUpdateAllSelectedValue,
+   setIndexTab,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

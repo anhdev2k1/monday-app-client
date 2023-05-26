@@ -1,0 +1,22 @@
+.item__in__card {
+   width: 100%;
+   display: flex;
+   align-items: center;
+   .item__card--btn {
+      width: 40%;
+      display: flex;
+      justify-content: flex-start;
+      .item__card__btn--icon {
+         width: 20px;
+         height: 20px;
+      }
+   }
+   .item__value {
+      position: relative;
+      height: 40px;
+      flex: 1;
+      text-align: center;
+      color: #fff;
+      font-size: 1.6rem;
+   }
+}

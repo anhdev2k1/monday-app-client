@@ -48,11 +48,14 @@
          }
       }
       .table__data-task-value {
+         text-align: center;
+         // display: inline-block;
+         // width: 100%;
          border-bottom: 1px solid #edeef4;
          border-right: 1px solid #edeef4;
          position: relative;
-         .data-task-rename{
-            width:max-content;
+         .data-task-rename {
+            width: max-content;
             padding: 5px;
             border-radius: 5px;
             margin: 0 auto;
@@ -70,10 +73,10 @@
             }
          }
       }
-      .data-status{
+      .data-status {
          color: white;
       }
-      .table__data-add-task{
+      .table__data-add-task {
          border-right: 1px solid #edeef4;
          input {
             height: 20px;

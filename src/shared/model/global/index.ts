@@ -11,6 +11,7 @@ export enum StatusType {
    Transparent = 'transparent',
    Warning = 'warning',
    Boder = 'boder',
+   Nonbehavior = 'nonbehavior',
 }
 export enum SizeType {
    Small = 'small',

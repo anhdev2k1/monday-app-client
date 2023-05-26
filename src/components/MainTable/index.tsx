@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
-interface IPropMainTable {
+export interface IPropMainTable {
    currBoard: IBoard;
 }
 
@@ -68,30 +68,8 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          dispatch(resetCreateGroup());
       }
    };
-   // const handleDeleteGroup = (id: string) => {
-   //    dispatch(handleDelGroup(id));
-   //    dispatch(
-   //       isNotification({
-   //          type: 'success',
-   //          message: 'Đã xoá group thành công!',
-   //          autoClose: 1000,
-   //          isOpen: true,
-   //       }),
-   //    );
-   //    if (idBoard)
-   //       dispatch(
-   //          deleteGroup({
-   //             idGroup: id,
-   //             idBoard,
-   //          }),
-   //       );
-   // };
    return (
       <div className="main-table">
-         <p className="board__title">
-            <span>{currBoard?.name}</span> <FontAwesomeIcon icon={faCircleExclamation} />
-         </p>
-         <HeadView />
          <div className="main__group__wrap">
             {listsGroup &&
                listsGroup.map((item: IGroup, index) => {

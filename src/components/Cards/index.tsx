@@ -1,51 +1,41 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonCustom from '../Button/ButtonCustom';
-import { faAngleDown, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
 import Card from '../Card';
-import { StatusType } from '~/shared/model/global';
+import { IPropMainTable } from '../MainTable';
+import './cards.scss';
+import { IGroup } from '~/shared/model/group';
+import { ITask } from '~/shared/model/task';
+import { IColumn } from '~/shared/model/column';
+import { Col, Row } from 'antd';
+export interface ITaskCard extends ITask {
+   columns: IColumn[];
+}
 
-const Cards = () => {
+const Cards = ({ currBoard }: IPropMainTable) => {
+   console.log('group thay đổi');
+
+   const taskArray: ITaskCard[] = currBoard.groups.flatMap((group) =>
+      group.tasks.map((task) => ({
+         ...task,
+         position: task.position,
+         group: group,
+         columns: currBoard.columns,
+      })),
+   );
+
+   console.log('taskArray', taskArray);
+
    return (
-      <>
-         <div className="table__head">
-            <ButtonCustom
-               statusType={StatusType.Primary}
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               leftIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-            <ButtonCustom
-               title="New item"
-               // transparent
-               rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-            />
-         </div>
-         <div className="cards" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-         </div>
-      </>
+      <div className="cards">
+         <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]}>
+            {taskArray.map((task) => {
+               return (
+                  <Col key={task._id} className="gutter-row" span={6} lg={6} md={8} xs={12}>
+                     <Card task={task} />
+                  </Col>
+               );
+            })}
+         </Row>
+      </div>
    );
 };
 
