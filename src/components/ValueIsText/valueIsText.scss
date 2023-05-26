@@ -1,0 +1,14 @@
+.value__text {
+   position: 'absolute';
+   .value__text--input {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      border: 0.5px solid blue;
+      outline: none;
+      padding: 2px 0;
+      text-align: center;
+   }
+}

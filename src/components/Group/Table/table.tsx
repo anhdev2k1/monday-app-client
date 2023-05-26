@@ -91,8 +91,14 @@ interface IPropsTable {
 
 const Table = ({ data }: IPropsTable) => {
    const [listTask, setListTask] = useState<ITask[]>(data.tasks);
+   console.log('change tasks', data.tasks);
+   useEffect(() => {
+      setListTask(data.tasks);
+   }, [data.tasks]);
+   console.log('listTask', listTask);
+
    const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
-   console.log("columns",columns, data.name);
+   console.log('columns', columns, data.name);
    // const [isRenameTask, setIsRenameTask] = useState(false);
    // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
@@ -210,6 +216,7 @@ const Table = ({ data }: IPropsTable) => {
                            if (colIncludeListValue) {
                               return (
                                  <ValueTask
+                                    task={task}
                                     valueOfTask={itemValue}
                                     key={index}
                                     colIncludeListValue={colIncludeListValue}

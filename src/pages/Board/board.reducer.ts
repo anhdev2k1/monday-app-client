@@ -303,7 +303,7 @@ const boardSlice = createSlice({
       ) => {
          // update tất cả các value trong group nếu thay đổi value đang được selected?
          const { valueId, key, value } = action.payload;
-         
+
          const updatedGroups = state.currBoard.data?.groups.map((group) => {
             const updatedTasks = group.tasks.map((task) => {
                const updatedValues = task.values.map((val) => {
@@ -343,6 +343,89 @@ const boardSlice = createSlice({
             };
          }
       },
+      handleSetValueTask: (
+         state,
+         action: PayloadAction<{
+            taskId: string;
+            valueId: string;
+            newValue: string | null;
+         }>,
+      ) => {
+         const { taskId, valueId, newValue } = action.payload;
+
+         const updatedData = JSON.parse(JSON.stringify(state));
+
+         const groups = updatedData.currBoard.data?.groups;
+         if (groups) {
+            // Find the task by id
+            for (const group of groups) {
+               const tasks = group.tasks;
+               if (tasks) {
+                  for (const task of tasks) {
+                     if (task._id === taskId) {
+                        // Find the value in the task by valueId
+                        const values = task.values;
+                        if (values) {
+                           for (const value of values) {
+                              if (value._id === valueId) {
+                                 // Update the new value
+                                 value.value = newValue;
+                                 break;
+                              }
+                           }
+                        }
+                        break;
+                     }
+                  }
+               }
+            }
+         }
+         console.log('updatedData', updatedData);
+
+         return updatedData;
+      },
+
+      handleEditValueTask: (
+         state,
+         action: PayloadAction<{
+            taskId: string;
+            valueId: string;
+            newValue: string;
+         }>,
+      ) => {
+         const { taskId, valueId, newValue } = action.payload;
+
+         const updatedData = JSON.parse(JSON.stringify(state));
+
+         const groups = updatedData.currBoard.data?.groups;
+         if (groups) {
+            // Find the task by id
+            for (const group of groups) {
+               const tasks = group.tasks;
+               if (tasks) {
+                  for (const task of tasks) {
+                     if (task._id === taskId) {
+                        // Find the value in the task by valueId
+                        const values = task.values;
+                        if (values) {
+                           for (const value of values) {
+                              if (value._id === valueId && value.value !== newValue) {
+                                 // Update the new value or set it to null
+                                 value.value = newValue;
+                                 break;
+                              }
+                           }
+                        }
+                        break;
+                     }
+                  }
+               }
+            }
+         }
+
+         return updatedData;
+      },
+
       resetCurrBoard(state) {
          state.currBoard = {
             data: undefined,
@@ -363,6 +446,8 @@ export const {
    handleAddGroup,
    handleDelGroup,
    handleUpdateAllSelectedValue,
+   handleSetValueTask,
+   handleEditValueTask,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

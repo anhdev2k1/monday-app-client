@@ -15,7 +15,9 @@ const images = {
    deleteTask: require('./deleteTask.svg').default,
    moveTo: require('./moveTo.svg').default,
    close: require('./close.svg').default,
-   color: require('./color.svg').default
+   color: require('./color.svg').default,
+   iconText: require('./iconText.svg').default,
+   iconDatePicker: require('./iconDatePicker.svg').default,
 };
 
 export default images;

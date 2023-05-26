@@ -1,14 +1,16 @@
 import DropdownStatus from '~/components/DropdownStatus/dropdownStatus';
 import { useState, useRef, useEffect } from 'react';
-import { IItemInListValueSelect, IValueOfTask } from '~/shared/model/task';
+import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task';
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { useParams } from 'react-router-dom';
 import { IColumn } from '~/shared/model/column';
 import { useAppSelector } from '~/config/store';
+import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
 interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
+   task: ITask;
    colIncludeListValue: IColumn;
 }
 
@@ -18,7 +20,7 @@ interface ISelectedOfValueTask extends IItemInListValueSelect {
 export interface ISetInfoValueTask {
    setChangeStatus: React.Dispatch<React.SetStateAction<ISelectedOfValueTask>>;
 }
-const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
+const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) => {
    const valuesSelect = useAppSelector((state) =>
       state.boardSlice.currBoard.data?.columns.flatMap((item) => item.defaultValues),
    );
@@ -56,7 +58,8 @@ const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
       setOpenStatusBox((pre) => !pre);
    };
 
-   console.log('valuesSelect', valuesSelect);
+   // console.log('valuesSelect', valuesSelect);
+   console.log('valueOfTask', valueOfTask);
 
    const changeValueSelected = () => {
       if (valuesSelect) {
@@ -69,6 +72,8 @@ const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
       <td
          key={valueOfTask._id}
          style={{
+            color: `${valueOfTask.typeOfValue === 'multiple' ? '#FFF' : 'var(--text-btn-color)'}`,
+            // color: `#111`,
             backgroundColor: `${
                changeValueSelected()?.color ? changeValueSelected()?.color : changeStatus.color
                // changeStatus.color || (value.typeOfValue === 'multiple' ? value.valueId.color : null)
@@ -77,10 +82,12 @@ const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
          className="table__data-task-value data-status"
          onClick={handleOpenStatus}
       >
-         {
-            changeValueSelected()?.value ? changeValueSelected()?.value : changeStatus.value
-            // ||(value.typeOfValue === 'multiple' ? value.valueId?.value : value.value)
-         }
+         {changeValueSelected()?.value
+            ? changeValueSelected()?.value
+            : changeStatus.value ||
+              (valueOfTask.typeOfValue === 'multiple'
+                 ? valueOfTask.valueId?.value
+                 : valueOfTask.value)}
          {valueOfTask.typeOfValue === 'multiple' ? (
             <DropdownStatus
                isOpen={openStatusBox}
@@ -90,7 +97,13 @@ const ValueTask = ({ valueOfTask, colIncludeListValue }: IValueTaskProps) => {
                columnId={colIncludeListValue._id}
                valueID={valueOfTask._id}
             />
-         ) : null}
+         ) : (
+            <ValueCustomizedByColumnType
+               task={task}
+               valueTask={valueOfTask}
+               nameOfType={colIncludeListValue.belongType.name}
+            />
+         )}
       </td>
    );
 };
