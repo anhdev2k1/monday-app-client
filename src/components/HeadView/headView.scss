@@ -6,4 +6,110 @@
    left: 20px;
    z-index: 1;
    background-color: #fff;
+   .search {
+      width: max-content;
+      height: 35px;
+      // border: 1px solid #e3e3e3;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 10px;
+      padding: 5px;
+      border-radius: 4px;
+
+      &:focus-within {
+         border: 1px solid #0073ea;
+      }
+      &-active .search__input {
+         width: 200px;
+         transition: all 0.2s;
+      }
+      &__btn {
+         width: 20px;
+         height: 100%;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 1.4rem;
+      }
+      &__input {
+         width: 80px;
+         border: none;
+         outline: none;
+         background: none;
+         font-size: 1.5rem;
+         transition: all 0.2s;
+         &::placeholder {
+            color: #333;
+         }
+      }
+   }
+   .filter {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      position: relative;
+      &__icon {
+         width: 20px;
+         height: max-content;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+      }
+      span {
+         font-size: 1.4rem;
+         font-weight: 400;
+      }
+      &__down {
+         margin-left: 5px;
+         width: 30px;
+         height: 100%;
+         font-size: 1.5rem;
+      }
+      &__menu {
+         position: absolute;
+         top: 100%;
+         left: 0;
+         min-width: 700px;
+         min-height: 200px;
+         background-color: white;
+         border: 1px solid #e3e3e3;
+         border-radius: 4px;
+         padding: 10px;
+         &-header {
+            display: flex;
+            justify-content: space-between;
+         }
+         &-content {
+            margin-top: 20px;
+            &-item {
+               display: flex;
+               justify-content: space-between;
+               gap: 15px;
+               span {
+                  margin-right: 20px;
+               }
+               
+            }
+            .filter__add-btn{
+               display: flex;
+               align-items: center;
+               width: max-content;
+               height: 30px;
+               padding: 8px 10px;
+               border: none;
+               outline: none;
+               background: none;
+               cursor: pointer;
+               margin-top: 30px;
+               &:hover{
+                  background-color: #e3e3e3;
+               }
+            }
+         }
+      }
+   }
 }

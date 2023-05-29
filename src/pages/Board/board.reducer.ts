@@ -33,6 +33,7 @@ interface IInitState {
       mess: string;
    };
    indexTab: number;
+   searchValue:string;
 }
 
 const initialState: IInitState = {
@@ -51,6 +52,7 @@ const initialState: IInitState = {
       mess: '',
    },
    indexTab: 0,
+   searchValue: ''
 };
 
 // body request
@@ -317,6 +319,9 @@ const boardSlice = createSlice({
          });
          return state;
       },
+      setSearchValueInput: (state, action ) => {
+         state.searchValue = action.payload
+      },
       // handleUpdateAllSelectedValue: (
       //    state,
       //    action: PayloadAction<{
@@ -367,13 +372,13 @@ const boardSlice = createSlice({
       //       };
       //    }
       // },
+      
       setIndexTab: (
          state,
          action: PayloadAction<{
             index: 0 | 1;
          }>,
       ) => {
-         console.log('chay vo day r');
 
          return {
             ...state,
@@ -402,6 +407,7 @@ export const {
    handleEditValueSelected,
    // handleUpdateAllSelectedValue,
    setIndexTab,
+   setSearchValueInput
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

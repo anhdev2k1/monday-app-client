@@ -21,14 +21,16 @@ export interface IPropMainTable {
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups);
-   // const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
+   const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
 
-   // useEffect(() => {
-   //    setListsGroup(currBoard.groups);
-   // }, [currBoard]);
-   console.log(listsGroup);
+   const searchFilter = (dataSearch: string) => {
+      const result = listsGroup?.filter((group) =>
+         group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
+      );
+      return result;
+   };
 
    useEffect(() => {
       const newGroup = dataCreateGroup.data;
@@ -71,8 +73,8 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    return (
       <div className="main-table">
          <div className="main__group__wrap">
-            {listsGroup &&
-               listsGroup.map((item: IGroup, index) => {
+            {searchFilter(getValueSearch) ? (
+               searchFilter(getValueSearch)!.map((item: IGroup, index) => {
                   return (
                      <Group
                         // handleDeleteGroup={handleDeleteGroup}
@@ -82,7 +84,10 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
                         data={item}
                      />
                   );
-               })}
+               })
+            ) : (
+               <img src="https://cdn.monday.com/images/search_empty_state.svg" alt="" />
+            )}
          </div>
 
          <ButtonCustom
