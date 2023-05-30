@@ -8,7 +8,7 @@ import { SERVER_API_URL } from '~/config/constants';
 import { useParams } from 'react-router-dom';
 import { IValueOfTask } from '~/shared/model/task';
 import { IDefaultValue } from '~/shared/model/column';
-import { useAppDispatch } from '~/config/store';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import { handleAddValueListStatus } from '~/pages/Board/board.reducer';
 import { ISetInfoValueTask } from '../Group/Table/ValueTask/valueTask';
 interface IDropdownStatusProps extends ISetInfoValueTask {
@@ -27,7 +27,10 @@ const DropdownStatus = ({
    valueID,
 }: IDropdownStatusProps) => {
    const { idBoard } = useParams();
-   console.log('list status', listStatus);
+   const indexTab = useAppSelector((state) => state.boardSlice.indexTab);
+   useEffect(() => {
+      setOpenStatusBox(false);
+   }, [indexTab]);
 
    const [isEdit, setIsEdit] = useState(false);
    const [isApply, setIsApply] = useState(false);

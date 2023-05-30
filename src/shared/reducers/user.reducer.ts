@@ -6,7 +6,12 @@ import {
    isRejected,
 } from '@reduxjs/toolkit';
 import { SERVER_API_URL } from '~/config/constants';
-import { IUserWithToken, IResponseUser, IResponseGetMe, IUserNotToken } from '../model/authentication';
+import {
+   IUserWithToken,
+   IResponseUser,
+   IResponseGetMe,
+   IUserNotToken,
+} from '../model/authentication';
 import { serializeAxiosError } from './reducer.utils';
 import axios from 'axios';
 
@@ -66,7 +71,7 @@ export const currenUser = createAsyncThunk(
    'current-user-slice',
    async () => {
       const requestUrl = `${baseUrl}v1/api/auth/me`;
-      return await axios.post<IResponseGetMe>(requestUrl);
+      return await axios.get<IResponseGetMe>(requestUrl);
    },
    { serializeError: serializeAxiosError },
 );
@@ -122,7 +127,7 @@ export const userSlice = createSlice({
          .addMatcher(isFulfilled(currenUser), (state, action) => {
             state.user.data = action.payload.data.metadata;
             state.user.mess = action.payload.data.message;
-            state.user.status = action.payload.data.statusCode
+            state.user.status = action.payload.data.statusCode;
             state.user.error = false;
          })
          .addMatcher(isPending(currenUser), (state) => {

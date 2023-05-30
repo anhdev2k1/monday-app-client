@@ -1,0 +1,30 @@
+.list__types--custom {
+   position: absolute;
+   top: 100%;
+   right: 50px;
+   background-color: #fff;
+   box-shadow: 0 4px 17px 6px rgba(0, 0, 0, 0.1);
+   border-radius: 4px;
+   padding: 20px;
+   z-index: 1;
+   .list__types {
+      min-width: 300px;
+      //   display: flex;
+      .type__item {
+         display: inline-flex;
+         //  padding: 4px;
+         margin: 6px;
+         width: 45%;
+         > button {
+            width: 100%;
+            justify-content: flex-start;
+            > span {
+               margin-left: 10px;
+            }
+         }
+         .list__types-icon {
+            background-color: green;
+         }
+      }
+   }
+}

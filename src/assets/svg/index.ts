@@ -18,6 +18,7 @@ const images = {
    color: require('./color.svg').default,
    iconText: require('./iconText.svg').default,
    iconDatePicker: require('./iconDatePicker.svg').default,
+   iconDesTask: require('./iconDesTask.svg').default,
 };
 
 export default images;

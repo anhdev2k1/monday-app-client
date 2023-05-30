@@ -18,8 +18,14 @@ const DefaultValueTask = ({ text, handleEmptyValue, icon, setIsEdit }: IPropsDef
          className="default__value--task--wrapper"
       >
          <div className="default__value--task">
-            {!text && icon}
-            <button className="value__task--btn" onClick={handleEmptyValue}>
+            {text ? <p>{text}</p> : icon}
+            <button
+               className="value__task--btn"
+               onClick={(e) => {
+                  e.stopPropagation();
+                  handleEmptyValue();
+               }}
+            >
                <FontAwesomeIcon icon={faXmark} />
             </button>
          </div>

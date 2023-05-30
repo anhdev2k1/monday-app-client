@@ -9,6 +9,31 @@
          min-width: 140px;
          border-bottom: 1px solid #edeef4;
          border-right: 1px solid #edeef4;
+         height: 50px;
+         .col__group--check {
+            opacity: 0;
+            &:checked ~ .plus__lable {
+               .input--icon {
+                  cursor: pointer;
+                  border-radius: 3px;
+                  &:hover {
+                     background-color: var(--background-btn-default);
+                  }
+                  > svg {
+                     font-size: 1.6rem;
+                     transform: rotate(0deg);
+                     transition: transform 0.2s ease-in-out;
+                  }
+                  padding: 0 4px;
+                  border: none;
+               }
+            }
+         }
+      }
+      .column__add {
+         display: flex;
+         align-items: center;
+         justify-content: center;
       }
       .column__group-check {
          min-width: 50px;
@@ -32,6 +57,10 @@
          &:hover {
             .default__value--task {
                display: flex;
+               .value__task--btn,
+               .icon__value--task {
+                  display: flex;
+               }
             }
          }
          &:nth-child(1) {

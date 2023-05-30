@@ -12,7 +12,7 @@ import axios from 'axios';
 import { SERVER_API_URL } from './config/constants';
 function App() {
    const dispatch = useAppDispatch();
-   const currentUser = useAppSelector((state) => state.userSlice.user.status);
+   const currentUser = useAppSelector((state) => state.userSlice.user);
    const getCurrenUser = async () => {
       dispatch(currenUser());
    };
@@ -66,7 +66,7 @@ function App() {
                         key={index}
                         path={route.path}
                         element={
-                           <ProtectedRoute user={currentUser} redirectPath="/login">
+                           <ProtectedRoute user={currentUser.status} redirectPath="/login">
                               <Layout>
                                  <Page />
                               </Layout>

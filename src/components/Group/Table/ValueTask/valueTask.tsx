@@ -5,8 +5,9 @@ import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { useParams } from 'react-router-dom';
 import { IColumn } from '~/shared/model/column';
-import { useAppSelector } from '~/config/store';
 import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
+import { useAppDispatch, useAppSelector } from '~/config/store';
+import { handleEditValueListStatus, handleEditValueSelected } from '~/pages/Board/board.reducer';
 interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
@@ -24,6 +25,7 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) 
    const valuesSelect = useAppSelector((state) =>
       state.boardSlice.currBoard.data?.columns.flatMap((item) => item.defaultValues),
    );
+   const dispatch = useAppDispatch();
    // console.log('valuesSelect',valuesSelect[0]!);
 
    const [openStatusBox, setOpenStatusBox] = useState(false);
@@ -35,13 +37,12 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) 
    }>({
       _id: valueOfTask._id,
       idSelected: valueOfTask.valueId?._id || null,
-      value:
-         valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : valueOfTask.value,
+      value: valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null,
       color: valueOfTask.valueId?.color || null,
    });
 
    useEffect(() => {
-      if (valueOfTask.valueId?.color || valueOfTask.valueId?.value)
+      if (valueOfTask.valueId?.color || valueOfTask.valueId?.value) {
          setChangeStatus((prev) => {
             return {
                ...prev,
@@ -50,7 +51,23 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) 
                color: valueOfTask.valueId?.color,
             };
          });
+      }
    }, [valueOfTask.valueId?._id, valueOfTask.valueId?.color, valueOfTask.valueId?.value]);
+
+   useEffect(() => {
+      if (changeStatus.idSelected) {
+         dispatch(
+            handleEditValueSelected({
+               idValue: changeStatus._id,
+               data: {
+                  _id: changeStatus.idSelected,
+                  color: changeStatus.color,
+                  value: changeStatus.value,
+               },
+            }),
+         );
+      }
+   }, [changeStatus.idSelected]);
 
    // const { idBoard } = useParams();
    // const [listStatus, setListStatus] = useState([]);
@@ -80,14 +97,16 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) 
             }`,
          }}
          className="table__data-task-value data-status"
-         onClick={handleOpenStatus}
+         onClick={(e) => {
+            e.stopPropagation();
+
+            handleOpenStatus();
+         }}
       >
          {changeValueSelected()?.value
             ? changeValueSelected()?.value
             : changeStatus.value ||
-              (valueOfTask.typeOfValue === 'multiple'
-                 ? valueOfTask.valueId?.value
-                 : valueOfTask.value)}
+              (valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null)}
          {valueOfTask.typeOfValue === 'multiple' ? (
             <DropdownStatus
                isOpen={openStatusBox}
