@@ -6,4 +6,107 @@
    left: 20px;
    z-index: 1;
    background-color: #fff;
+   .filter {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 4px;
+      position: relative;
+      &__icon {
+         width: 20px;
+         height: max-content;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+      }
+      span {
+         font-size: 1.4rem;
+         font-weight: 400;
+      }
+      &__down {
+         margin-left: 5px;
+         width: 30px;
+         height: 100%;
+         font-size: 1.5rem;
+      }
+      &__menu {
+         position: absolute;
+         top: 100%;
+         left: 0;
+         min-width: 700px;
+         min-height: 200px;
+         background-color: white;
+         border: 1px solid #e3e3e3;
+         border-radius: 4px;
+         padding: 10px;
+         &-header {
+            display: flex;
+            justify-content: space-between;
+         }
+         &-content {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            &-item {
+               display: flex;
+               align-items: center;
+               // justify-content: space-between;
+               gap: 15px;
+
+               h3 {
+                  display: block;
+                  width: 80px;
+                  font-size: 1.5rem;
+                  font-weight: 500;
+               }
+               .select__item {
+                  .item__icon {
+                     height: 20px;
+                     margin-top: 5px;
+                     display: flex;
+                     align-items: center;
+                     justify-content: center;
+                     border-radius: 4px;
+                     img{
+                        border-radius: 4px;
+                     }
+                  }
+               }
+            }
+            .item__delete {
+               width: 20px;
+               height: 20px;
+               cursor: pointer;
+            }
+            .filter__add-btn {
+               display: flex;
+               align-items: center;
+               width: max-content;
+               height: 30px;
+               padding: 8px 10px;
+               border: none;
+               outline: none;
+               background: none;
+               cursor: pointer;
+               margin-top: 30px;
+               border-radius: 4px;
+               &:hover {
+                  background-color: #e3e3e3;
+               }
+               img {
+                  width: 10px;
+                  height: 10px;
+               }
+               &-label {
+                  font-size: 1.4rem;
+                  margin-left: 3px;
+                  color: #333;
+               }
+            }
+         }
+      }
+   }
 }

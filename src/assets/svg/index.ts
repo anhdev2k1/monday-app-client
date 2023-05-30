@@ -17,6 +17,7 @@ const images = {
    close: require('./close.svg').default,
    color: require('./color.svg').default,
    iconDesTask: require('./iconDesTask.svg').default,
+   filter: require('./filter.svg').default
 };
 
 export default images;
