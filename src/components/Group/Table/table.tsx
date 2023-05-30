@@ -9,8 +9,11 @@ import { message } from 'antd';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import MenuTask from '~/components/MenuTask/menuTask';
-import { useAppSelector } from '~/config/store';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import TaskEdit from './TaskEdit/taskEdit';
+import Column from '~/components/Column/column';
+import ListType from '~/components/ListTypes/listTypes';
+import { createColumn } from '~/components/MainTable/mainTable.reducer';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask';
@@ -108,6 +111,9 @@ const Table = ({ data }: IPropsTable) => {
    const { idBoard } = useParams();
    const [idTask, setIdTask] = useState('');
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
+   const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
+   const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
+   const dispatch = useAppDispatch();
    // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
 
    interface ITaskChecked {
@@ -133,7 +139,26 @@ const Table = ({ data }: IPropsTable) => {
       };
       deleteTask();
    };
-
+   const handleAddColumn = (id: string) => {
+      const addColumn = async () => {
+         try {
+            messageApi.loading('Đợi xý nhé...!');
+            if (idBoard)
+               await dispatch(
+                  createColumn({
+                     idBoard,
+                     typeId: id,
+                     position: listColumns.length + 1,
+                  }),
+               );
+            // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
+            messageApi.success(`Thêm mới column thành công!`);
+         } catch (error) {
+            messageApi.error(`${error}`);
+         }
+      };
+      addColumn();
+   };
    const handleAddTask = () => {
       if (valueAddTask !== '') {
          const addTask = async () => {
@@ -184,9 +209,16 @@ const Table = ({ data }: IPropsTable) => {
                      })}
                   <th className="column__group">
                      <input className="col__group--check" type="checkbox" id="plus--col" />
-                     <label className="plus__lable" htmlFor="plus--col">
+                     <label
+                        className="plus__lable"
+                        htmlFor="plus--col"
+                        onClick={() => {
+                           setIsOpenListTypes((prev) => !prev);
+                        }}
+                     >
                         <div className="input--icon">
                            <FontAwesomeIcon icon={faPlus} />
+                           {isOpenListTypes && <ListType handleAddColumn={handleAddColumn} />}
                         </div>
                      </label>
                   </th>

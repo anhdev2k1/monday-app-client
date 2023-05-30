@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import './taskEdit.scss';
+import axios from 'axios';
+import { SERVER_API_URL } from '~/config/constants';
 interface ITaskEditProps {
    task: any;
 }
@@ -7,8 +9,14 @@ const TaskEdit = ({ task }: ITaskEditProps) => {
    const [isRenameTask, setIsRenameTask] = useState(false);
    const elementInput = useRef<HTMLInputElement>(null);
    const [valueTask, setValueTask] = useState<string>(task.name);
-   const handleRenameTask = (e: any, taskID: any) => {
+   const handleRenameTask = async (
+      e: React.FocusEvent<HTMLInputElement, Element>,
+      taskID: string,
+   ) => {
       setIsRenameTask(true);
+      await axios.patch(`${SERVER_API_URL}v1/api/task/${taskID}`, {
+         name: e.target.value,
+      });
    };
    return (
       <td className="table__data-task-value" key={task._id}>
@@ -19,7 +27,10 @@ const TaskEdit = ({ task }: ITaskEditProps) => {
                value={valueTask}
                type="text"
                style={{ width: '90%' }}
-               onBlur={() => setIsRenameTask(false)}
+               onBlur={(e) => {
+                  handleRenameTask(e, task._id);
+                  setIsRenameTask(false);
+               }}
                onChange={(e) => {
                   if (e.target.value) {
                      setValueTask(e.target.value);
@@ -30,7 +41,7 @@ const TaskEdit = ({ task }: ITaskEditProps) => {
          ) : (
             <span
                className="task__value--custom"
-               onClick={(e) => handleRenameTask(e, task._id)}
+               onClick={(e) => setIsRenameTask(true)}
                data-id={task._id}
             >
                {valueTask ? valueTask : task.name}

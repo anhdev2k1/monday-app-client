@@ -4,6 +4,8 @@ import { ITask, IValueOfTask } from '~/shared/model/task';
 import './valueIsText.scss';
 import { useAppDispatch } from '~/config/store';
 import { handleSetValueTask } from '~/pages/Board/board.reducer';
+import axios from 'axios';
+import { SERVER_API_URL } from '~/config/constants';
 interface IPropsValueIsText {
    valueTask: IValueOfTask;
    icon: JSX.Element;
@@ -27,7 +29,7 @@ const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
          {isEdit ? (
             <input
                autoFocus
-               onBlur={(e) => {
+               onBlur={async (e) => {
                   if (e.target.value !== valueTask.value) {
                      dispatch(
                         handleSetValueTask({
@@ -36,6 +38,10 @@ const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
                            valueId: valueTask._id,
                         }),
                      );
+                     await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueTask._id}`, {
+                        value: valueBox,
+                        valueId: null,
+                     });
                   }
                   setTimeout(() => {
                      setIsEdit(false);

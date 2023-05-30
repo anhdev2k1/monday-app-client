@@ -1,4 +1,9 @@
 .table__head {
    display: flex;
    align-items: center;
+   position: absolute;
+   top: 128px;
+   left: 20px;
+   z-index: 1;
+   background-color: #fff;
 }

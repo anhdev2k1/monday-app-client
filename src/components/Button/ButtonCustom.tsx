@@ -42,7 +42,7 @@ const ButtonCustom: React.FC<PropsTypeButton> = ({
    };
 
    // Remove event listener when btn is disabled
-   if (statusType === StatusType.Disabled) {
+   if (statusType === StatusType.Disabled || statusType === StatusType.Nonbehavior) {
       Object.keys(props).forEach((key) => {
          if (key.startsWith('on') && typeof props[key] === 'function') {
             delete props[key];

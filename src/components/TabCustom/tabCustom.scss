@@ -1,10 +1,32 @@
-.css-dev-only-do-not-override-1fviqcj.ant-tabs .ant-tabs-tab {
-   border-left: 0.5px solid #ccc;
-   border-right: 0.5px solid #ccc;
-   margin: 0;
-   padding-left: 10px;
-   padding-right: 10px;
-   &:first-child {
-      border: transparent;
+.thuan_22 {
+   position: relative;
+   .board__title {
+      padding: 20px 20px 10px 20px;
+      font-size: 2.6rem;
+      font-weight: 700;
+      > svg {
+         font-size: 1.8rem;
+      }
+   }
+   .ant-tabs-nav {
+      // margin: 0 20px;
+      padding-left: 20px;
+      padding-bottom: 72px;
+      border-bottom: 0.5px solid #ccc;
+   }
+   .ant-tabs-content-holder {
+      overflow-y: scroll;
+      height: calc(100vh - 176px);
+      background-color: #f5f6f8;
+   }
+   .css-dev-only-do-not-override-1fviqcj.ant-tabs .ant-tabs-tab {
+      border-left: 0.5px solid #ccc;
+      border-right: 0.5px solid #ccc;
+      margin: 0;
+      padding-left: 10px;
+      padding-right: 10px;
+      &:first-child {
+         border: transparent;
+      }
    }
 }

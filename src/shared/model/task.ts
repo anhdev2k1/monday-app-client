@@ -10,7 +10,6 @@ export interface IValueOfTask {
    value: string;
    valueId: IItemInListValueSelect;
    name: string;
-   position: number;
 }
 export interface ITask {
    _id: string;

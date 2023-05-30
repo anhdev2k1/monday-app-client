@@ -6,6 +6,8 @@ import './datePicker.scss';
 import { useAppDispatch } from '~/config/store';
 import { handleSetValueTask } from '~/pages/Board/board.reducer';
 import { ITask, IValueOfTask } from '~/shared/model/task';
+import axios from 'axios';
+import { SERVER_API_URL } from '~/config/constants';
 interface IPropsDatePicker {
    valueTask: IValueOfTask;
    icon: JSX.Element;
@@ -26,15 +28,22 @@ const DateTimePicker: React.FC<IPropsDatePicker> = ({ valueTask, icon, task }) =
       setSelectedDate(null);
    };
    useEffect(() => {
-      if (selectedDate !== valueTask.value) {
-         dispatch(
-            handleSetValueTask({
-               newValue: selectedDate,
-               taskId: task._id,
-               valueId: valueTask._id,
-            }),
-         );
-      }
+      const handleUpdateValue = async () => {
+         if (selectedDate !== valueTask.value) {
+            dispatch(
+               handleSetValueTask({
+                  newValue: selectedDate,
+                  taskId: task._id,
+                  valueId: valueTask._id,
+               }),
+            );
+            await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueTask._id}`, {
+               value: selectedDate,
+               valueId: null,
+            });
+         }
+      };
+      handleUpdateValue();
    }, [selectedDate]);
    return (
       <>
@@ -48,7 +57,7 @@ const DateTimePicker: React.FC<IPropsDatePicker> = ({ valueTask, icon, task }) =
                left: '0px',
                textAlign: 'center',
                opacity: '0',
-               zIndex: '1',
+               zIndex: '99999',
             }}
             size={'middle'}
             onChange={handleDateChange}

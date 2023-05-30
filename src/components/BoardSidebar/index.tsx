@@ -28,6 +28,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const navigate = useNavigate();
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
+   const { idWorkspace } = useParams();
 
    const handleEditBoard = (
       e: React.FocusEvent<HTMLInputElement, Element> | React.KeyboardEvent<HTMLInputElement>,
@@ -51,7 +52,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    };
    const handleDeleteBoard = () => {
       setVisible(false);
-      dispatch(deleteBoard({ id: dataBoard._id }));
+      if (idWorkspace) dispatch(deleteBoard({ id: dataBoard._id, idWorkspace }));
       dispatch(deleteItemBoard(dataBoard._id));
       if (dataBoard._id === idBoard) {
          dispatch(resetCurrBoard());
