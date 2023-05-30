@@ -37,8 +37,7 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) 
    }>({
       _id: valueOfTask._id,
       idSelected: valueOfTask.valueId?._id || null,
-      value:
-         valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : valueOfTask.value,
+      value: valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null,
       color: valueOfTask.valueId?.color || null,
    });
 
@@ -107,9 +106,7 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) 
          {changeValueSelected()?.value
             ? changeValueSelected()?.value
             : changeStatus.value ||
-              (valueOfTask.typeOfValue === 'multiple'
-                 ? valueOfTask.valueId?.value
-                 : valueOfTask.value)}
+              (valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null)}
          {valueOfTask.typeOfValue === 'multiple' ? (
             <DropdownStatus
                isOpen={openStatusBox}
