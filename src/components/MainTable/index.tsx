@@ -25,11 +25,6 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
 
-   // useEffect(() => {
-   //    setListsGroup(currBoard.groups);
-   // }, [currBoard]);
-   console.log(listsGroup);
-
    useEffect(() => {
       const newGroup = dataCreateGroup.data;
       if (newGroup) {
