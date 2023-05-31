@@ -57,6 +57,10 @@
          &:hover {
             .default__value--task {
                display: flex;
+               .value__task--btn,
+               .icon__value--task {
+                  display: flex;
+               }
             }
          }
          &:nth-child(1) {

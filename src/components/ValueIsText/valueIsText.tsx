@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DefaultValueTask from '../Group/Table/ValueTask/defaultValueTask';
 import { ITask, IValueOfTask } from '~/shared/model/task';
 import './valueIsText.scss';
@@ -14,23 +14,30 @@ interface IPropsValueIsText {
 
 const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
    const [valueBox, setValueBox] = useState<string | null>(valueTask.value);
+   useEffect(() => {
+      setValueBox(valueTask.value);
+   }, [valueTask.value]);
    const [isEdit, setIsEdit] = useState<boolean>(false);
    const dispatch = useAppDispatch();
-   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setValueBox(e.target.value);
    };
    console.log(valueBox);
 
-   const handleEmptyValue = () => {
+   const handleEmptyValue = async () => {
       setValueBox(null);
+      await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueTask._id}`, {
+         value: '',
+         valueId: null,
+      });
    };
    return (
       <div className="value__text">
          {isEdit ? (
             <input
                autoFocus
-               onBlur={async (e) => {
-                  if (e.target.value !== valueTask.value) {
+               onBlur={(e) => {
+                  if (e.target.value !== valueTask.value || e.target.value === '') {
                      dispatch(
                         handleSetValueTask({
                            newValue: e.target.value,
@@ -38,20 +45,20 @@ const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
                            valueId: valueTask._id,
                         }),
                      );
-                     await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueTask._id}`, {
-                        value: valueBox,
-                        valueId: null,
-                     });
+                     (async () => {
+                        await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueTask._id}`, {
+                           value: valueBox,
+                           valueId: null,
+                        });
+                     })();
                   }
-                  setTimeout(() => {
-                     setIsEdit(false);
-                  }, 500);
+                  setIsEdit(false);
                }}
                className="value__text--input"
                type="text"
                value={valueBox || ''}
                onChange={(e) => {
-                  handleDateChange(e);
+                  handleValueChange(e);
                }}
             />
          ) : (
