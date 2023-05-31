@@ -43,8 +43,8 @@ const Table = ({ data }: IPropsTable) => {
    const [idTask, setIdTask] = useState('');
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
    const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
-   const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
-   const valueSearch = useAppSelector(state => state.boardSlice.searchValue)
+   const listColumns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
+   const valueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
    // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
 
@@ -78,12 +78,12 @@ const Table = ({ data }: IPropsTable) => {
       const addColumn = async () => {
          try {
             messageApi.loading('Đợi xý nhé...!');
-            if (idBoard)
+            if (idBoard && listColumns)
                await dispatch(
                   createColumn({
                      idBoard,
-                     typeId: id,
-                     position: listColumns.length + 1,
+                     belongType: id,
+                     position: listColumns.length,
                   }),
                );
             // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
@@ -168,7 +168,6 @@ const Table = ({ data }: IPropsTable) => {
             </thead>
             <tbody className="table__data">
                {listTask.map((task) => {
-
                   return (
                      <tr className="table__data-task" key={task._id}>
                         <td className="table__data-task-value">

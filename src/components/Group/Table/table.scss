@@ -6,6 +6,7 @@
    z-index: -1;
    &-header {
       .column__group {
+         position: relative;
          min-width: 140px;
          border-bottom: 1px solid #edeef4;
          border-right: 1px solid #edeef4;

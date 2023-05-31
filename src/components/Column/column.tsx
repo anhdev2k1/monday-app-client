@@ -31,11 +31,11 @@ const Column = ({ name, _id, position }: IPropsColumn) => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
    const [valueInput, setValueInput] = useState<string>(name);
-   const handleCreateColumn = ({ idBoard, typeId, position }: ICreateColumn) => {
+   const handleCreateColumn = ({ idBoard, belongType, position }: ICreateColumn) => {
       dispatch(
          createColumn({
             idBoard,
-            typeId,
+            belongType,
             position,
          }),
       );
@@ -95,7 +95,7 @@ const Column = ({ name, _id, position }: IPropsColumn) => {
                   if (idBoard)
                      handleCreateColumn({
                         idBoard,
-                        typeId: item._id,
+                        belongType: item._id,
                         position,
                      });
                },

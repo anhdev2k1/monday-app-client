@@ -35,7 +35,7 @@ const initialState: IInitState = {
 
 export interface ICreateColumn {
    idBoard: string;
-   typeId: string;
+   belongType: string;
    position: number;
 }
 export interface IDeleteColumn {

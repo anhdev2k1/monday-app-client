@@ -4,9 +4,9 @@ import { getListTypes } from './listTypes.reducer';
 import './listTypes.scss';
 import ButtonCustom from '../Button/ButtonCustom';
 interface ILisTTypesProps {
-   handleAddColumn: (id : string) => void
+   handleAddColumn: (id: string) => void;
 }
-const ListType = ({handleAddColumn}: ILisTTypesProps) => {
+const ListType = ({ handleAddColumn }: ILisTTypesProps) => {
    const listTypes = useAppSelector((state) => state.listTypesSlice.listTypes.datas);
    return (
       <div className="list__types--custom">
@@ -19,7 +19,10 @@ const ListType = ({handleAddColumn}: ILisTTypesProps) => {
                            leftIcon={
                               <img
                                  className="list__types-icon"
-                                 src="https://cdn.monday.com/images/column-store/columns/numeric-column-icon.svg"
+                                 src={typeItem.icon}
+                                 style={{
+                                    backgroundColor: `${typeItem.color}`,
+                                 }}
                                  alt="icon"
                               />
                            }

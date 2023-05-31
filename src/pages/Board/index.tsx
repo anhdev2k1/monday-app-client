@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { getBoardDetail, setIndexTab } from './board.reducer';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
+import { getListTypes } from '~/components/ListTypes/listTypes.reducer';
 const Board = () => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
@@ -35,6 +36,11 @@ const Board = () => {
          );
       }
    }, [dispatch, idBoard]);
+
+   useEffect(() => {
+      dispatch(getListTypes());
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
    console.log('board render');
 
    return (
