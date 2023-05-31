@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
+import { ITask } from '~/shared/model/task';
 export interface IPropMainTable {
    currBoard: IBoard;
 }
@@ -26,8 +27,12 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
    const { idBoard } = useParams();
 
    const searchFilter = (dataSearch: string) => {
-      const result = listsGroup?.filter((group) =>
-         group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
+      const result = listsGroup?.filter(
+         (group) =>
+            group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
+            group.tasks.some((task) =>
+               task.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
+            ),
       );
       return result;
    };
@@ -70,10 +75,11 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          dispatch(resetCreateGroup());
       }
    };
+
    return (
       <div className="main-table">
          <div className="main__group__wrap">
-            {searchFilter(getValueSearch) ? (
+            {searchFilter(getValueSearch)!?.length > 0 ? (
                searchFilter(getValueSearch)!.map((item: IGroup, index) => {
                   return (
                      <Group
@@ -86,7 +92,11 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
                   );
                })
             ) : (
-               <img src="https://cdn.monday.com/images/search_empty_state.svg" alt="" />
+               <div className="search__empty" style={{textAlign: "center", padding: "20px 0"}}>
+                  <img src="https://cdn.monday.com/images/search_empty_state.svg" alt=""  style={{width: "300px"}}/>
+                  <h3>No result found</h3>
+                  <p>Searching 10 of 10 column on this board</p>
+               </div>
             )}
          </div>
 
