@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
+import { ITask } from '~/shared/model/task';
 export interface IPropMainTable {
    currBoard: IBoard;
 }
@@ -21,14 +22,20 @@ export interface IPropMainTable {
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups);
-   // const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
+   const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
 
-   // useEffect(() => {
-   //    setListsGroup(currBoard.groups);
-   // }, [currBoard]);
-   console.log(listsGroup);
+   const searchFilter = (dataSearch: string) => {
+      const result = listsGroup?.filter(
+         (group) =>
+            group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
+            group.tasks.some((task) =>
+               task.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
+            ),
+      );
+      return result;
+   };
 
    useEffect(() => {
       const newGroup = dataCreateGroup.data;
@@ -68,11 +75,12 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
          dispatch(resetCreateGroup());
       }
    };
+
    return (
       <div className="main-table">
          <div className="main__group__wrap">
-            {listsGroup &&
-               listsGroup.map((item: IGroup, index) => {
+            {searchFilter(getValueSearch)!?.length > 0 ? (
+               searchFilter(getValueSearch)!.map((item: IGroup, index) => {
                   return (
                      <Group
                         // handleDeleteGroup={handleDeleteGroup}
@@ -82,7 +90,14 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
                         data={item}
                      />
                   );
-               })}
+               })
+            ) : (
+               <div className="search__empty" style={{textAlign: "center", padding: "20px 0"}}>
+                  <img src="https://cdn.monday.com/images/search_empty_state.svg" alt=""  style={{width: "300px"}}/>
+                  <h3>No result found</h3>
+                  <p>Searching 10 of 10 column on this board</p>
+               </div>
+            )}
          </div>
 
          <ButtonCustom

@@ -19,6 +19,9 @@ const images = {
    iconText: require('./iconText.svg').default,
    iconDatePicker: require('./iconDatePicker.svg').default,
    iconDesTask: require('./iconDesTask.svg').default,
+   filter: require('./filter.svg').default,
+   sort: require('./sort.svg').default,
+   hide: require('./hide.svg').default
 };
 
 export default images;

@@ -21,77 +21,6 @@ interface IPropsTable {
    data: IGroup;
 }
 
-// const mockDataColumns = [
-//    {
-//       _id: '6466f21069b91a0aa4b7c008',
-//       name: 'date',
-//       position: 2,
-//       belongType: {
-//          _id: '6465ecc9f59e11b0b52a9589',
-//          name: 'date',
-//          icon: 'http://localhost:3001/v1/api/images/date-column-icon.svg',
-//          color: '#11dd80',
-//       },
-//       defaultValues: [],
-//    },
-//    {
-//       _id: '6466f34669b91a0aa4b7c0d9',
-//       name: 'status',
-//       position: 2,
-//       belongType: {
-//          _id: '6465ecc9f59e11b0b52a9586',
-//          name: 'status',
-//          icon: 'http://localhost:3001/v1/api/images/status-column-icon.svg',
-//          color: '#11dd80',
-//       },
-//       defaultValues: [
-//          {
-//             _id: '6465eccaf59e11b0b52a959c',
-//             value: 'Done',
-//             color: 'green',
-//          },
-//          {
-//             _id: '6465eccaf59e11b0b52a959v',
-//             value: 'Stuck',
-//             color: 'red',
-//          },
-//          {
-//             _id: '6465eccaf59e11b0b52a959k',
-//             value: 'Working on it',
-//             color: 'orange',
-//          },
-//       ],
-//    },
-//    {
-//       _id: '64673727d4ee7467ad7ca69a',
-//       name: 'priority',
-//       position: 3,
-//       belongType: {
-//          _id: '6465ecc9f59e11b0b52a9587',
-//          name: 'priority',
-//          icon: 'http://localhost:3001/v1/api/images/priority-column-icon.png',
-//          color: '#feca00',
-//       },
-//       defaultValues: [
-//          {
-//             _id: '6465eccaf59e11b0b52a9591',
-//             value: 'Done',
-//             color: 'green',
-//          },
-//          {
-//             _id: '6465eccaf59e11b0b52a9592',
-//             value: 'Stuck',
-//             color: 'red',
-//          },
-//          {
-//             _id: '6465eccaf59e11b0b52a9593',
-//             value: 'Working on it',
-//             color: 'orange',
-//          },
-//       ],
-//    },
-// ];
-
 const Table = ({ data }: IPropsTable) => {
    const [listTask, setListTask] = useState<ITask[]>(data.tasks);
    console.log('change tasks', data.tasks);
@@ -113,6 +42,7 @@ const Table = ({ data }: IPropsTable) => {
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
    const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
    const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
+   const valueSearch = useAppSelector(state => state.boardSlice.searchValue)
    const dispatch = useAppDispatch();
    // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
 
@@ -226,7 +156,6 @@ const Table = ({ data }: IPropsTable) => {
             </thead>
             <tbody className="table__data">
                {listTask.map((task) => {
-                  console.log('task', task);
 
                   return (
                      <tr className="table__data-task" key={task._id}>
