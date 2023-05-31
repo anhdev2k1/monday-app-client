@@ -4,7 +4,7 @@ import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { useParams } from 'react-router-dom';
-import { IColumn } from '~/shared/model/column';
+import { IColumn, IDefaultValue } from '~/shared/model/column';
 import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { handleEditValueListStatus, handleEditValueSelected } from '~/pages/Board/board.reducer';
@@ -13,6 +13,7 @@ interface IValueTaskProps {
    // columnID: string;
    task: ITask;
    colIncludeListValue: IColumn;
+   defaultValueInColumn: IDefaultValue[];
 }
 
 interface ISelectedOfValueTask extends IItemInListValueSelect {
@@ -21,12 +22,16 @@ interface ISelectedOfValueTask extends IItemInListValueSelect {
 export interface ISetInfoValueTask {
    setChangeStatus: React.Dispatch<React.SetStateAction<ISelectedOfValueTask>>;
 }
-const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) => {
+const ValueTask = ({
+   valueOfTask,
+   colIncludeListValue,
+   task,
+   defaultValueInColumn,
+}: IValueTaskProps) => {
    const valuesSelect = useAppSelector((state) =>
       state.boardSlice.currBoard.data?.columns.flatMap((item) => item.defaultValues),
    );
    const dispatch = useAppDispatch();
-   // console.log('valuesSelect',valuesSelect[0]!);
 
    const [openStatusBox, setOpenStatusBox] = useState(false);
    const [changeStatus, setChangeStatus] = useState<{
@@ -112,7 +117,7 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task }: IValueTaskProps) 
                isOpen={openStatusBox}
                setOpenStatusBox={setOpenStatusBox}
                setChangeStatus={setChangeStatus}
-               listStatus={colIncludeListValue.defaultValues}
+               listStatus={defaultValueInColumn}
                columnId={colIncludeListValue._id}
                valueID={valueOfTask._id}
             />

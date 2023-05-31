@@ -54,7 +54,7 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
             createGroup({
                idBoard,
                name: 'New Group',
-               position: listsGroup.length + 1,
+               position: listsGroup.length,
             }),
          );
          dispatch(

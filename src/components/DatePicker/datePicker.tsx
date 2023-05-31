@@ -57,7 +57,7 @@ const DateTimePicker: React.FC<IPropsDatePicker> = ({ valueTask, icon, task }) =
                left: '0px',
                textAlign: 'center',
                opacity: '0',
-               zIndex: '99999',
+               zIndex: '10',
             }}
             size={'middle'}
             onChange={handleDateChange}

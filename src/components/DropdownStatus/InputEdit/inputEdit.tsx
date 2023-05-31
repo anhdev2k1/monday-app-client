@@ -53,7 +53,7 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
          //    }),
          // );
          setChangeStatus((prev) => {
-            if (data._id && data._id === prev._id) {
+            if (data._id && data._id === prev.idSelected) {
                return {
                   ...prev,
                   [key]: value,

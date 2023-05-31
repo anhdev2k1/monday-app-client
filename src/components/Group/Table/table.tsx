@@ -17,6 +17,8 @@ import { createColumn } from '~/components/MainTable/mainTable.reducer';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask';
+import { handleAddTaskToGroup, handleDeleteTaskFromGroup } from '~/pages/Board/board.reducer';
+import { SERVER_API_URL } from '~/config/constants';
 interface IPropsTable {
    data: IGroup;
 }
@@ -130,14 +132,17 @@ const Table = ({ data }: IPropsTable) => {
          setIsChecked((pre) => pre.filter((item) => item._id !== taskID));
       }
    };
-   const handleDeleteTask = async (taskID: string) => {
-      const deleteTask = async () => {
-         messageApi.loading('Đợi xý nhé !...');
-         await axios.delete(`http://localhost:3001/v1/api/group/${data._id}/task/${taskID}`);
-         setListTask((pre) => pre.filter((item) => item._id !== taskID));
-         messageApi.success('Xoá task thành công!');
-      };
-      deleteTask();
+   const handleDeleteTask = async (taskId: string) => {
+      messageApi.loading('Đợi xý nhé !...');
+      await axios.delete(`${SERVER_API_URL}v1/api/group/${data._id}/task/${taskId}`);
+      setListTask((pre) => pre.filter((item) => item._id !== taskId));
+      messageApi.success('Xoá task thành công!');
+      dispatch(
+         handleDeleteTaskFromGroup({
+            groupId: data._id,
+            taskId,
+         }),
+      );
    };
    const handleAddColumn = (id: string) => {
       const addColumn = async () => {
@@ -169,9 +174,9 @@ const Table = ({ data }: IPropsTable) => {
                }>
             >(`http://localhost:3001/v1/api/board/${idBoard}/group/${data._id}/task`, {
                name: valueAddTask,
-               position: data.tasks.length + 1,
+               position: data.tasks.length,
             });
-            if (res.data.metadata)
+            if (res.data.metadata) {
                setListTask((pre) => {
                   const newTask = res.data.metadata?.task;
                   if (newTask) {
@@ -179,8 +184,15 @@ const Table = ({ data }: IPropsTable) => {
                   }
                   return pre;
                });
-            messageApi.success('Tạo task thành công!');
-            setValueAddTask('');
+               dispatch(
+                  handleAddTaskToGroup({
+                     groupId: data._id,
+                     newTask: res.data.metadata?.task,
+                  }),
+               );
+               messageApi.success('Tạo task thành công!');
+               setValueAddTask('');
+            }
          };
          addTask();
       } else {
@@ -239,7 +251,7 @@ const Table = ({ data }: IPropsTable) => {
                               data-id={task._id}
                            />
                         </td>
-                        <TaskEdit task={task} />
+                        <TaskEdit groupId={data._id} task={task} />
                         {task.values.map((itemValue, index) => {
                            const colIncludeListValue = columns?.find(
                               (col) => col._id === itemValue.belongColumn,
@@ -252,6 +264,7 @@ const Table = ({ data }: IPropsTable) => {
                                     valueOfTask={itemValue}
                                     key={index}
                                     colIncludeListValue={colIncludeListValue}
+                                    defaultValueInColumn={colIncludeListValue.defaultValues}
                                  />
                               );
                            }

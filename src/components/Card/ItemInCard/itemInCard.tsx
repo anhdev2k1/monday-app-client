@@ -11,8 +11,6 @@ interface IPropsCard {
    task: ITask;
 }
 const ItemInCard = ({ column, value, task }: IPropsCard) => {
-   console.log(value);
-
    return (
       <div className="item__in__card">
          <ButtonCustom
@@ -38,7 +36,12 @@ const ItemInCard = ({ column, value, task }: IPropsCard) => {
                      e.preventDefault();
                   }}
                >
-                  <ValueTask task={task} valueOfTask={value} colIncludeListValue={column} />
+                  <ValueTask
+                     task={task}
+                     valueOfTask={value}
+                     colIncludeListValue={column}
+                     defaultValueInColumn={column.defaultValues}
+                  />
                </tr>
             </tbody>
          </table>

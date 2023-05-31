@@ -2,13 +2,18 @@ import { useRef, useState } from 'react';
 import './taskEdit.scss';
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
+import { useAppDispatch } from '~/config/store';
+import { handleEditTaskFromGroup } from '~/pages/Board/board.reducer';
+import { ITask } from '~/shared/model/task';
 interface ITaskEditProps {
-   task: any;
+   task: ITask;
+   groupId: string;
 }
-const TaskEdit = ({ task }: ITaskEditProps) => {
+const TaskEdit = ({ task, groupId }: ITaskEditProps) => {
    const [isRenameTask, setIsRenameTask] = useState(false);
    const elementInput = useRef<HTMLInputElement>(null);
    const [valueTask, setValueTask] = useState<string>(task.name);
+   const dispatch = useAppDispatch();
    const handleRenameTask = async (
       e: React.FocusEvent<HTMLInputElement, Element>,
       taskID: string,
@@ -17,6 +22,14 @@ const TaskEdit = ({ task }: ITaskEditProps) => {
       await axios.patch(`${SERVER_API_URL}v1/api/task/${taskID}`, {
          name: e.target.value,
       });
+      dispatch(
+         handleEditTaskFromGroup({
+            groupId,
+            taskId: task._id,
+            key: 'name',
+            value: e.target.value,
+         }),
+      );
    };
    return (
       <td className="table__data-task-value" key={task._id}>
