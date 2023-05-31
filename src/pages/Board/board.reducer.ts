@@ -11,7 +11,8 @@ import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { IBoard, IBoardResponse, IBoardsResponse } from '~/shared/model/board';
 import { IResponseData } from '~/shared/model/global';
-import { IItemInListValueSelect, IValueOfTask } from '~/shared/model/task';
+import { IGroup } from '~/shared/model/group';
+import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
 
 const apiUrl = SERVER_API_URL;
@@ -33,7 +34,7 @@ interface IInitState {
       mess: string;
    };
    indexTab: number;
-   searchValue:string;
+   searchValue: string;
 }
 
 const initialState: IInitState = {
@@ -52,7 +53,7 @@ const initialState: IInitState = {
       mess: '',
    },
    indexTab: 0,
-   searchValue: ''
+   searchValue: '',
 };
 
 // body request
@@ -229,6 +230,117 @@ const boardSlice = createSlice({
             };
          }
       },
+      handleAddTaskToGroup: (
+         state,
+         action: PayloadAction<{
+            groupId: string;
+            newTask: ITask;
+         }>,
+      ) => {
+         const { groupId, newTask } = action.payload;
+         const updatedGroups = state.currBoard.data?.groups
+            ?.map((group) => {
+               if (group._id === groupId) {
+                  return {
+                     ...group, // Create a new object or draft
+                     tasks: [...group.tasks, newTask], // Modify the new object or draft
+                  };
+               }
+               return group;
+            })
+            .filter((group) => group !== undefined); // Type assertion to WritableDraft<IGroup>[]
+
+         if (state.currBoard.data && updatedGroups) {
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     groups: updatedGroups, // Update groups array with the new array
+                  },
+               },
+            };
+         }
+      },
+      handleDeleteTaskFromGroup: (
+         state,
+         action: PayloadAction<{ groupId: string; taskId: string }>,
+      ) => {
+         const { groupId, taskId } = action.payload;
+
+         const updatedGroups = state.currBoard.data?.groups
+            ?.map((group) => {
+               if (group._id === groupId) {
+                  return {
+                     ...group,
+                     tasks: group.tasks.filter((task) => task._id !== taskId),
+                  };
+               }
+               return group;
+            })
+            .filter((group) => group !== undefined);
+
+         if (state.currBoard.data && updatedGroups) {
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     groups: updatedGroups,
+                  },
+               },
+            };
+         }
+      },
+      handleEditTaskFromGroup: (
+         state,
+         action: PayloadAction<{
+            groupId: string;
+            taskId: string;
+            key: 'name' | 'description';
+            value: string;
+         }>,
+      ) => {
+         const { groupId, taskId, key, value } = action.payload;
+
+         const updatedGroups = state.currBoard.data?.groups
+            ?.map((group) => {
+               if (group._id === groupId) {
+                  return {
+                     ...group,
+                     tasks: group.tasks.map((task) => {
+                        if (task._id === taskId) {
+                           return {
+                              ...task,
+                              [key]: value, // Update the specified key (name or description) with the new value
+                           };
+                        }
+                        return task;
+                     }),
+                  };
+               }
+               return group;
+            })
+            .filter((group) => group !== undefined);
+
+         if (state.currBoard.data && updatedGroups) {
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     groups: updatedGroups,
+                  },
+               },
+            };
+         }
+      },
+
+      //  handle value
+
       handleAddValueListStatus: (state, action) => {
          const { columnId, newValueStatus } = action.payload;
          state.currBoard.data?.columns?.forEach((col) => {
@@ -319,8 +431,8 @@ const boardSlice = createSlice({
          });
          return state;
       },
-      setSearchValueInput: (state, action ) => {
-         state.searchValue = action.payload
+      setSearchValueInput: (state, action) => {
+         state.searchValue = action.payload;
       },
       // handleUpdateAllSelectedValue: (
       //    state,
@@ -372,14 +484,13 @@ const boardSlice = createSlice({
       //       };
       //    }
       // },
-      
+
       setIndexTab: (
          state,
          action: PayloadAction<{
             index: 0 | 1;
          }>,
       ) => {
-
          return {
             ...state,
             indexTab: action.payload.index,
@@ -491,7 +602,11 @@ export const {
    handleEditValueTask,
    handleEditValueSelected,
    setIndexTab,
-   setSearchValueInput
+   setSearchValueInput,
+   // handle task
+   handleAddTaskToGroup,
+   handleDeleteTaskFromGroup,
+   handleEditTaskFromGroup,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

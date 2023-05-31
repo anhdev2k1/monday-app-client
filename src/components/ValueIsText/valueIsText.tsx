@@ -57,6 +57,10 @@ const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
                className="value__text--input"
                type="text"
                value={valueBox || ''}
+               onInput={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  target.value = target.value.replace(/[^0-9]/g, '');
+               }}
                onChange={(e) => {
                   handleValueChange(e);
                }}
