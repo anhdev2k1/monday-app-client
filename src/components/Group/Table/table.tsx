@@ -182,11 +182,15 @@ const Table = ({ data }: IPropsTable) => {
          messageApi.error('Vui lòng nhập tên task');
       }
    };
-   const filterValue = (data: IValueOfTask[]) => {
-      const result = data.filter((item) => item._id === filterItem._id);
-      return result;
-   };
-
+   // const filterValue = (data: IColumn[]) => {
+   //    const result = filterItem.map(item => {
+   //       data.find(col => col._id === item._id)
+   //    })
+   //    return result;
+   // };
+   // console.log(filterValue(columns!));
+   console.log("filterItem",filterItem);
+   
    return (
       <>
          <table className="table__group">
@@ -198,14 +202,21 @@ const Table = ({ data }: IPropsTable) => {
                      <input type="checkbox" id="checked" />
                   </th>
                   <th className="column__group">Task</th>
-                  {columns &&
-                     columns.map((col) => {
+                  {filterItem.length > 0 ? columns?.map((col) => {
+                     if (filterItem.includes(col._id)) {
                         return (
                            <th className="column__group" key={col._id}>
                               {col.name}
                            </th>
                         );
-                     })}
+                     }
+                  }): columns?.map(col => {
+                     return (
+                        <th className="column__group" key={col._id}>
+                              {col.name}
+                           </th>
+                     )
+                  })}
                   <th className="column__group">
                      <input className="col__group--check" type="checkbox" id="plus--col" />
                      <label
@@ -239,7 +250,20 @@ const Table = ({ data }: IPropsTable) => {
                            />
                         </td>
                         <TaskEdit task={task} />
-                        {task.values.map((itemValue, index) => {
+                        {filterItem.length > 0 ? task.values.map((itemValue, index) => {
+                           const colIncludeListValue = columns?.find(col => {
+                              return filterItem.includes(col._id) && col._id === itemValue.belongColumn
+                           })
+                           if (colIncludeListValue) {
+                              return (
+                                 <ValueTask
+                                    valueOfTask={itemValue}
+                                    key={index}
+                                    colIncludeListValue={colIncludeListValue}
+                                 />
+                              );
+                           }
+                        }): task.values.map((itemValue, index) => {
                            const colIncludeListValue = columns?.find(
                               (col) => col._id === itemValue.belongColumn,
                            );

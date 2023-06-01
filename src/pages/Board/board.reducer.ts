@@ -33,9 +33,8 @@ interface IInitState {
       mess: string;
    };
    indexTab: number;
-   filter: {
-      _id:string
-   }
+   filter: string[];
+   activeFilterItem: string[]
 }
 
 const initialState: IInitState = {
@@ -54,9 +53,8 @@ const initialState: IInitState = {
       mess: '',
    },
    indexTab: 0,
-   filter: {
-      _id:''
-   }
+   filter: [],
+   activeFilterItem: []
 };
 
 // body request
@@ -385,11 +383,27 @@ const boardSlice = createSlice({
          };
       },
 
-      setFilterColumn: (
-         state,
-         action,
-      ) => {
-        state.filter = action.payload
+      setFilterColumn: (state, action) => {
+         let listFilter = state.filter
+         if (listFilter.length > 0 ) {
+            const foundFilter = listFilter.find(item => item === action.payload)
+            if(foundFilter){
+               const removeItem = listFilter.filter(col => col !== foundFilter)
+               state.filter = removeItem
+            }
+            else state.filter.push(action.payload)
+         }else state.filter.push(action.payload);
+      },
+      setActiveFilterItem:(state,action) => {
+         let listActive = state.activeFilterItem
+         if (listActive.length > 0 ) {
+            const foundActive = listActive.find(item => item === action.payload)
+            if(foundActive){
+               const removeItem = listActive.filter(col => col !== foundActive)
+               state.activeFilterItem = removeItem
+            }
+            else state.activeFilterItem.push(action.payload)
+         }else state.activeFilterItem.push(action.payload);
       },
       resetCurrBoard(state) {
          state.currBoard = {
@@ -400,6 +414,10 @@ const boardSlice = createSlice({
             mess: '',
          };
       },
+      resetFilter(state) {
+         state.filter = []
+         state.activeFilterItem = []
+      }
    },
 });
 
@@ -413,7 +431,9 @@ export const {
    handleEditValueSelected,
    // handleUpdateAllSelectedValue,
    setIndexTab,
-   setFilterColumn
+   setFilterColumn,
+   setActiveFilterItem,
+   resetFilter
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

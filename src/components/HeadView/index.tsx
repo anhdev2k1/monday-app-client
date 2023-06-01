@@ -10,14 +10,17 @@ import {
 import Tippy from '../Tippy';
 import { StatusType } from '~/shared/model/global';
 import icons from '../../assets/svg/index';
-import ColumnFilter from './ColumnFilter/columnFilter';
 import { useAppSelector } from '~/config/store';
 import { useEffect, useRef, useState } from 'react';
+import ColumnFilterItem from './ColumnFilterItem/columnFilterItem';
+import { useDispatch } from 'react-redux';
+import { resetFilter, setActiveFilterItem, setFilterColumn } from '~/pages/Board/board.reducer';
 
 const HeadView = () => {
    let countNames: { [key: string]: number } = {};
    const currentBoard = useAppSelector((state) => state.boardSlice.currBoard.data);
    const [isOpen, setIsOpen] = useState(false);
+   const countFilter = useAppSelector(state => state.boardSlice.activeFilterItem)
    const dropdownRef = useRef<any>(null);
    const listGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups)?.flatMap(
       (gr) => gr.tasks,
@@ -33,19 +36,21 @@ const HeadView = () => {
    };
    duplicateNumberOfTask();
 
-   
    useEffect(() => {
       document.addEventListener('click', handleClickOutside);
       return () => {
-        document.removeEventListener('click', handleClickOutside);
+         document.removeEventListener('click', handleClickOutside);
       };
    });
-   const handleClickOutside = (event:any) => {
+   const handleClickOutside = (event: any) => {
       if (!dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
+         setIsOpen(false);
       }
-    };
-  
+   };
+   const dispatch = useDispatch()
+   const handleClearFilter = () => {
+      dispatch(resetFilter())
+   }
    return (
       <div className="table__head">
          <ButtonCustom
@@ -55,11 +60,11 @@ const HeadView = () => {
          />
          <ButtonCustom title="Search" leftIcon={<FontAwesomeIcon icon={faMagnifyingGlass} />} />
          <Tippy position="top" html={<p>Filter by anything</p>}>
-            <div className="filter" onClick={() => setIsOpen(pre => !pre)} ref={dropdownRef}>
+            <div className={`filter ${isOpen ? 'filter__active' : ''}`} onClick={() => setIsOpen((pre) => !pre)} ref={dropdownRef}>
                <div className="filter__icon">
                   <img src={icons.filter} alt="" />
                </div>
-               <span>Filter</span>
+               <span>{countFilter.length > 0 ? `Filter/${countFilter.length}` : 'Filter'}</span>
                <div className="filter__icon filter__down">
                   <FontAwesomeIcon icon={faAngleDown} />
                </div>
@@ -67,17 +72,15 @@ const HeadView = () => {
                   <div className="filter__menu" onClick={() => setIsOpen(false)}>
                      <div className="filter__menu-header">
                         <h3 className="filter__menu-header-heading">Quick filters</h3>
-                        <span>Showing all of 4 tasks</span>
-                        <div className="filter__menu-clear">
-                           <button className="filter__menu-clear-btn">Clear all</button>
-                        </div>
+                        <span>Showing all of {currentBoard?.columns.length} columns</span>
+                        <button className="filter__menu-clear-btn" onClick={handleClearFilter}>Clear all</button>
                      </div>
 
                      <div className="filter__menu-content">
                         <div className="filter__menu-column">
                            <h3>All columns</h3>
                            <div className="filter__menu-column-wrapper">
-                              <div className="menu__column-wrapper">
+                              {/* <div className="menu__column-wrapper">
                                  <h3 className="menu__column-wrapper-heading">Group</h3>
                                  <div className="menu__column-list">
                                     {currentBoard?.groups &&
@@ -92,9 +95,9 @@ const HeadView = () => {
                                           );
                                        })}
                                  </div>
-                              </div>
+                              </div> */}
 
-                              <div className="menu__column-wrapper">
+                              {/* <div className="menu__column-wrapper">
                                  <h3 className="menu__column-wrapper-heading">Name</h3>
                                  <div className="menu__column-list">
                                     {listGroup &&
@@ -109,12 +112,13 @@ const HeadView = () => {
                                           );
                                        })}
                                  </div>
+                              </div> */}
+                              <div className="menu__column-list">
+                                 {currentBoard?.columns &&
+                                    currentBoard.columns.map((col) => {
+                                       return <ColumnFilterItem columnValue={col} />;
+                                    })}
                               </div>
-
-                              {currentBoard?.columns &&
-                                 currentBoard.columns.map((col) => {
-                                    return <ColumnFilter columnData={col} />;
-                                 })}
                            </div>
                         </div>
                      </div>
