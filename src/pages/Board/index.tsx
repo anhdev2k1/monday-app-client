@@ -47,44 +47,11 @@ const Board = () => {
 
    useEffect(() => {
       if (dataCreateCol !== undefined) {
-         // setListsGroup((prev) => {
-         //    const { _id, name, position } = dataCreateCol.column;
-         //    const defaultValue = dataCreateCol.defaultValue;
-         //    const valueIds = [...dataCreateCol.tasksColumnsIds];
-         //    const updatedTasks = prev.map((group, index1) => ({
-         //       ...group,
-         //       tasks: group.tasks.map((task, index) => {
-         //          const valueTaskId = valueIds.shift();
-         //          const newDefaultValueTask: IValueOfTask = {
-         //             _id: valueTaskId!,
-         //             belongColumn: _id,
-         //             value: defaultValue ? null : defaultValue,
-         //             valueId:
-         //                defaultValue && typeof defaultValue !== 'string' ? defaultValue : null,
-         //             name,
-         //             position,
-         //             typeOfValue: defaultValue ? 'multiple' : 'single',
-         //          };
-
-         //          const prevValue = [...task.values];
-
-         //          prevValue.push(newDefaultValueTask);
-         //          return {
-         //             ...task,
-         //             values: prevValue,
-         //          };
-         //       }),
-         //    }));
-         //    return updatedTasks;
-         // });¥
-         console.log('dataCreateCol', dataCreateCol);
+         console.log('dataCreateCol', { dataCreateCol });
 
          dispatch(
             handleAddColumn({
-               newData: {
-                  ...dataCreateCol.column,
-                  defaultValues: dataCreateCol.defaultValues,
-               },
+               newData: dataCreateCol.column,
             }),
          );
       }

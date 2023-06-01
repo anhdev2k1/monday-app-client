@@ -1,5 +1,3 @@
-import { IGroup } from './group';
-
 // export interface IColumn extends IGroup {}
 
 export interface IDefaultValue {
@@ -23,6 +21,5 @@ export interface IColumn {
 
 export interface ICreateCol {
    column: IColumn;
-   defaultValues: IDefaultValue[];
    tasksColumnsIds: string[];
 }

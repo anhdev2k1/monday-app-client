@@ -442,21 +442,11 @@ const boardSlice = createSlice({
          }>,
       ) => {
          if (state.currBoard.data) {
-            const newColumns = [...state.currBoard.data.columns, action.payload.newData];
-
-            return {
-               ...state,
-               currBoard: {
-                  ...state.currBoard,
-                  data: {
-                     ...state.currBoard.data,
-                     columns: newColumns,
-                  },
-               },
-            };
+            const newColumn = action.payload.newData;
+            const copiedColumns = [...state.currBoard.data.columns];
+            copiedColumns.splice(newColumn.position, 0, newColumn);
+            state.currBoard.data.columns = copiedColumns;
          }
-
-         return state;
       },
 
       setIndexTab: (
