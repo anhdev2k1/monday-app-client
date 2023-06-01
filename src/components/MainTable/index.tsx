@@ -21,6 +21,7 @@ export interface IPropMainTable {
 const MainTable = ({ currBoard }: IPropMainTable) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups);
+   const itemFilter = useAppSelector(state => state.boardSlice.filter)
    // const [listsGroup, setListsGroup] = useState<IGroup[]>(currBoard.groups);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();

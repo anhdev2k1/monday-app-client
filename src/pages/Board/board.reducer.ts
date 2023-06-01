@@ -33,6 +33,9 @@ interface IInitState {
       mess: string;
    };
    indexTab: number;
+   filter: {
+      _id:string
+   }
 }
 
 const initialState: IInitState = {
@@ -51,6 +54,9 @@ const initialState: IInitState = {
       mess: '',
    },
    indexTab: 0,
+   filter: {
+      _id:''
+   }
 };
 
 // body request
@@ -317,7 +323,7 @@ const boardSlice = createSlice({
          });
          return state;
       },
-      // handleUpdateAllSelectedValue: (
+
       //    state,
       //    action: PayloadAction<{
       //       valueId: string;
@@ -373,12 +379,17 @@ const boardSlice = createSlice({
             index: 0 | 1;
          }>,
       ) => {
-         console.log('chay vo day r');
-
          return {
             ...state,
             indexTab: action.payload.index,
          };
+      },
+
+      setFilterColumn: (
+         state,
+         action,
+      ) => {
+        state.filter = action.payload
       },
       resetCurrBoard(state) {
          state.currBoard = {
@@ -402,6 +413,7 @@ export const {
    handleEditValueSelected,
    // handleUpdateAllSelectedValue,
    setIndexTab,
+   setFilterColumn
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

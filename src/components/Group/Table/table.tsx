@@ -14,7 +14,7 @@ import TaskEdit from './TaskEdit/taskEdit';
 import Column from '~/components/Column/column';
 import ListType from '~/components/ListTypes/listTypes';
 import { createColumn } from '~/components/MainTable/mainTable.reducer';
-import { ITask } from '~/shared/model/task';
+import { ITask, IValueOfTask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask';
 interface IPropsTable {
@@ -108,6 +108,7 @@ const Table = ({ data }: IPropsTable) => {
    const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
    const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
    const dispatch = useAppDispatch();
+   const filterItem = useAppSelector((state) => state.boardSlice.filter);
    // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
 
    interface ITaskChecked {
@@ -180,6 +181,10 @@ const Table = ({ data }: IPropsTable) => {
       } else {
          messageApi.error('Vui lòng nhập tên task');
       }
+   };
+   const filterValue = (data: IValueOfTask[]) => {
+      const result = data.filter((item) => item._id === filterItem._id);
+      return result;
    };
 
    return (
