@@ -35,10 +35,7 @@ const DropdownStatus = ({
    const [isEdit, setIsEdit] = useState(false);
    const [isApply, setIsApply] = useState(false);
    useEffect(() => {
-      console.log('isApply', isApply);
       if (isApply) {
-         console.log('isApply');
-
          setOpenStatusBox(false);
       }
    }, [isApply]);
@@ -53,8 +50,6 @@ const DropdownStatus = ({
    //    setColorsIsSamp(listStatus);
    // }, [listStatus]);
    const handleEditStatus = () => {
-      console.log('ASdsd');
-
       setIsEdit(true);
    };
    useEffect(() => {
@@ -127,7 +122,6 @@ const DropdownStatus = ({
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
-   console.log(isOpen);
 
    return (
       <>

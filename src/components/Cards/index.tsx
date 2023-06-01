@@ -8,6 +8,7 @@ import { IColumn } from '~/shared/model/column';
 import { Col, Row } from 'antd';
 export interface ITaskCard extends ITask {
    columns: IColumn[];
+   group: IGroup;
 }
 
 const Cards = ({ currBoard }: IPropMainTable) => {
@@ -29,7 +30,7 @@ const Cards = ({ currBoard }: IPropMainTable) => {
          <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]}>
             {taskArray.map((task) => {
                return (
-                  <Col key={task._id} className="gutter-row" span={6} lg={6} md={8} xs={12}>
+                  <Col key={task._id} span={6} lg={6} md={8} xs={12}>
                      <Card task={task} />
                   </Col>
                );

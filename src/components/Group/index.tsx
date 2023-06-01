@@ -3,7 +3,6 @@ import { faAngleDown, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import './group.scss';
 import { useRef, useState } from 'react';
 import Tippy from '../Tippy';
-import HeaderTable from './headerTable';
 import Row from '../Row';
 import { IGroup } from '~/shared/model/group';
 import { IColumn } from '~/shared/model/column';

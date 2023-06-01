@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseMedicalCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IColumn } from '~/shared/model/column';
 import { IGroup } from '~/shared/model/group';
-import { useState, useRef, useEffect, Fragment } from 'react';
+import { useState, useRef, useEffect, Fragment, createRef } from 'react';
 import './table.scss';
 import { message } from 'antd';
 import axios from 'axios';
@@ -35,11 +35,12 @@ const Table = ({ data }: IPropsTable) => {
    const [messageApi, contextHolder] = message.useMessage();
    const handleValueAdd = useRef<any>();
    // const handleEditInput = useRef<HTMLInputElement>(null);
+
+   const listTypeElement: React.RefObject<HTMLDivElement> = createRef();
    const { idBoard } = useParams();
    const [idTask, setIdTask] = useState('');
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
-   const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
-   const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
+   const listColumns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
    const valueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
    const filterItem = useAppSelector((state) => state.boardSlice.filter);
@@ -71,25 +72,33 @@ const Table = ({ data }: IPropsTable) => {
          }),
       );
    };
-   const handleAddColumn = (id: string) => {
-      const addColumn = async () => {
-         try {
-            messageApi.loading('Đợi xý nhé...!');
-            if (idBoard)
+   const handleAddColumn = async (id: string, position?: number) => {
+      try {
+         messageApi.loading('Đợi xý nhé...!');
+         if (idBoard && listColumns) {
+            if (position === undefined) {
                await dispatch(
                   createColumn({
                      idBoard,
-                     typeId: id,
-                     position: listColumns.length + 1,
+                     belongType: id,
+                     position: listColumns.length,
                   }),
                );
-            // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
-            messageApi.success(`Thêm mới column thành công!`);
-         } catch (error) {
-            messageApi.error(`${error}`);
+            } else {
+               await dispatch(
+                  createColumn({
+                     idBoard,
+                     belongType: id,
+                     position: position + 1,
+                  }),
+               );
+            }
          }
-      };
-      addColumn();
+         // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
+         messageApi.success(`Thêm mới column thành công!`);
+      } catch (error) {
+         messageApi.error(`${error}`);
+      }
    };
    const handleAddTask = () => {
       if (valueAddTask !== '') {
@@ -144,37 +153,57 @@ const Table = ({ data }: IPropsTable) => {
                      <label htmlFor="checked"></label>
                      <input type="checkbox" id="checked" />
                   </th>
-                  <th className="column__group column__group-name">Task</th>
-                  {filterItem.length > 0
-                     ? columns?.map((col) => {
-                          if (filterItem.includes(col._id)) {
-                             return (
-                                <th className="column__group" key={col._id}>
-                                   {col.name}
-                                </th>
-                             );
-                          }
-                       })
-                     : columns?.map((col) => {
-                          return (
-                             <th className="column__group" key={col._id}>
-                                {col.name}
-                             </th>
-                          );
-                       })}
+                  <th className="column__group">Task</th>
+                  {columns &&
+                     // columns.map((col) => {
+                     //    return (
+                     //       <th className="column__group" key={col._id}>
+                     //          {col.name}
+                     //       </th>
+
+                     //    );
+                     // })}
+                     columns.map((col, index) => (
+                        <Column
+                           index={index}
+                           key={col._id}
+                           name={col.name}
+                           _id={col._id}
+                           position={col.position}
+                           handleAddColumn={handleAddColumn}
+                        />
+                     ))}
                   <th className="column__group">
-                     <input className="col__group--check" type="checkbox" id="plus--col" />
-                     <label
-                        className="plus__lable"
-                        htmlFor="plus--col"
-                        onClick={() => {
-                           setIsOpenListTypes((prev) => !prev);
+                     <input
+                        defaultChecked={false}
+                        onChange={(event) => {
+                           const isChecked = event.target.checked;
+                           if (!isChecked) {
+                              if (listTypeElement.current !== null) {
+                                 listTypeElement.current.style.display = 'none';
+                              }
+                           } else {
+                              if (listTypeElement.current !== null) {
+                                 listTypeElement.current.style.display = 'block';
+                              }
+                           }
                         }}
-                     >
-                        <div className="input--icon">
-                           <FontAwesomeIcon icon={faPlus} />
-                           {isOpenListTypes && <ListType handleAddColumn={handleAddColumn} />}
-                        </div>
+                        // onBlur={(event) => {
+                        //    const isChecked = event.target.checked;
+                        //    if (isChecked) {
+                        //       if (listTypeElement.current !== null) {
+                        //          listTypeElement.current.style.display = 'none';
+                        //       }
+                        //       event.target.checked = false;
+                        //    }
+                        // }}
+                        className="col__group--check"
+                        type="checkbox"
+                        id={`plus--col--${data._id}`}
+                     />
+                     <label className="plus__lable" htmlFor={`plus--col--${data._id}`}>
+                        <FontAwesomeIcon icon={faPlus} />
+                        <ListType ref={listTypeElement} handleAddColumn={handleAddColumn} />
                      </label>
                   </th>
                </tr>
@@ -203,9 +232,13 @@ const Table = ({ data }: IPropsTable) => {
                                 });
                                 if (colIncludeListValue) {
                                    return (
-                                      <ValueTask key={index} colIncludeListValue={colIncludeListValue}  valueOfTask={itemValue} task={task} defaultValueInColumn={colIncludeListValue.defaultValues}/>
-                                     
-                                      
+                                      <ValueTask
+                                         key={index}
+                                         colIncludeListValue={colIncludeListValue}
+                                         valueOfTask={itemValue}
+                                         task={task}
+                                         defaultValueInColumn={colIncludeListValue.defaultValues}
+                                      />
                                    );
                                 }
                              })

@@ -12,16 +12,12 @@ interface ITaskEditProps {
 const TaskEdit = ({ task, groupId }: ITaskEditProps) => {
    const [isRenameTask, setIsRenameTask] = useState(false);
    const elementInput = useRef<HTMLInputElement>(null);
-   const [valueTask, setValueTask] = useState<string>(task.name);
    const dispatch = useAppDispatch();
    const handleRenameTask = async (
       e: React.FocusEvent<HTMLInputElement, Element>,
       taskID: string,
    ) => {
       setIsRenameTask(true);
-      await axios.patch(`${SERVER_API_URL}v1/api/task/${taskID}`, {
-         name: e.target.value,
-      });
       dispatch(
          handleEditTaskFromGroup({
             groupId,
@@ -30,6 +26,9 @@ const TaskEdit = ({ task, groupId }: ITaskEditProps) => {
             value: e.target.value,
          }),
       );
+      await axios.patch(`${SERVER_API_URL}v1/api/task/${taskID}`, {
+         name: e.target.value,
+      });
    };
    return (
       <td className="table__data-task-value table-data-name" key={task._id}>
@@ -37,18 +36,14 @@ const TaskEdit = ({ task, groupId }: ITaskEditProps) => {
             <input
                autoFocus
                className="input__rename-task"
-               value={valueTask}
+               defaultValue={task.name}
                type="text"
                style={{ width: '90%' }}
                onBlur={(e) => {
                   handleRenameTask(e, task._id);
                   setIsRenameTask(false);
                }}
-               onChange={(e) => {
-                  if (e.target.value) {
-                     setValueTask(e.target.value);
-                  }
-               }}
+               onChange={(e) => {}}
                ref={elementInput}
             />
          ) : (
@@ -57,7 +52,7 @@ const TaskEdit = ({ task, groupId }: ITaskEditProps) => {
                onClick={(e) => setIsRenameTask(true)}
                data-id={task._id}
             >
-               {valueTask ? valueTask : task.name}
+               {task.name}
             </span>
          )}
       </td>

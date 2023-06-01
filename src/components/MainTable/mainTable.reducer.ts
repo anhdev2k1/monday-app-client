@@ -5,20 +5,30 @@ import {
    isPending,
    isRejected,
 } from '@reduxjs/toolkit';
-import { IColumn } from '~/shared/model/column';
+import { IColumn, ICreateCol, IDefaultValue } from '~/shared/model/column';
 import { SERVER_API_URL } from '~/config/constants';
 import { IResponseData } from '~/shared/model/global';
 import axios from 'axios';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
+
+// export interface IDataCreateCol {
+//    column: IColumn;
+//    defaultValue: IDefaultValue[];
+//    tasksColumnsIds: string[];
+// }
 
 interface IInitState {
    listColumns: {
       datas: IColumn[];
    };
    createCol: {
+      data?: ICreateCol;
       loading: boolean;
       status: string;
       message: string;
+   };
+   deleteCol: {
+      idDelete: string;
    };
 }
 
@@ -27,15 +37,19 @@ const initialState: IInitState = {
       datas: [],
    },
    createCol: {
+      data: undefined,
       loading: false,
       status: '',
       message: '',
+   },
+   deleteCol: {
+      idDelete: '',
    },
 };
 
 export interface ICreateColumn {
    idBoard: string;
-   typeId: string;
+   belongType: string;
    position: number;
 }
 export interface IDeleteColumn {
@@ -52,7 +66,7 @@ export const createColumn = createAsyncThunk(
    async (bodyRequest: ICreateColumn) => {
       const { idBoard, ...rest } = bodyRequest;
       const requestUrl = `${SERVER_API_URL}v1/api/board/${idBoard}/column`;
-      return await axios.post<IResponseData<{ column: IColumn }>>(requestUrl, rest);
+      return await axios.post<IResponseData<ICreateCol>>(requestUrl, rest);
    },
    { serializeError: serializeAxiosError },
 );
@@ -90,6 +104,7 @@ export const mainTableSlice = createSlice({
          .addMatcher(isFulfilled(createColumn), (state, action) => {
             if (action.payload.data.metadata)
                state.listColumns.datas.push(action.payload.data.metadata?.column);
+            state.createCol.data = action.payload.data.metadata;
             state.createCol.loading = false;
             state.createCol.status = action.payload.data.status;
             state.createCol.message = action.payload.data.message;
@@ -153,6 +168,12 @@ export const mainTableSlice = createSlice({
             };
          }
       },
+      resetDataCreateCol(state) {
+         state.createCol.data = undefined;
+         state.createCol.loading = false;
+         state.createCol.status = '';
+         state.createCol.message = '';
+      },
    },
 });
 
@@ -163,6 +184,7 @@ export const {
    renameColMainTable,
    // addColMainTable,
    deleteColumnMainTable,
+   resetDataCreateCol,
 } = mainTableSlice.actions;
 
 export default mainTableSlice.reducer;

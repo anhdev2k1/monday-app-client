@@ -27,6 +27,7 @@ const ValueCustomizedByColumnType = ({ nameOfType, valueTask, task }: ITypeValue
       ),
       text: (
          <ValueIsText
+            type="text"
             task={task}
             valueTask={valueTask}
             icon={<img className="icon__value--task" src={iconText} alt="icon__value" />}
@@ -34,6 +35,7 @@ const ValueCustomizedByColumnType = ({ nameOfType, valueTask, task }: ITypeValue
       ),
       number: (
          <ValueIsText
+            type="number"
             task={task}
             valueTask={valueTask}
             icon={<img className="icon__value--task" src={iconText} alt="icon__value" />}

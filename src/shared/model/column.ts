@@ -1,6 +1,6 @@
-import { IGroup } from './group';
-
 // export interface IColumn extends IGroup {}
+
+import { IValueOfTask } from './task';
 
 export interface IDefaultValue {
    _id: string;
@@ -18,5 +18,10 @@ export interface IColumn {
       icon: string;
       color: string;
    };
-   defaultValues: IDefaultValue[] | [];
+   defaultValues: IDefaultValue[];
+}
+
+export interface ICreateCol {
+   column: IColumn;
+   tasksColumns: IValueOfTask[];
 }

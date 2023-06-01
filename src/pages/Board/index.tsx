@@ -8,12 +8,20 @@ import MainTable from '~/components/MainTable';
 import Cards from '~/components/Cards';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { getBoardDetail, setIndexTab } from './board.reducer';
+import {
+   getBoardDetail,
+   handleAddColumn,
+   handleAddValueIntoTask,
+   setIndexTab,
+} from './board.reducer';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
 import icons from '../../assets/svg/index';
 import { Input } from 'antd';
 import LoadingLogo from '~/components/LoadingLogo/loadingLogo';
+import { getListTypes } from '~/components/ListTypes/listTypes.reducer';
+import { resetDataCreateCol } from '~/components/MainTable/mainTable.reducer';
+import { IGroup } from '~/shared/model/group';
 const Board = () => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
@@ -22,6 +30,8 @@ const Board = () => {
    const { idWorkspace } = useParams();
    const [changeEditName, setChangeEditName] = useState(currBoard?.name);
    const [isLoading, setIsLoading] = useState<boolean>(true);
+   const dataCreateCol = useAppSelector((state) => state.mainTableSlice.createCol.data);
+
    useEffect(() => {
       if (!cuurWorkspace && idWorkspace) {
          dispatch(
@@ -33,9 +43,9 @@ const Board = () => {
    }, [cuurWorkspace, dispatch, idWorkspace]);
    useEffect(() => {
       setTimeout(() => {
-         setIsLoading(false)
-      },1500)
-   },[])
+         setIsLoading(false);
+      }, 1500);
+   }, []);
    useEffect(() => {
       if (idBoard) {
          dispatch(
@@ -50,6 +60,32 @@ const Board = () => {
    const handleEditBoard = () => {
       setEditName(false);
    };
+
+   useEffect(() => {
+      dispatch(getListTypes());
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
+   console.log('board render');
+
+   useEffect(() => {
+      if (dataCreateCol !== undefined) {
+         console.log('dataCreateCol', { dataCreateCol });
+
+         dispatch(
+            handleAddColumn({
+               newData: dataCreateCol.column,
+            }),
+         );
+         dispatch(
+            handleAddValueIntoTask({
+               position: dataCreateCol.column.position,
+               newValuesOfTasks: dataCreateCol.tasksColumns,
+            }),
+         );
+      }
+      dispatch(resetDataCreateCol());
+   }, [dataCreateCol, dispatch]);
+
    return (
       <>
          {isLoading ? (
