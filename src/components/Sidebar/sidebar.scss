@@ -84,6 +84,9 @@
          .menu__container--input {
             width: 100%;
             overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            // -webkit-box-orient: vertical;
          }
          .menu__container--input.focus__input {
             border: 0.5px solid #ccc;
