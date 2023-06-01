@@ -25,14 +25,11 @@ interface IPropsTable {
 
 const Table = ({ data }: IPropsTable) => {
    const [listTask, setListTask] = useState<ITask[]>(data.tasks);
-   console.log('change tasks', data.tasks);
    useEffect(() => {
       setListTask(data.tasks);
    }, [data.tasks]);
-   console.log('listTask', listTask);
 
    const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
-   console.log('columns', columns, data.name);
    // const [isRenameTask, setIsRenameTask] = useState(false);
    // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');

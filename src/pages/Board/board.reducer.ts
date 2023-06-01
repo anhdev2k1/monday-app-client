@@ -13,6 +13,7 @@ import { IBoard, IBoardResponse, IBoardsResponse } from '~/shared/model/board';
 import { IColumn } from '~/shared/model/column';
 import { IResponseData } from '~/shared/model/global';
 import { IGroup } from '~/shared/model/group';
+import { ITypeItem } from '~/shared/model/listTypes';
 import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
 
@@ -552,6 +553,33 @@ const boardSlice = createSlice({
             mess: '',
          };
       },
+
+      handleAddValueIntoTask(
+         state,
+         action: PayloadAction<{
+            position: number;
+            newValuesOfTasks: IValueOfTask[];
+         }>,
+      ) {
+         const valuesOfTasks = [...action.payload.newValuesOfTasks];
+         if (state.currBoard.data) {
+            state.currBoard.data.groups.map((group) => {
+               group.tasks.map((task) => {
+                  const value = valuesOfTasks.pop()!;
+                  const newValue: IValueOfTask = {
+                     _id: value._id,
+                     name: value.name,
+                     value: value.value,
+                     valueId: value.valueId,
+                     belongColumn: value.belongColumn,
+                     typeOfValue: value.typeOfValue,
+                  };
+                  task.values.splice(action.payload.position, 0, newValue);
+                  return task;
+               });
+            });
+         }
+      },
    },
 });
 
@@ -573,6 +601,9 @@ export const {
    handleEditTaskFromGroup,
    // handle clumn
    handleAddColumn,
+
+   // Handle value when add a new column
+   handleAddValueIntoTask,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

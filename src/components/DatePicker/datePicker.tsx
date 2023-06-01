@@ -22,7 +22,6 @@ const DateTimePicker: React.FC<IPropsDatePicker> = ({ valueTask, icon, task }) =
       console.log('Ngày được chọn:', date);
       console.log('Ngày được chọn dưới dạng chuỗi:', dateString);
    };
-   console.log(selectedDate);
 
    const handleEmptyValue = () => {
       setSelectedDate(null);

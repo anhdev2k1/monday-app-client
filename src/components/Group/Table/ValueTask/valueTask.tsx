@@ -80,9 +80,6 @@ const ValueTask = ({
       setOpenStatusBox((pre) => !pre);
    };
 
-   // console.log('valuesSelect', valuesSelect);
-   console.log('valueOfTask', valueOfTask);
-
    const changeValueSelected = () => {
       if (valuesSelect) {
          const temp = valuesSelect.find((value) => value._id === changeStatus.idSelected);

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './board.scss';
 import { faCircleExclamation, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,11 +8,17 @@ import MainTable from '~/components/MainTable';
 import Cards from '~/components/Cards';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { getBoardDetail, handleAddColumn, setIndexTab } from './board.reducer';
+import {
+   getBoardDetail,
+   handleAddColumn,
+   handleAddValueIntoTask,
+   setIndexTab,
+} from './board.reducer';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
 import { getListTypes } from '~/components/ListTypes/listTypes.reducer';
 import { resetDataCreateCol } from '~/components/MainTable/mainTable.reducer';
+import { IGroup } from '~/shared/model/group';
 const Board = () => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
@@ -20,6 +26,7 @@ const Board = () => {
    const cuurWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkspace } = useParams();
    const dataCreateCol = useAppSelector((state) => state.mainTableSlice.createCol.data);
+
    useEffect(() => {
       if (!cuurWorkspace && idWorkspace) {
          dispatch(
@@ -52,6 +59,12 @@ const Board = () => {
          dispatch(
             handleAddColumn({
                newData: dataCreateCol.column,
+            }),
+         );
+         dispatch(
+            handleAddValueIntoTask({
+               position: dataCreateCol.column.position,
+               newValuesOfTasks: dataCreateCol.tasksColumns,
             }),
          );
       }
