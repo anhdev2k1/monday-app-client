@@ -72,17 +72,28 @@ const Table = ({ data }: IPropsTable) => {
          }),
       );
    };
-   const handleAddColumn = async (id: string) => {
+   const handleAddColumn = async (id: string, position?: number) => {
       try {
          messageApi.loading('Đợi xý nhé...!');
-         if (idBoard && listColumns)
-            await dispatch(
-               createColumn({
-                  idBoard,
-                  belongType: id,
-                  position: listColumns.length,
-               }),
-            );
+         if (idBoard && listColumns) {
+            if (position === undefined) {
+               await dispatch(
+                  createColumn({
+                     idBoard,
+                     belongType: id,
+                     position: listColumns.length,
+                  }),
+               );
+            } else {
+               await dispatch(
+                  createColumn({
+                     idBoard,
+                     belongType: id,
+                     position: position + 1,
+                  }),
+               );
+            }
+         }
          // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
          messageApi.success(`Thêm mới column thành công!`);
       } catch (error) {
@@ -137,13 +148,24 @@ const Table = ({ data }: IPropsTable) => {
                   </th>
                   <th className="column__group">Task</th>
                   {columns &&
-                     columns.map((col) => {
-                        return (
-                           <th className="column__group" key={col._id}>
-                              {col.name}
-                           </th>
-                        );
-                     })}
+                     // columns.map((col) => {
+                     //    return (
+                     //       <th className="column__group" key={col._id}>
+                     //          {col.name}
+                     //       </th>
+
+                     //    );
+                     // })}
+                     columns.map((col, index) => (
+                        <Column
+                           index={index}
+                           key={col._id}
+                           name={col.name}
+                           _id={col._id}
+                           position={col.position}
+                           handleAddColumn={handleAddColumn}
+                        />
+                     ))}
                   <th className="column__group">
                      <input
                         defaultChecked={false}

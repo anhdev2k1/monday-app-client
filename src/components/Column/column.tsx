@@ -16,11 +16,13 @@ import {
    renameColMainTable,
 } from '../MainTable/mainTable.reducer';
 interface IPropsColumn {
+   index: number;
    name: string;
    _id: string;
    position: number;
+   handleAddColumn: (id: string, position?: number) => Promise<void>;
 }
-const Column = ({ name, _id, position }: IPropsColumn) => {
+const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
    const listTypes = useAppSelector((state) => state.listTypesSlice.listTypes.datas);
    const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
@@ -31,17 +33,6 @@ const Column = ({ name, _id, position }: IPropsColumn) => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
    const [valueInput, setValueInput] = useState<string>(name);
-   const handleCreateColumn = ({ idBoard, belongType, position }: ICreateColumn) => {
-      dispatch(
-         createColumn({
-            idBoard,
-            belongType,
-            position,
-         }),
-      );
-   };
-
-   console.log(name);
 
    const handleDeleteColumn = ({ idBoard, idColumn }: IDeleteColumn) => {
       dispatch(
@@ -91,14 +82,7 @@ const Column = ({ name, _id, position }: IPropsColumn) => {
                key: `2-${index}`,
                label: item.name,
                icon: <img src={add} alt="dropdow--icon" />,
-               onClick: () => {
-                  if (idBoard)
-                     handleCreateColumn({
-                        idBoard,
-                        belongType: item._id,
-                        position,
-                     });
-               },
+               onClick: () => handleAddColumn(item._id, position),
             };
          }),
       },
