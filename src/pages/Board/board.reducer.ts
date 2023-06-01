@@ -10,6 +10,7 @@ import {
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { IBoard, IBoardResponse, IBoardsResponse } from '~/shared/model/board';
+import { IColumn } from '~/shared/model/column';
 import { IResponseData } from '~/shared/model/global';
 import { IGroup } from '~/shared/model/group';
 import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task';
@@ -434,56 +435,29 @@ const boardSlice = createSlice({
       setSearchValueInput: (state, action) => {
          state.searchValue = action.payload;
       },
-      // handleUpdateAllSelectedValue: (
-      //    state,
-      //    action: PayloadAction<{
-      //       valueId: string;
-      //       key: 'color' | 'value';
-      //       value: string;
-      //    }>,
-      // ) => {
-      //    // update tất cả các value trong group nếu thay đổi value đang được selected?
-      //    const { valueId, key, value } = action.payload;
+      handleAddColumn: (
+         state,
+         action: PayloadAction<{
+            newData: IColumn;
+         }>,
+      ) => {
+         if (state.currBoard.data) {
+            const newColumns = [...state.currBoard.data.columns, action.payload.newData];
 
-      //    const updatedGroups = state.currBoard.data?.groups.map((group) => {
-      //       const updatedTasks = group.tasks.map((task) => {
-      //          const updatedValues = task.values.map((val) => {
-      //             if (val._id && val._id === valueId) {
-      //                return {
-      //                   ...val,
-      //                   valueId: {
-      //                      ...val.valueId,
-      //                      [key]: value,
-      //                   },
-      //                };
-      //             }
-      //             return val;
-      //          });
+            return {
+               ...state,
+               currBoard: {
+                  ...state.currBoard,
+                  data: {
+                     ...state.currBoard.data,
+                     columns: newColumns,
+                  },
+               },
+            };
+         }
 
-      //          return {
-      //             ...task,
-      //             values: updatedValues,
-      //          };
-      //       });
-
-      //       return {
-      //          ...group,
-      //          tasks: updatedTasks,
-      //       };
-      //    });
-      //    if (updatedGroups && state.currBoard.data) {
-      //       return {
-      //          ...state,
-      //          currBoard: {
-      //             ...state.currBoard,
-      //             data: {
-      //                ...state.currBoard.data,
-      //                groups: updatedGroups,
-      //             },
-      //          },
-      //       };
-      //    }
-      // },
+         return state;
+      },
 
       setIndexTab: (
          state,
@@ -607,6 +581,8 @@ export const {
    handleAddTaskToGroup,
    handleDeleteTaskFromGroup,
    handleEditTaskFromGroup,
+   // handle clumn
+   handleAddColumn,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

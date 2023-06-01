@@ -1,15 +1,21 @@
-import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '~/config/store';
+import React, { forwardRef, Ref } from 'react';
+import { useAppSelector } from '~/config/store';
 import { getListTypes } from './listTypes.reducer';
 import './listTypes.scss';
 import ButtonCustom from '../Button/ButtonCustom';
-interface ILisTTypesProps {
+
+interface IListTypesProps {
    handleAddColumn: (id: string) => void;
 }
-const ListType = ({ handleAddColumn }: ILisTTypesProps) => {
+
+const ListTypes: React.ForwardRefRenderFunction<HTMLDivElement, IListTypesProps> = (
+   { handleAddColumn },
+   ref: Ref<HTMLDivElement>,
+) => {
    const listTypes = useAppSelector((state) => state.listTypesSlice.listTypes.datas);
+
    return (
-      <div className="list__types--custom">
+      <div className="list__types--custom" onClick={(e) => {}} ref={ref}>
          <ul className="list__types">
             {listTypes &&
                listTypes.map((typeItem, index) => {
@@ -36,5 +42,7 @@ const ListType = ({ handleAddColumn }: ILisTTypesProps) => {
       </div>
    );
 };
+
+const ListType = forwardRef(ListTypes);
 
 export default ListType;

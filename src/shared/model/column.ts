@@ -18,5 +18,11 @@ export interface IColumn {
       icon: string;
       color: string;
    };
-   defaultValues: IDefaultValue[] | [];
+   defaultValues: IDefaultValue[];
+}
+
+export interface ICreateCol {
+   column: IColumn;
+   defaultValues: IDefaultValue[];
+   tasksColumnsIds: string[];
 }

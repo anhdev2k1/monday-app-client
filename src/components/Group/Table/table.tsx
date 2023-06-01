@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouseMedicalCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IColumn } from '~/shared/model/column';
 import { IGroup } from '~/shared/model/group';
-import { useState, useRef, useEffect, Fragment } from 'react';
+import { useState, useRef, useEffect, Fragment, createRef } from 'react';
 import './table.scss';
 import { message } from 'antd';
 import axios from 'axios';
@@ -39,10 +39,11 @@ const Table = ({ data }: IPropsTable) => {
    const [messageApi, contextHolder] = message.useMessage();
    const handleValueAdd = useRef<any>();
    // const handleEditInput = useRef<HTMLInputElement>(null);
+
+   const listTypeElement: React.RefObject<HTMLDivElement> = createRef();
    const { idBoard } = useParams();
    const [idTask, setIdTask] = useState('');
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
-   const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
    const listColumns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
    const valueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
@@ -74,25 +75,22 @@ const Table = ({ data }: IPropsTable) => {
          }),
       );
    };
-   const handleAddColumn = (id: string) => {
-      const addColumn = async () => {
-         try {
-            messageApi.loading('Đợi xý nhé...!');
-            if (idBoard && listColumns)
-               await dispatch(
-                  createColumn({
-                     idBoard,
-                     belongType: id,
-                     position: listColumns.length,
-                  }),
-               );
-            // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
-            messageApi.success(`Thêm mới column thành công!`);
-         } catch (error) {
-            messageApi.error(`${error}`);
-         }
-      };
-      addColumn();
+   const handleAddColumn = async (id: string) => {
+      try {
+         messageApi.loading('Đợi xý nhé...!');
+         if (idBoard && listColumns)
+            await dispatch(
+               createColumn({
+                  idBoard,
+                  belongType: id,
+                  position: listColumns.length,
+               }),
+            );
+         // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
+         messageApi.success(`Thêm mới column thành công!`);
+      } catch (error) {
+         messageApi.error(`${error}`);
+      }
    };
    const handleAddTask = () => {
       if (valueAddTask !== '') {
@@ -150,18 +148,36 @@ const Table = ({ data }: IPropsTable) => {
                         );
                      })}
                   <th className="column__group">
-                     <input className="col__group--check" type="checkbox" id="plus--col" />
-                     <label
-                        className="plus__lable"
-                        htmlFor="plus--col"
-                        onClick={() => {
-                           setIsOpenListTypes((prev) => !prev);
+                     <input
+                        defaultChecked={false}
+                        onChange={(event) => {
+                           const isChecked = event.target.checked;
+                           if (!isChecked) {
+                              if (listTypeElement.current !== null) {
+                                 listTypeElement.current.style.display = 'none';
+                              }
+                           } else {
+                              if (listTypeElement.current !== null) {
+                                 listTypeElement.current.style.display = 'block';
+                              }
+                           }
                         }}
-                     >
-                        <div className="input--icon">
-                           <FontAwesomeIcon icon={faPlus} />
-                           {isOpenListTypes && <ListType handleAddColumn={handleAddColumn} />}
-                        </div>
+                        // onBlur={(event) => {
+                        //    const isChecked = event.target.checked;
+                        //    if (isChecked) {
+                        //       if (listTypeElement.current !== null) {
+                        //          listTypeElement.current.style.display = 'none';
+                        //       }
+                        //       event.target.checked = false;
+                        //    }
+                        // }}
+                        className="col__group--check"
+                        type="checkbox"
+                        id={`plus--col--${data._id}`}
+                     />
+                     <label className="plus__lable" htmlFor={`plus--col--${data._id}`}>
+                        <FontAwesomeIcon icon={faPlus} />
+                        <ListType ref={listTypeElement} handleAddColumn={handleAddColumn} />
                      </label>
                   </th>
                </tr>

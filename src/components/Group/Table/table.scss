@@ -10,24 +10,19 @@
          min-width: 140px;
          border-bottom: 1px solid #edeef4;
          border-right: 1px solid #edeef4;
-         height: 50px;
+         height: 36px;
          .col__group--check {
             opacity: 0;
-            &:checked ~ .plus__lable {
-               .input--icon {
-                  cursor: pointer;
-                  border-radius: 3px;
-                  &:hover {
-                     background-color: var(--background-btn-default);
-                  }
-                  > svg {
-                     font-size: 1.6rem;
-                     transform: rotate(0deg);
-                     transition: transform 0.2s ease-in-out;
-                  }
-                  padding: 0 4px;
-                  border: none;
-               }
+         }
+         .plus__lable {
+            position: relative;
+            padding: 10px;
+            .input--icon {
+               position: absolute;
+               right: 0;
+               bottom: 0;
+               top: 0;
+               left: 0;
             }
          }
       }
