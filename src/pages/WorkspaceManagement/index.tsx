@@ -16,6 +16,7 @@ import { getListBoards } from '../Board/board.reducer';
 import BoardSidebar from '~/components/BoardSidebar';
 import { IWorkspace } from '~/shared/model/workSpace';
 import Notification from '~/components/NotificationProvider/Notification/notification';
+import LoadingLogo from '~/components/LoadingLogo/loadingLogo';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
@@ -55,7 +56,7 @@ const WorkspaceManagement = () => {
          dispatch(resetCurrWorkspace());
       };
    }, []);
-  
+
    const items: TabsProps['items'] = [
       {
          key: '1',
@@ -64,7 +65,6 @@ const WorkspaceManagement = () => {
             <>
                <span>Boards and dashboards you visited recently in this workspace</span>
                <div className="workspace__boards">
-                 
                   {currentWorkspace?.boards &&
                      currentWorkspace.boards.map((board, index) => {
                         return <BoardSidebar dataBoard={board} key={index} />;
@@ -107,7 +107,7 @@ const WorkspaceManagement = () => {
             [fieldUpdate]: e.target.value,
             idWorkspace,
          }),
-      )
+      );
 
       dispatch(
          editWorkSpace({
@@ -115,7 +115,6 @@ const WorkspaceManagement = () => {
             idWorkspace,
          }),
       );
-
    };
 
    const handleChangeInput = useCallback(
@@ -131,48 +130,57 @@ const WorkspaceManagement = () => {
       },
       [],
    );
-
+   const [isLoading, setIsLoading] = useState<boolean>(true);
+   useEffect(() => {
+      setTimeout(() => {
+         setIsLoading(false);
+      }, 1500);
+   }, []);
    return (
       <>
-         <div className="wrapper">
-            <div className="workspace__cover">
-               <img
-                  src="https://cdn.monday.com/images/workspaces_cover_photos/full/done.png"
-                  alt=""
-               />
-            </div>
-            <div className="workspace__header">
-               <div className="workspace__header-avt">
-                  <span>{currentWorkspace?.name.substring(0, 1)}</span>
-               </div>
-               <div className="workspace__header-title">
-                  <Input
-                     className="header__title-name"
-                     value={currentWorkspace?.name}
-                     onChange={(e) => {
-                        handleChangeInput(e, 'name');
-                     }}
-                     onBlur={(e) => {
-                        handleBlurInput(e, 'name');
-                     }}
-                  />
-                  <TextArea
-                     rows={3}
-                     value={currentWorkspace?.description}
-                     className="header__title-desc"
-                     onChange={(e) => {
-                        handleChangeInput(e, 'description');
-                     }}
-                     onBlur={(e) => {
-                        handleBlurInput(e, 'description');
-                     }}
+         {isLoading ? (
+            <LoadingLogo height='100%' />
+         ) : (
+            <div className="workspace__container">
+               <div className="workspace__cover">
+                  <img
+                     src="https://cdn.monday.com/images/workspaces_cover_photos/full/done.png"
+                     alt=""
                   />
                </div>
+               <div className="workspace__header">
+                  <div className="workspace__header-avt">
+                     <span>{currentWorkspace?.name.substring(0, 1)}</span>
+                  </div>
+                  <div className="workspace__header-title">
+                     <Input
+                        className="header__title-name"
+                        value={currentWorkspace?.name}
+                        onChange={(e) => {
+                           handleChangeInput(e, 'name');
+                        }}
+                        onBlur={(e) => {
+                           handleBlurInput(e, 'name');
+                        }}
+                     />
+                     <TextArea
+                        rows={2}
+                        value={currentWorkspace?.description}
+                        className="header__title-desc"
+                        onChange={(e) => {
+                           handleChangeInput(e, 'description');
+                        }}
+                        onBlur={(e) => {
+                           handleBlurInput(e, 'description');
+                        }}
+                     />
+                  </div>
+               </div>
+               <div className="workspace__content">
+                  <Tabs defaultActiveKey="1" items={items} />
+               </div>
             </div>
-            <div className="workspace__content">
-               <Tabs defaultActiveKey="1" items={items} />
-            </div>
-         </div>
+         )}
       </>
    );
 };

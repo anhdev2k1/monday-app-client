@@ -4,11 +4,15 @@
    justify-content: space-between;
    align-items: center;
    border-radius: 3px;
-   background-color: var(--background-btn-default);
+   
    margin-bottom: 10px;
    padding: 6px 10px 6px 6px;
    font-size: 1.3rem;
    font-weight: 500;
+   &:hover{
+      background-color: var(--background-btn-default);
+      transition: all .3s;
+   }
    .board__info {
       display: flex;
       align-items: center;

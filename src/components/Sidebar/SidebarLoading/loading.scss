@@ -1,0 +1,25 @@
+.loading__wrapper{
+    width: 100%;
+    position: relative;
+    background-color: #eeee;
+    overflow: hidden;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    .loading__swiper{
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: hsl(0, 1%, 71%);
+        width: 30px;
+        height: 100%;
+        filter: blur(30px);
+        animation: swiper ease-in-out 1s infinite ;
+    }
+}
+@keyframes swiper {
+    from{
+        transform: translateX(400px);
+    }to{
+        transform: translateX(0);
+    }
+}

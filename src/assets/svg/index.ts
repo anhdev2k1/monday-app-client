@@ -21,7 +21,21 @@ const images = {
    iconDesTask: require('./iconDesTask.svg').default,
    filter: require('./filter.svg').default,
    sort: require('./sort.svg').default,
-   hide: require('./hide.svg').default
+   hide: require('./hide.svg').default,
+   burger: require('./burger.svg').default,
+   flower: require('./flower.svg').default,
+   notification: require('./notification.svg').default,
+   inbox: require('./inbox.svg').default,
+   invite: require('./invite.svg').default,
+   app: require('./app.svg').default,
+   search: require('./search.svg').default,
+   help: require('./help.svg').default,
+   info: require('./info.svg').default,
+   heart: require('./heart.svg').default,
+   card: require('./card.svg').default,
+   home: require('./home.svg').default,
+   work: require('./work.svg').default,
+
 };
 
 export default images;

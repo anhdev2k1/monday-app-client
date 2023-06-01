@@ -1,12 +1,28 @@
 import React from 'react';
+import NavbarTop from '~/components/NavbarTop/navbarTop';
 import Sidebar from '~/components/Sidebar/sidebar';
 import { IChildrenComponentProps } from '~/shared/model/global';
 const LayoutWorkspace: React.FC<IChildrenComponentProps> = ({ children }) => {
    return (
       <div>
-         <div className="wrapper" style={{ display: 'flex' }}>
+         <NavbarTop />
+         <div
+            className="wrapper"
+            style={{ display: 'flex', backgroundColor: '#eceff8', gap: '15px' , paddingTop: "60px"}}
+         >
             <Sidebar />
-            <div className="content" style={{flex : 1}}>{children}</div>
+            <div
+               className="content"
+               style={{
+                  flex: 1,
+                  backgroundColor: 'white',
+                  borderRadius: '12px',
+                  boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px',
+                  padding: '15px',
+               }}
+            >
+               {children}
+            </div>
          </div>
       </div>
    );

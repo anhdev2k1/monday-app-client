@@ -30,3 +30,13 @@
       }
    }
 }
+.css-dev-only-do-not-override-1fviqcj.ant-tabs .ant-tabs-tab {
+   border-left: 0.5px solid #e3e3e3;
+   border-right: 0.5px solid #e3e3e3;
+   margin: 0;
+   padding-left: 10px;
+   padding-right: 10px;
+   &:first-child {
+      border: transparent;
+   }
+}

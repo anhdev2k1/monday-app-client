@@ -1,15 +1,12 @@
 .group {
    margin-top: 40px;
    max-width: calc(var(--width-default-layout) - 100px);
-   // max-width: 1200px;
-   // overflow-x: scroll;
-   -webkit-scrollbar {
-      display: none;
-   }
+   
    .group__head {
       display: flex;
       align-items: center;
       position: relative;
+
       &:hover {
          .head__btn--option {
             opacity: 1;
@@ -31,12 +28,14 @@
       .head__input--wrap {
          display: flex;
          align-items: center;
+         color: #579bfc;
          .input__group {
             font-size: 1.8rem;
             padding: 4px 10px;
             border: 1px solid transparent;
             border-radius: 4px;
             flex: 1;
+            color: #579bfc;
             &:hover {
                border: 1px solid #ccc;
             }
@@ -96,6 +95,7 @@
          .group__table {
             margin-top: 10px;
             overflow-x: scroll;
+            
             .cols__group {
                display: flex;
                .col__group__item {
@@ -150,6 +150,7 @@
                }
             }
          }
+         
       }
    }
 }

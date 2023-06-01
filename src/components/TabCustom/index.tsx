@@ -22,13 +22,17 @@ const TabCustom = ({ arr }: IPropsTabCustom) => {
    });
 
    return (
-      <div className="thuan_22">
-         <p className="board__title">
-            <span>{currBoard?.name}</span> <FontAwesomeIcon icon={faCircleExclamation} />
-         </p>
-         <HeadView />
-         <Tabs items={items} />
-      </div>
+      // <div className="thuan_22">
+      //    {/* <p className="board__title">
+      //       <span>{currBoard?.name}</span> <FontAwesomeIcon icon={faCircleExclamation} />
+      //    </p> */}
+      //    <HeadView />
+      //    <Tabs type='card' items={items} />
+      // </div>
+      <>
+         {/* <HeadView /> */}
+         <Tabs type="card" items={items} />
+      </>
    );
 };
 

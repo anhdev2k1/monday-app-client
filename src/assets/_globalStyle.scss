@@ -4,12 +4,16 @@
    padding: 0;
    box-sizing: border-box;
 }
+
 :root {
    --background-primary-color: #0173ea;
    --text-btn-color: #323338;
    --background-btn-default: #dddfec;
    --width-default-layout: 1200px;
 }
+$primary-bg-color: #eceff8;
+$primary-button-color: #0073ea;
+$primary-selected-hover-color: #b5cec0;
 html {
    font-size: 62.5%;
    -webkit-font-smoothing: antialiased;

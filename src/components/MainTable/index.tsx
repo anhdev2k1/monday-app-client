@@ -80,6 +80,10 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
 
    return (
       <div className="main-table">
+         {/* <p className="board__title">
+            <span>{currBoard?.name}</span> <FontAwesomeIcon icon={faCircleExclamation} />
+         </p> */}
+         <HeadView />
          <div className="main__group__wrap">
             {searchFilter(getValueSearch)!?.length > 0 ? (
                searchFilter(getValueSearch)!.map((item: IGroup, index) => {

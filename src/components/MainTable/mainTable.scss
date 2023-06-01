@@ -12,5 +12,25 @@
       padding-left: 22px;
       overflow-y: scroll;
       margin-bottom: 40px;
+      
    }
+   ::-webkit-scrollbar {
+      width: 6px;
+      border-radius: 50%;
+    }
+    
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: white; 
+    }
+     
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #a1e3f6; 
+    }
+    
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94def3; 
+    }
 }
