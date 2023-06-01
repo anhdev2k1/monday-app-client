@@ -35,6 +35,8 @@ interface IInitState {
    };
    indexTab: number;
    searchValue: string;
+   filter: string[];
+   activeFilterItem: string[]
 }
 
 const initialState: IInitState = {
@@ -54,6 +56,8 @@ const initialState: IInitState = {
    },
    indexTab: 0,
    searchValue: '',
+   filter: [],
+   activeFilterItem: []
 };
 
 // body request
@@ -579,6 +583,29 @@ const boardSlice = createSlice({
          return updatedData;
       },
 
+
+      setFilterColumn: (state, action) => {
+         let listFilter = state.filter
+         if (listFilter.length > 0 ) {
+            const foundFilter = listFilter.find(item => item === action.payload)
+            if(foundFilter){
+               const removeItem = listFilter.filter(col => col !== foundFilter)
+               state.filter = removeItem
+            }
+            else state.filter.push(action.payload)
+         }else state.filter.push(action.payload);
+      },
+      setActiveFilterItem:(state,action) => {
+         let listActive = state.activeFilterItem
+         if (listActive.length > 0 ) {
+            const foundActive = listActive.find(item => item === action.payload)
+            if(foundActive){
+               const removeItem = listActive.filter(col => col !== foundActive)
+               state.activeFilterItem = removeItem
+            }
+            else state.activeFilterItem.push(action.payload)
+         }else state.activeFilterItem.push(action.payload);
+      },
       resetCurrBoard(state) {
          state.currBoard = {
             data: undefined,
@@ -588,6 +615,10 @@ const boardSlice = createSlice({
             mess: '',
          };
       },
+      resetFilter(state) {
+         state.filter = []
+         state.activeFilterItem = []
+      }
    },
 });
 
@@ -607,6 +638,9 @@ export const {
    handleAddTaskToGroup,
    handleDeleteTaskFromGroup,
    handleEditTaskFromGroup,
+   setFilterColumn,
+   setActiveFilterItem,
+   resetFilter
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

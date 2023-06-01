@@ -37,6 +37,8 @@ const MainTable = ({ currBoard }: IPropMainTable) => {
       return result;
    };
 
+   const itemFilter = useAppSelector(state => state.boardSlice.filter)
+
    useEffect(() => {
       const newGroup = dataCreateGroup.data;
       if (newGroup) {

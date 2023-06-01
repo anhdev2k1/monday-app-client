@@ -32,7 +32,7 @@ const TaskEdit = ({ task, groupId }: ITaskEditProps) => {
       );
    };
    return (
-      <td className="table__data-task-value" key={task._id}>
+      <td className="table__data-task-value table-data-name" key={task._id}>
          {isRenameTask ? (
             <input
                autoFocus

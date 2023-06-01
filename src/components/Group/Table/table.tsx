@@ -14,7 +14,7 @@ import TaskEdit from './TaskEdit/taskEdit';
 import Column from '~/components/Column/column';
 import ListType from '~/components/ListTypes/listTypes';
 import { createColumn } from '~/components/MainTable/mainTable.reducer';
-import { ITask } from '~/shared/model/task';
+import { ITask, IValueOfTask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask';
 import { handleAddTaskToGroup, handleDeleteTaskFromGroup } from '~/pages/Board/board.reducer';
@@ -25,14 +25,10 @@ interface IPropsTable {
 
 const Table = ({ data }: IPropsTable) => {
    const [listTask, setListTask] = useState<ITask[]>(data.tasks);
-   console.log('change tasks', data.tasks);
    useEffect(() => {
       setListTask(data.tasks);
    }, [data.tasks]);
-   console.log('listTask', listTask);
-
    const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
-   console.log('columns', columns, data.name);
    // const [isRenameTask, setIsRenameTask] = useState(false);
    // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
@@ -44,8 +40,9 @@ const Table = ({ data }: IPropsTable) => {
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
    const [isOpenListTypes, setIsOpenListTypes] = useState<boolean>(false);
    const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
-   const valueSearch = useAppSelector(state => state.boardSlice.searchValue)
+   const valueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
+   const filterItem = useAppSelector((state) => state.boardSlice.filter);
    // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
 
    interface ITaskChecked {
@@ -129,6 +126,13 @@ const Table = ({ data }: IPropsTable) => {
          messageApi.error('Vui lòng nhập tên task');
       }
    };
+   // const filterValue = (data: IColumn[]) => {
+   //    const result = filterItem.map(item => {
+   //       data.find(col => col._id === item._id)
+   //    })
+   //    return result;
+   // };
+   // console.log(filterValue(columns!));
 
    return (
       <>
@@ -140,15 +144,24 @@ const Table = ({ data }: IPropsTable) => {
                      <label htmlFor="checked"></label>
                      <input type="checkbox" id="checked" />
                   </th>
-                  <th className="column__group">Task</th>
-                  {columns &&
-                     columns.map((col) => {
-                        return (
-                           <th className="column__group" key={col._id}>
-                              {col.name}
-                           </th>
-                        );
-                     })}
+                  <th className="column__group column__group-name">Task</th>
+                  {filterItem.length > 0
+                     ? columns?.map((col) => {
+                          if (filterItem.includes(col._id)) {
+                             return (
+                                <th className="column__group" key={col._id}>
+                                   {col.name}
+                                </th>
+                             );
+                          }
+                       })
+                     : columns?.map((col) => {
+                          return (
+                             <th className="column__group" key={col._id}>
+                                {col.name}
+                             </th>
+                          );
+                       })}
                   <th className="column__group">
                      <input className="col__group--check" type="checkbox" id="plus--col" />
                      <label
@@ -168,7 +181,6 @@ const Table = ({ data }: IPropsTable) => {
             </thead>
             <tbody className="table__data">
                {listTask.map((task) => {
-
                   return (
                      <tr className="table__data-task" key={task._id}>
                         <td className="table__data-task-value">
@@ -180,24 +192,40 @@ const Table = ({ data }: IPropsTable) => {
                               data-id={task._id}
                            />
                         </td>
-                        <TaskEdit groupId={data._id} task={task} />
-                        {task.values.map((itemValue, index) => {
-                           const colIncludeListValue = columns?.find(
-                              (col) => col._id === itemValue.belongColumn,
-                           );
+                        <TaskEdit task={task} groupId={data._id} />
+                        {filterItem.length > 0
+                           ? task.values.map((itemValue, index) => {
+                                const colIncludeListValue = columns?.find((col) => {
+                                   return (
+                                      filterItem.includes(col._id) &&
+                                      col._id === itemValue.belongColumn
+                                   );
+                                });
+                                if (colIncludeListValue) {
+                                   return (
+                                      <ValueTask key={index} colIncludeListValue={colIncludeListValue}  valueOfTask={itemValue} task={task} defaultValueInColumn={colIncludeListValue.defaultValues}/>
+                                     
+                                      
+                                   );
+                                }
+                             })
+                           : task.values.map((itemValue, index) => {
+                                const colIncludeListValue = columns?.find(
+                                   (col) => col._id === itemValue.belongColumn,
+                                );
 
-                           if (colIncludeListValue) {
-                              return (
-                                 <ValueTask
-                                    task={task}
-                                    valueOfTask={itemValue}
-                                    key={index}
-                                    colIncludeListValue={colIncludeListValue}
-                                    defaultValueInColumn={colIncludeListValue.defaultValues}
-                                 />
-                              );
-                           }
-                        })}
+                                if (colIncludeListValue) {
+                                   return (
+                                      <ValueTask
+                                         task={task}
+                                         valueOfTask={itemValue}
+                                         key={index}
+                                         colIncludeListValue={colIncludeListValue}
+                                         defaultValueInColumn={colIncludeListValue.defaultValues}
+                                      />
+                                   );
+                                }
+                             })}
                      </tr>
                   );
                })}
