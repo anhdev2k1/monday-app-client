@@ -1,6 +1,5 @@
 .sidebar__wrapper {
    width: 240px;
-   max-width: 255px;
    height: 100vh;
    padding: 15px;
    background-color: white;
@@ -31,6 +30,7 @@
          cursor: pointer;
          padding: 0 5px;
          border-radius: 4px;
+         color: #333;
          img{
             width: 15px;
             height: 15px;
@@ -178,7 +178,7 @@
    .sidebar__features {
       margin-top: 20px;
       display: flex;
-      flex-direction: column;
+      gap: 10px;
       gap: 10px;
       &-item {
          display: flex;
@@ -195,6 +195,16 @@
          //    transition: all 0.2s;
          // }
       }
+      .add__board{
+         width: 30px;
+         height: 30px;
+         background-color: #0073ea;
+         font-size: 1.3rem;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         flex-shrink: 0;
+      }
       &-item:last-child {
          margin-bottom: 10px;
       }
@@ -203,6 +213,7 @@
          height: 30px;
          display: flex;
          align-items: center;
+         width: 79%;
          .search__btn{
             width: 30px;
             height: 30px;
@@ -218,6 +229,7 @@
             border: none;
             outline: none;
             background: none;
+            width: 70%;
          }
          .filter__btn{
             width: 30px;

@@ -20,10 +20,7 @@ const Workspace = () => {
    const handleRedirect = (e: any, workspaceID: string) => {
       e.preventDefault();
       const pathName = e.currentTarget.getAttribute('data-path');
-      messageApi.loading('Đợi xý nhé...');
-      setTimeout(() => {
-         navigate(`/${pathName}/${workspaceID}`);
-      }, 500);
+      navigate(`/${pathName}/${workspaceID}`);
    };
    const getWorkspaces = () => {
       dispatch(getListlWorkspace());
@@ -33,8 +30,6 @@ const Workspace = () => {
    }, []);
    return (
       <>
-         {contextHolder}
-
          <NavbarTop />
          <div className="workspace__wrapper">
             <div className="circle"></div>

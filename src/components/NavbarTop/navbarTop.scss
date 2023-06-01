@@ -8,8 +8,8 @@
    align-items: center;
    font-size: 1.5rem;
    line-height: 22.5px;
-   position: relative;
-//    z-index: 2;
+   position: fixed;
+   z-index: 2;
    &-title{
       padding-left: 4px;
       display: flex;

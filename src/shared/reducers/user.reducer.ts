@@ -66,7 +66,7 @@ export const currenUser = createAsyncThunk(
    'current-user-slice',
    async () => {
       const requestUrl = `${baseUrl}v1/api/auth/me`;
-      return await axios.post<IResponseGetMe>(requestUrl);
+      return await axios.get<IResponseGetMe>(requestUrl);
    },
    { serializeError: serializeAxiosError },
 );

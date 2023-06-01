@@ -19,13 +19,6 @@ function App() {
    useEffect(() => {
       getCurrenUser();
    }, []);
-   // const getAllTypes = async () => {
-   //    const res = await axios.get(`${SERVER_API_URL}v1/api/column/types`)
-   //    localStorage.setItem('types',JSON.stringify(res.data.metadata.types))
-   // }
-   // useEffect(() => {
-   //    getAllTypes()
-   // },[])
    return (
       <Router>
          <div className="App">
