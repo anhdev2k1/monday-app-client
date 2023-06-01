@@ -15,6 +15,7 @@ import {
    editColumn,
    renameColMainTable,
 } from '../MainTable/mainTable.reducer';
+import { handleDelColumnAndValueTask, handleEditColumn } from '~/pages/Board/board.reducer';
 interface IPropsColumn {
    index: number;
    name: string;
@@ -32,7 +33,7 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
    const inputElement = useRef<HTMLInputElement>(null);
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
-   const [valueInput, setValueInput] = useState<string>(name);
+   // const [valueInput, setValueInput] = useState<string>(name);
 
    const handleDeleteColumn = ({ idBoard, idColumn }: IDeleteColumn) => {
       dispatch(
@@ -41,31 +42,31 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
             idColumn,
          }),
       );
-      const newArr = listColumns.filter((column) => column._id !== _id);
-      //          console.log(newArr);
+      dispatch(
+         handleDelColumnAndValueTask({
+            idColumn,
+         }),
+      );
+      // const newArr = listColumns.filter((column) => column._id !== _id);
+      // //          console.log(newArr);
 
-      dispatch(deleteColumnMainTable(newArr));
+      // dispatch(deleteColumnMainTable(newArr));
    };
 
    const handleEditNameCol = (e: React.FocusEvent<HTMLInputElement, Element>) => {
       const target = e.target as HTMLInputElement;
       if (target.value !== name) {
-         const newColRename = listColumns.map((column) => {
-            if (column._id === _id) {
-               return {
-                  ...column,
-                  name: target.value,
-               };
-            }
-            return column;
-         });
-         console.log(newColRename);
-
-         dispatch(renameColMainTable(newColRename));
          dispatch(
             editColumn({
                idColumn: _id,
                name: target.value,
+            }),
+         );
+         dispatch(
+            handleEditColumn({
+               idColumn: _id,
+               key: 'name',
+               value: target.value,
             }),
          );
       }
@@ -134,14 +135,14 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
                ref={inputElement}
                autoFocus
                onBlur={(e) => {
-                  handleEditNameCol(e);
+                  if (e.target.value && e.target.value !== name) {
+                     handleEditNameCol(e);
+                  }
                   setIsEditInput(false);
                }}
                type="text"
-               onChange={(e) => {
-                  setValueInput(e.target.value);
-               }}
-               value={valueInput}
+               onChange={(e) => {}}
+               defaultValue={name}
             />
          ) : (
             <span
@@ -149,7 +150,7 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
                   setIsEditInput(true);
                }}
             >
-               {valueInput}
+               {name}
             </span>
          )}
          {!isEditInput && (

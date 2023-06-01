@@ -22,6 +22,10 @@
          .value__task--btn {
             background-color: var(--background-btn-default);
          }
+         .icon__value--task,
+         .value__task--btn {
+            display: block;
+         }
       }
       .value__task--btn {
          position: absolute;

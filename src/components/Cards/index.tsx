@@ -8,6 +8,7 @@ import { IColumn } from '~/shared/model/column';
 import { Col, Row } from 'antd';
 export interface ITaskCard extends ITask {
    columns: IColumn[];
+   group: IGroup;
 }
 
 const Cards = ({ currBoard }: IPropMainTable) => {

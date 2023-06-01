@@ -3,16 +3,17 @@ import DefaultValueTask from '../Group/Table/ValueTask/defaultValueTask';
 import { ITask, IValueOfTask } from '~/shared/model/task';
 import './valueIsText.scss';
 import { useAppDispatch } from '~/config/store';
-import { handleSetValueTask } from '~/pages/Board/board.reducer';
+import { handleEmptyValueTask, handleSetValueTask } from '~/pages/Board/board.reducer';
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 interface IPropsValueIsText {
    valueTask: IValueOfTask;
    icon: JSX.Element;
    task: ITask;
+   type?: string;
 }
 
-const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
+const ValueIsText = ({ valueTask, icon, task, type }: IPropsValueIsText) => {
    const [valueBox, setValueBox] = useState<string | null>(valueTask.value);
    useEffect(() => {
       setValueBox(valueTask.value);
@@ -30,6 +31,12 @@ const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
          value: '',
          valueId: null,
       });
+      dispatch(
+         handleEmptyValueTask({
+            taskId: task._id,
+            valueId: valueTask._id,
+         }),
+      );
    };
    return (
       <div className="value__text">
@@ -59,7 +66,9 @@ const ValueIsText = ({ valueTask, icon, task }: IPropsValueIsText) => {
                value={valueBox || ''}
                onInput={(e) => {
                   const target = e.target as HTMLInputElement;
-                  target.value = target.value.replace(/[^0-9]/g, '');
+                  if (type === 'number') {
+                     target.value = target.value.replace(/[^0-9]/g, '');
+                  }
                }}
                onChange={(e) => {
                   handleValueChange(e);
