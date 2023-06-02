@@ -142,7 +142,19 @@ const Table = ({ data }: IPropsTable) => {
    //    return result;
    // };
    // console.log(filterValue(columns!));
-
+   const [isOpenAddColumn, setIsOpenAddColumn] = useState<boolean>(false);
+   const dropdownColumn = useRef<any>(null);
+   useEffect(() => {
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+         document.removeEventListener('click', handleClickOutside);
+      };
+   });
+   const handleClickOutside = (event: any) => {
+      if (!dropdownColumn.current.contains(event.target)) {
+         setIsOpenAddColumn(false);
+      }
+   };
    return (
       <>
          <table className="table__group">
@@ -181,21 +193,25 @@ const Table = ({ data }: IPropsTable) => {
                              />
                           );
                        })}
-                  <th className="column__group">
+                  <th
+                     className="column__group"
+                     onClick={() => setIsOpenAddColumn(!isOpenAddColumn)}
+                     ref={dropdownColumn}
+                  >
                      <input
                         defaultChecked={false}
-                        onChange={(event) => {
-                           const isChecked = event.target.checked;
-                           if (!isChecked) {
-                              if (listTypeElement.current !== null) {
-                                 listTypeElement.current.style.display = 'none';
-                              }
-                           } else {
-                              if (listTypeElement.current !== null) {
-                                 listTypeElement.current.style.display = 'block';
-                              }
-                           }
-                        }}
+                        // onChange={(event) => {
+                        //    const isChecked = event.target.checked;
+                        //    if (!isChecked) {
+                        //       if (listTypeElement.current !== null) {
+                        //          listTypeElement.current.style.display = 'none';
+                        //       }
+                        //    } else {
+                        //       if (listTypeElement.current !== null) {
+                        //          listTypeElement.current.style.display = 'block';
+                        //       }
+                        //    }
+                        // }}
                         // onBlur={(event) => {
                         //    const isChecked = event.target.checked;
                         //    if (isChecked) {
@@ -211,7 +227,11 @@ const Table = ({ data }: IPropsTable) => {
                      />
                      <label className="plus__lable" htmlFor={`plus--col--${data._id}`}>
                         <FontAwesomeIcon icon={faPlus} />
-                        <ListType ref={listTypeElement} handleAddColumn={handleAddColumn} />
+                        <ListType
+                           handleAddColumn={handleAddColumn}
+                           isOpenAddColumn={isOpenAddColumn}
+                           setIsOpenAddColumn={setIsOpenAddColumn}
+                        />
                      </label>
                   </th>
                </tr>
