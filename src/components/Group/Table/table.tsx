@@ -25,10 +25,10 @@ interface IPropsTable {
 
 const Table = ({ data }: IPropsTable) => {
    const [listTask, setListTask] = useState<ITask[]>(data.tasks);
+   const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
    useEffect(() => {
       setListTask(data.tasks);
    }, [data.tasks]);
-   const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
    // const [isRenameTask, setIsRenameTask] = useState(false);
    // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
@@ -252,40 +252,14 @@ const Table = ({ data }: IPropsTable) => {
                         <TaskEdit task={task} groupId={data._id} />
                         {filterItem.length > 0
                            ? task.values.map((itemValue, index) => {
-                                const colIncludeListValue = columns?.find((col) => {
-                                   return (
-                                      filterItem.includes(col._id) &&
-                                      col._id === itemValue.belongColumn
-                                   );
-                                });
-                                if (colIncludeListValue) {
-                                   return (
-                                      <ValueTask
-                                         key={index}
-                                         colIncludeListValue={colIncludeListValue}
-                                         valueOfTask={itemValue}
-                                         task={task}
-                                         defaultValueInColumn={colIncludeListValue.defaultValues}
-                                      />
-                                   );
-                                }
+                                return (
+                                   <ValueTask key={index} valueOfTask={itemValue} task={task} />
+                                );
                              })
                            : task.values.map((itemValue, index) => {
-                                const colIncludeListValue = columns?.find(
-                                   (col) => col._id === itemValue.belongColumn,
+                                return (
+                                   <ValueTask task={task} valueOfTask={itemValue} key={index} />
                                 );
-
-                                if (colIncludeListValue) {
-                                   return (
-                                      <ValueTask
-                                         task={task}
-                                         valueOfTask={itemValue}
-                                         key={index}
-                                         colIncludeListValue={colIncludeListValue}
-                                         defaultValueInColumn={colIncludeListValue.defaultValues}
-                                      />
-                                   );
-                                }
                              })}
                      </tr>
                   );

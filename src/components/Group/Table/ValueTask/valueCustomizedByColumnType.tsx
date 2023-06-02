@@ -5,7 +5,7 @@ import ValueIsText from '~/components/ValueIsText/valueIsText';
 import { ITask, IValueOfTask } from '~/shared/model/task';
 
 interface ITypeValue {
-   nameOfType: string;
+   nameOfType?: string;
    valueTask: IValueOfTask;
    task: ITask;
 }
@@ -43,7 +43,7 @@ const ValueCustomizedByColumnType = ({ nameOfType, valueTask, task }: ITypeValue
       ),
    };
 
-   return dataRenderTask[nameOfType] || null;
+   return (nameOfType && dataRenderTask[nameOfType]) || null;
 };
 
 export default ValueCustomizedByColumnType;

@@ -12,8 +12,6 @@ interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
    task: ITask;
-   colIncludeListValue: IColumn;
-   defaultValueInColumn: IDefaultValue[];
 }
 
 interface ISelectedOfValueTask extends IItemInListValueSelect {
@@ -22,17 +20,14 @@ interface ISelectedOfValueTask extends IItemInListValueSelect {
 export interface ISetInfoValueTask {
    setChangeStatus: React.Dispatch<React.SetStateAction<ISelectedOfValueTask>>;
 }
-const ValueTask = ({
-   valueOfTask,
-   colIncludeListValue,
-   task,
-   defaultValueInColumn,
-}: IValueTaskProps) => {
+const ValueTask = ({ valueOfTask, task }: IValueTaskProps) => {
    const valuesSelect = useAppSelector((state) =>
       state.boardSlice.currBoard.data?.columns.flatMap((item) => item.defaultValues),
    );
    const dispatch = useAppDispatch();
-
+   const itemColumn = useAppSelector((state) =>
+      state.boardSlice.currBoard.data?.columns.find((col) => col._id === valueOfTask.belongColumn),
+   );
    const [openStatusBox, setOpenStatusBox] = useState(false);
    const [changeStatus, setChangeStatus] = useState<{
       _id: string;
@@ -87,8 +82,22 @@ const ValueTask = ({
       }
    };
 
+   const refValueElement = useRef<HTMLTableCellElement>(null);
+   useEffect(() => {
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+         document.removeEventListener('click', handleClickOutside);
+      };
+   });
+   const handleClickOutside = (event: any) => {
+      if (refValueElement.current && !refValueElement.current.contains(event.target)) {
+         console.log('asdsa');
+         setOpenStatusBox(false);
+      }
+   };
    return (
       <td
+         ref={valueOfTask.typeOfValue === 'multiple' ? refValueElement : undefined}
          key={valueOfTask._id}
          style={{
             color: `${valueOfTask.typeOfValue === 'multiple' ? '#FFF' : 'var(--text-btn-color)'}`,
@@ -100,8 +109,6 @@ const ValueTask = ({
          }}
          className="table__data-task-value data-status"
          onClick={(e) => {
-            e.stopPropagation();
-
             handleOpenStatus();
          }}
       >
@@ -114,15 +121,14 @@ const ValueTask = ({
                isOpen={openStatusBox}
                setOpenStatusBox={setOpenStatusBox}
                setChangeStatus={setChangeStatus}
-               listStatus={defaultValueInColumn}
-               columnId={colIncludeListValue._id}
+               columnId={valueOfTask.belongColumn}
                valueID={valueOfTask._id}
             />
          ) : (
             <ValueCustomizedByColumnType
                task={task}
                valueTask={valueOfTask}
-               nameOfType={colIncludeListValue.belongType.name}
+               nameOfType={itemColumn?.belongType.name}
             />
          )}
       </td>

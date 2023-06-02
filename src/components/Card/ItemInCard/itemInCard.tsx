@@ -36,12 +36,7 @@ const ItemInCard = ({ column, value, task }: IPropsCard) => {
                      e.preventDefault();
                   }}
                >
-                  <ValueTask
-                     task={task}
-                     valueOfTask={value}
-                     colIncludeListValue={column}
-                     defaultValueInColumn={column.defaultValues}
-                  />
+                  <ValueTask task={task} valueOfTask={value} />
                </tr>
             </tbody>
          </table>

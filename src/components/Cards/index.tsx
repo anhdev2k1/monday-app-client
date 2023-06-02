@@ -12,8 +12,6 @@ export interface ITaskCard extends ITask {
 }
 
 const Cards = ({ currBoard }: IPropMainTable) => {
-   console.log('group thay đổi');
-
    const taskArray: ITaskCard[] = currBoard.groups.flatMap((group) =>
       group.tasks.map((task) => ({
          ...task,
@@ -22,8 +20,6 @@ const Cards = ({ currBoard }: IPropMainTable) => {
          columns: currBoard.columns,
       })),
    );
-
-   console.log('taskArray', taskArray);
 
    return (
       <div className="cards">
