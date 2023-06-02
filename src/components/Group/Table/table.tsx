@@ -154,25 +154,6 @@ const Table = ({ data }: IPropsTable) => {
                      <input type="checkbox" id="checked" />
                   </th>
                   <th className="column__group">Task</th>
-                  {/* {columns &&
-                     // columns.map((col) => {
-                     //    return (
-                     //       <th className="column__group" key={col._id}>
-                     //          {col.name}
-                     //       </th>
-
-                     //    );
-                     // })}
-                     columns.map((col, index) => (
-                        <Column
-                           index={index}
-                           key={col._id}
-                           name={col.name}
-                           _id={col._id}
-                           position={col.position}
-                           handleAddColumn={handleAddColumn}
-                        />
-                     ))} */}
                   {filterItem.length > 0
                      ? columns?.map((col, index) => {
                           if (filterItem.includes(col._id)) {
@@ -188,11 +169,16 @@ const Table = ({ data }: IPropsTable) => {
                              );
                           }
                        })
-                     : columns?.map((col) => {
+                     : columns?.map((col, index) => {
                           return (
-                             <th className="column__group" key={col._id}>
-                                {col.name}
-                             </th>
+                             <Column
+                                index={index}
+                                key={col._id}
+                                name={col.name}
+                                _id={col._id}
+                                position={col.position}
+                                handleAddColumn={handleAddColumn}
+                             />
                           );
                        })}
                   <th className="column__group">
