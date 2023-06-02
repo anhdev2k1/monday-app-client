@@ -191,10 +191,13 @@ export const userSlice = createSlice({
          state.user.mess = '';
          state.user.error = false;
       },
+      setUser : (state,action) => {
+         state.user.data = action.payload
+      }
    },
 });
 
 // Action creators are generated for each case reducer function
-export const { resetLogin } = userSlice.actions;
+export const { resetLogin, setUser } = userSlice.actions;
 
 export default userSlice.reducer;

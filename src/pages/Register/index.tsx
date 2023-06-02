@@ -35,6 +35,7 @@ const Register = () => {
    const errRegister = useAppSelector((state) => state.userSlice.user.error);
    const infoAuthUser = useAppSelector((state) => state.userSlice.user);
    const { verification } = useParams();
+   const [navigateEmail,setNavigateEmail] = useState('')
    const [infoNotifi, setInfoNotifi] = useState<IInfoNotifi>({
       isOpen: false,
       info: Info.Open,
@@ -45,7 +46,14 @@ const Register = () => {
    useEffect(() => {
       let timerId: NodeJS.Timeout;
       if (infoAuthUser.status === 'success' && !infoAuthUser.data?.user) {
-         navigate('/register/verification');
+         // console.log("infoAuthUser",infoAuthUser.data?.user.email);
+         setTimeout(() => {
+            navigate('/register/verification',{
+               state:{
+                  email: navigateEmail
+               }
+            });
+         },500)
       } else if (infoAuthUser.status === 'success' && infoAuthUser.data?.user) {
          timerId = setTimeout(() => {
             navigate('/');
@@ -57,10 +65,10 @@ const Register = () => {
    const onFinish = async (values: IDataRegister) => {
       if (values.email && values.password && values.name) {
          dispatch(registerAccount(values));
+         setNavigateEmail(values.email)
+         
       }
    };
-   console.log(verification);
-
    return (
       <Row>
          <Col span={14}>
