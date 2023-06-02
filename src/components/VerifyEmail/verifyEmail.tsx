@@ -1,28 +1,40 @@
 import { Form, Input } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { IDataVerifyAcc, verifyEmail } from '~/shared/reducers/user.reducer';
+import { IDataVerifyAcc, setUser, verifyEmail } from '~/shared/reducers/user.reducer';
 import ButtonCustom from '../Button/ButtonCustom';
 import { StatusType } from '~/shared/model/global';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 const VerifyEmail = () => {
    const dispatch = useAppDispatch();
+   const { state } = useLocation();
+   const { email } = state;
+
    const currentUser = useAppSelector((state) => state.userSlice.user.data);
    const navigate = useNavigate();
    const onFinish = async (values: IDataVerifyAcc) => {
-      if (values.email && values.code && values.email) {
-         dispatch(verifyEmail(values));
+      const res = await axios.post("http://localhost:3001/v1/api/auth/verify",{
+         email,
+         code: values.code
+      })
+      console.log(res.data.status);
+      if(res.data.status === "success"){
+         dispatch(setUser(res.data.metadata))
+         navigate("/")
       }
+      // if (values.code) {
+      //    dispatch(verifyEmail(values));
+      // }
    };
-   console.log(currentUser);
-   useEffect(() => {
-      if (currentUser && Object.keys(currentUser).length > 0) {
-         console.log('');
 
-         navigate('/');
-      }
-   }, [currentUser, navigate]);
+   // useEffect(() => {
+   //    if (currentUser && Object.keys(currentUser).length > 0) {
+   //       navigate('/');
+   //    }
+   // });
 
    return (
       <Form
@@ -36,25 +48,10 @@ const VerifyEmail = () => {
          <p className="form__container-des">
             The code has been sent to your email - Please check and enter in the box below.
          </p>
+         <p style={{ textAlign: 'left', padding: '10px 0' }}>Email</p>
+         <Input className="form__container-input" value={email} name="email" disabled={true} />
          <Form.Item
-            label="email"
-            name="email"
-            rules={[
-               {
-                  type: 'email',
-                  message: 'The input is not valid E-mail!',
-               },
-               {
-                  required: true,
-                  message: 'Please input your E-mail!',
-               },
-            ]}
-         >
-            <Input placeholder="Example@company.com" className="form__container-input" />
-         </Form.Item>
-
-         <Form.Item
-            label="code"
+            label="Code"
             name="code"
             rules={[
                {

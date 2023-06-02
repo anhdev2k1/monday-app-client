@@ -76,7 +76,7 @@ export const currenUser = createAsyncThunk(
    'current-user-slice',
    async () => {
       const requestUrl = `${baseUrl}v1/api/auth/me`;
-      return await axios.post<IResponseGetMe>(requestUrl);
+      return await axios.get<IResponseGetMe>(requestUrl);
    },
    { serializeError: serializeAxiosError },
 );
@@ -191,10 +191,13 @@ export const userSlice = createSlice({
          state.user.mess = '';
          state.user.error = false;
       },
+      setUser : (state,action) => {
+         state.user.data = action.payload
+      }
    },
 });
 
 // Action creators are generated for each case reducer function
-export const { resetLogin } = userSlice.actions;
+export const { resetLogin, setUser } = userSlice.actions;
 
 export default userSlice.reducer;
