@@ -8,12 +8,7 @@ import MainTable from '~/components/MainTable';
 import Cards from '~/components/Cards';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import {
-   getBoardDetail,
-   handleAddColumn,
-   handleAddValueIntoTask,
-   setIndexTab,
-} from './board.reducer';
+import { getBoardDetail, handleAddColumn, handleAddValueIntoTask } from './board.reducer';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
 import icons from '../../assets/svg/index';
@@ -21,7 +16,6 @@ import { Input } from 'antd';
 import LoadingLogo from '~/components/LoadingLogo/loadingLogo';
 import { getListTypes } from '~/components/ListTypes/listTypes.reducer';
 import { resetDataCreateCol } from '~/components/MainTable/mainTable.reducer';
-import { IGroup } from '~/shared/model/group';
 const Board = () => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
@@ -65,12 +59,9 @@ const Board = () => {
       dispatch(getListTypes());
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
-   console.log('board render');
 
    useEffect(() => {
       if (dataCreateCol !== undefined) {
-         console.log('dataCreateCol', { dataCreateCol });
-
          dispatch(
             handleAddColumn({
                newData: dataCreateCol.column,
@@ -132,7 +123,7 @@ const Board = () => {
                                  </span>
                               </Tippy>
                            ),
-                           info: <MainTable currBoard={currBoard} />,
+                           info: <MainTable />,
                         },
                         {
                            label: (

@@ -403,6 +403,8 @@ const boardSlice = createSlice({
 
          return state;
       },
+
+      // asbdkjasbdkabskdjas
       handleEditValueSelected: (
          state,
          action: PayloadAction<{
@@ -411,16 +413,20 @@ const boardSlice = createSlice({
          }>,
       ) => {
          const { idValue, data } = action.payload;
-
-         state.currBoard.data?.groups?.forEach((group) => {
-            group.tasks.forEach((task) => {
-               task.values.forEach((value) => {
-                  if (value._id === idValue) {
-                     value.valueId = data;
-                  }
+         if (state.currBoard.data) {
+            state.currBoard.data.groups = state.currBoard.data.groups.map((group) => {
+               group.tasks.map((task) => {
+                  task.values.map((value) => {
+                     if (value._id === idValue) {
+                        value.valueId = { ...data };
+                     }
+                     return value;
+                  });
+                  return task;
                });
+               return group;
             });
-         });
+         }
       },
       handleDeleteValueListStatus: (
          state,
@@ -448,9 +454,14 @@ const boardSlice = createSlice({
       ) => {
          if (state.currBoard.data) {
             const newColumn = action.payload.newData;
-            const copiedColumns = [...state.currBoard.data.columns];
+            const copiedColumns = state.currBoard.data.columns;
             copiedColumns.splice(newColumn.position, 0, newColumn);
-            state.currBoard.data.columns = copiedColumns;
+            state.currBoard.data.columns = copiedColumns.map((column, index) => {
+               if (column.position !== index) {
+                  column.position = index;
+               }
+               return column;
+            });
          }
       },
       handleEditColumn: (
@@ -484,41 +495,59 @@ const boardSlice = createSlice({
       handleDelColumnAndValueTask: (
          state,
          action: PayloadAction<{
-            idColumn: string;
+            position: number;
          }>,
       ) => {
-         const { idColumn } = action.payload;
-
-         // Xóa cột khỏi mảng columns
-         const newColumns = state.currBoard.data?.columns.filter(
-            (column: IColumn) => column._id !== idColumn,
-         );
-
-         // Xóa giá trị có belongColumn là idColumn trong mỗi task
-         const newGroups = state.currBoard.data?.groups.map((group) => {
-            const newTasks = group.tasks.map((task) => {
-               const newValues = task.values.filter((value) => value.belongColumn !== idColumn);
-               return { ...task, values: newValues };
+         const { position } = action.payload;
+         if (state.currBoard.data) {
+            const copiedColumns = state.currBoard.data.columns;
+            copiedColumns.splice(position, 1);
+            state.currBoard.data.columns = copiedColumns.map((column, index) => {
+               if (column.position !== index) {
+                  column.position = index;
+               }
+               return column;
             });
 
-            return { ...group, tasks: newTasks };
-         });
-         console.log('newGroups', newGroups);
-         if (newGroups && newColumns && state.currBoard.data) {
-            return {
-               ...state,
-               currBoard: {
-                  ...state.currBoard,
-                  data: {
-                     ...state.currBoard.data,
-                     groups: newGroups,
-                     columns: newColumns,
-                  },
-               },
-            };
+            state.currBoard.data.groups = state.currBoard.data.groups.map((group) => {
+               group.tasks = group.tasks.map((task) => {
+                  task.values.splice(position, 1);
+                  return task;
+               });
+               return group;
+            });
          }
 
-         return state;
+         // Xóa cột khỏi mảng columns
+         // const newColumns = state.currBoard.data?.columns.filter(
+         //    (column: IColumn) => column._id !== idColumn,
+         // );
+
+         // Xóa giá trị có belongColumn là idColumn trong mỗi task
+         // const newGroups = state.currBoard.data?.groups.map((group) => {
+         //    const newTasks = group.tasks.map((task) => {
+         //       const newValues = task.values.filter((value) => value.belongColumn !== idColumn);
+         //       return { ...task, values: newValues };
+         //    });
+
+         //    return { ...group, tasks: newTasks };
+         // });
+         // console.log('newGroups', newGroups);
+         // if (newGroups && newColumns && state.currBoard.data) {
+         //    return {
+         //       ...state,
+         //       currBoard: {
+         //          ...state.currBoard,
+         //          data: {
+         //             ...state.currBoard.data,
+         //             groups: newGroups,
+         //             columns: newColumns,
+         //          },
+         //       },
+         //    };
+         // }
+
+         // return state;
       },
 
       setIndexTab: (
@@ -616,8 +645,6 @@ const boardSlice = createSlice({
       },
       handleEmptyValueTask: (state, action) => {
          const { taskId, valueId } = action.payload;
-         console.log('taskId', taskId);
-         console.log('valueId', valueId);
 
          const newGroups = state.currBoard.data?.groups.map((group) => {
             const newTasks = group.tasks.map((task) => {
@@ -689,22 +716,24 @@ const boardSlice = createSlice({
             newValuesOfTasks: IValueOfTask[];
          }>,
       ) {
-         const valuesOfTasks = [...action.payload.newValuesOfTasks];
+         const { position, newValuesOfTasks } = action.payload;
+         const valuesOfTasks = [...newValuesOfTasks];
          if (state.currBoard.data) {
-            state.currBoard.data.groups.map((group) => {
-               group.tasks.map((task) => {
-                  const value = valuesOfTasks.pop()!;
+            state.currBoard.data.groups = state.currBoard.data.groups.map((group) => {
+               group.tasks = group.tasks.map((task) => {
+                  const value = valuesOfTasks.shift()!;
                   const newValue: IValueOfTask = {
                      _id: value._id,
-                     name: value.name,
                      value: value.value,
                      valueId: value.valueId,
                      belongColumn: value.belongColumn,
                      typeOfValue: value.typeOfValue,
                   };
-                  task.values.splice(action.payload.position, 0, newValue);
+                  task.values.splice(position, 0, newValue);
                   return task;
                });
+
+               return group;
             });
          }
       },

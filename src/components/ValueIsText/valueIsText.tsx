@@ -23,7 +23,6 @@ const ValueIsText = ({ valueTask, icon, task, type }: IPropsValueIsText) => {
    const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setValueBox(e.target.value);
    };
-   console.log(valueBox);
 
    const handleEmptyValue = async () => {
       setValueBox(null);

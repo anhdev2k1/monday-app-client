@@ -1,9 +1,8 @@
 /* eslint-disable array-callback-return */
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouseMedicalCircleExclamation, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { IColumn } from '~/shared/model/column';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IGroup } from '~/shared/model/group';
-import { useState, useRef, useEffect, Fragment, createRef } from 'react';
+import { useState, useRef, Fragment, createRef } from 'react';
 import './table.scss';
 import { message } from 'antd';
 import axios from 'axios';
@@ -14,7 +13,7 @@ import TaskEdit from './TaskEdit/taskEdit';
 import Column from '~/components/Column/column';
 import ListType from '~/components/ListTypes/listTypes';
 import { createColumn } from '~/components/MainTable/mainTable.reducer';
-import { ITask, IValueOfTask } from '~/shared/model/task';
+import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask';
 import { handleAddTaskToGroup, handleDeleteTaskFromGroup } from '~/pages/Board/board.reducer';
@@ -24,11 +23,12 @@ interface IPropsTable {
 }
 
 const Table = ({ data }: IPropsTable) => {
-   const [listTask, setListTask] = useState<ITask[]>(data.tasks);
-   useEffect(() => {
-      setListTask(data.tasks);
-   }, [data.tasks]);
+   // const [listTask, setListTask] = useState<ITask[]>(data.tasks);
+   // useEffect(() => {
+   //    setListTask(data.tasks);
+   // }, [data.tasks]);
    const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
+
    // const [isRenameTask, setIsRenameTask] = useState(false);
    // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
@@ -40,8 +40,6 @@ const Table = ({ data }: IPropsTable) => {
    const { idBoard } = useParams();
    const [idTask, setIdTask] = useState('');
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
-   const listColumns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
-   const valueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
    const filterItem = useAppSelector((state) => state.boardSlice.filter);
    // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
@@ -63,7 +61,7 @@ const Table = ({ data }: IPropsTable) => {
    const handleDeleteTask = async (taskId: string) => {
       messageApi.loading('Đợi xý nhé !...');
       await axios.delete(`${SERVER_API_URL}v1/api/group/${data._id}/task/${taskId}`);
-      setListTask((pre) => pre.filter((item) => item._id !== taskId));
+      // setListTask((pre) => pre.filter((item) => item._id !== taskId));
       messageApi.success('Xoá task thành công!');
       dispatch(
          handleDeleteTaskFromGroup({
@@ -75,13 +73,14 @@ const Table = ({ data }: IPropsTable) => {
    const handleAddColumn = async (id: string, position?: number) => {
       try {
          messageApi.loading('Đợi xý nhé...!');
-         if (idBoard && listColumns) {
+         if (idBoard && columns) {
+            // console.log({ position });
             if (position === undefined) {
                await dispatch(
                   createColumn({
                      idBoard,
                      belongType: id,
-                     position: listColumns.length,
+                     position: columns.length,
                   }),
                );
             } else {
@@ -113,13 +112,13 @@ const Table = ({ data }: IPropsTable) => {
                position: data.tasks.length,
             });
             if (res.data.metadata) {
-               setListTask((pre) => {
-                  const newTask = res.data.metadata?.task;
-                  if (newTask) {
-                     return [...pre, newTask];
-                  }
-                  return pre;
-               });
+               // setListTask((pre) => {
+               //    const newTask = res.data.metadata?.task;
+               //    if (newTask) {
+               //       return [...pre, newTask];
+               //    }
+               //    return pre;
+               // });
                dispatch(
                   handleAddTaskToGroup({
                      groupId: data._id,
@@ -159,11 +158,10 @@ const Table = ({ data }: IPropsTable) => {
                           if (filterItem.includes(col._id)) {
                              return (
                                 <Column
-                                   index={index}
                                    key={col._id}
                                    name={col.name}
                                    _id={col._id}
-                                   position={col.position}
+                                   position={index}
                                    handleAddColumn={handleAddColumn}
                                 />
                              );
@@ -172,11 +170,10 @@ const Table = ({ data }: IPropsTable) => {
                      : columns?.map((col, index) => {
                           return (
                              <Column
-                                index={index}
                                 key={col._id}
                                 name={col.name}
                                 _id={col._id}
-                                position={col.position}
+                                position={index}
                                 handleAddColumn={handleAddColumn}
                              />
                           );
@@ -217,7 +214,7 @@ const Table = ({ data }: IPropsTable) => {
                </tr>
             </thead>
             <tbody className="table__data">
-               {listTask.map((task) => {
+               {data.tasks.map((task) => {
                   return (
                      <tr className="table__data-task" key={task._id}>
                         <td className="table__data-task-value">
