@@ -8,7 +8,7 @@ import {
    handleDeleteValueListStatus,
    handleEditValueListStatus,
 } from '~/pages/Board/board.reducer';
-import { ISetInfoValueTask } from '~/components/Group/Table/ValueTask/valueTask';
+import { ISetInfoValueTask } from '~/components/Group/Table/ValueTask/valueTask.v2';
 
 interface IValueStatus {
    _id: string;
@@ -52,15 +52,10 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
          //       value,
          //    }),
          // );
-         // setChangeStatus((prev) => {
-         //    if (data._id && data._id === prev.idSelected) {
-         //       return {
-         //          ...prev,
-         //          [key]: value,
-         //       };
-         //    }
-         //    return prev;
-         // });
+         setChangeStatus({
+            ...data,
+            [key]: value,
+         });
       }
       await axios.patch(`${SERVER_API_URL}v1/api/values/${data._id}`, {
          [key]: value,

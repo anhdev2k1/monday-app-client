@@ -6,20 +6,29 @@ import Tippy from '../Tippy';
 import { useAppDispatch } from '~/config/store';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 import ModalCardDetail from './ModalCardDetail/modalCardDetail';
+import { setTaskToDisplay } from '~/pages/Board/board.reducer';
 interface IPropsCard {
    task: ITaskCard;
 }
 const Card = ({ task }: IPropsCard) => {
    const { iconDesTask } = images;
    const dispatch = useAppDispatch();
+
    const handleShowModalCartDetail = () => {
+      dispatch(
+         setTaskToDisplay({
+            task: task,
+         }),
+      );
+
       dispatch(
          setDisplayOverlay({
             isDisplay: true,
-            children: <ModalCardDetail task={task} />,
+            children: <ModalCardDetail />,
          }),
       );
    };
+
    return (
       <div onClick={handleShowModalCartDetail} className="card__item">
          <div className="card__item-title">

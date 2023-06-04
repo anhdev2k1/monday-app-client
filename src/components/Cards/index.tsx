@@ -1,25 +1,25 @@
-import { useState } from 'react';
 import Card from '../Card';
-import { IPropMainTable } from '../MainTable';
 import './cards.scss';
 import { IGroup } from '~/shared/model/group';
 import { ITask } from '~/shared/model/task';
 import { IColumn } from '~/shared/model/column';
 import { Col, Row } from 'antd';
+import { useAppSelector } from '~/config/store';
 export interface ITaskCard extends ITask {
    columns: IColumn[];
    group: IGroup;
 }
 
-const Cards = ({ currBoard }: IPropMainTable) => {
-   console.log('group thay đổi');
+const Cards = () => {
+   const groups = useAppSelector((state) => state.boardSlice.currBoard.data?.groups);
+   const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
 
-   const taskArray: ITaskCard[] = currBoard.groups.flatMap((group) =>
+   const taskArray: ITaskCard[] = groups!.flatMap((group) =>
       group.tasks.map((task) => ({
          ...task,
          position: task.position,
          group: group,
-         columns: currBoard.columns,
+         columns: columns!,
       })),
    );
 

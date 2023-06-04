@@ -137,7 +137,7 @@ const Board = () => {
                                  </span>
                               </Tippy>
                            ),
-                           info: <Cards currBoard={currBoard} />,
+                           info: <Cards />,
                         },
                      ]}
                   />

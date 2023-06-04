@@ -8,6 +8,7 @@ import {
    isRejected,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { ITaskCard } from '~/components/Cards';
 import { SERVER_API_URL } from '~/config/constants';
 import { IBoard, IBoardResponse, IBoardsResponse } from '~/shared/model/board';
 import { IColumn } from '~/shared/model/column';
@@ -39,6 +40,7 @@ interface IInitState {
    searchValue: string;
    filter: string[];
    activeFilterItem: string[];
+   taskToDisplay?: ITaskCard;
 }
 
 const initialState: IInitState = {
@@ -60,6 +62,7 @@ const initialState: IInitState = {
    searchValue: '',
    filter: [],
    activeFilterItem: [],
+   taskToDisplay: undefined,
 };
 
 // body request
@@ -386,7 +389,6 @@ const boardSlice = createSlice({
             }
             return col;
          });
-         console.log(newDataColumn);
 
          if (newDataColumn && state.currBoard.data && state.currBoard.data.columns) {
             return {
@@ -415,13 +417,19 @@ const boardSlice = createSlice({
          const { idValue, data } = action.payload;
          if (state.currBoard.data) {
             state.currBoard.data.groups = state.currBoard.data.groups.map((group) => {
-               group.tasks.map((task) => {
-                  task.values.map((value) => {
+               group.tasks = group.tasks.map((task) => {
+                  task.values = task.values.map((value) => {
                      if (value._id === idValue) {
                         value.valueId = { ...data };
                      }
                      return value;
                   });
+                  if (state.taskToDisplay && state.taskToDisplay._id === task._id) {
+                     state.taskToDisplay = {
+                        ...state.taskToDisplay,
+                        ...task,
+                     };
+                  }
                   return task;
                });
                return group;
@@ -737,6 +745,15 @@ const boardSlice = createSlice({
             });
          }
       },
+
+      setTaskToDisplay(
+         state,
+         action: PayloadAction<{
+            task?: ITaskCard;
+         }>,
+      ) {
+         state.taskToDisplay = action.payload.task;
+      },
    },
 });
 
@@ -756,6 +773,7 @@ export const {
    handleAddTaskToGroup,
    handleDeleteTaskFromGroup,
    handleEditTaskFromGroup,
+   setTaskToDisplay,
    // handle filter
    setFilterColumn,
    setActiveFilterItem,

@@ -79,7 +79,7 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
                key: `2-${index}`,
                label: item.name,
                icon: <img src={add} alt="dropdow--icon" />,
-               onClick: () => handleAddColumn(item._id, position),
+               onClick: () => handleAddColumn(item._id, position + 1),
             };
          }),
       },

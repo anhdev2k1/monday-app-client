@@ -103,8 +103,6 @@ export const editWorkSpace = createAsyncThunk(
 export const getDetailWorkspace = createAsyncThunk(
    'get-detail-workspace-slice',
    async (idWorkspace: IDetailWorkspace) => {
-      console.log(idWorkspace);
-
       const requestUrl = `${baseUrl}v1/api/workspace/${idWorkspace.idWorkspace}`;
       return await axios.get<
          IResponseWorkSpace<{

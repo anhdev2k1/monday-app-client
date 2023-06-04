@@ -14,14 +14,10 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
-export interface IPropMainTable {
-   currBoard: IBoard;
-}
 
 const MainTable = () => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups);
-   console.log({ listsGroup });
    const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
    const { idBoard } = useParams();
@@ -47,7 +43,7 @@ const MainTable = () => {
          dispatch(resetCreateGroup());
       }
    }, [dataCreateGroup]);
-   const handleAddNewGroup = async () => {
+   const handleAddNewGroup = async (position?: number) => {
       if (idBoard && listsGroup) {
          dispatch(
             isNotification({
@@ -61,7 +57,7 @@ const MainTable = () => {
             createGroup({
                idBoard,
                name: 'New Group',
-               position: listsGroup.length,
+               position: position ?? listsGroup.length,
             }),
          );
          dispatch(

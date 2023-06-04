@@ -1,18 +1,17 @@
-import { ITaskCard } from '~/components/Cards';
 import './modalCardDetail.scss';
 import Tippy from '~/components/Tippy';
 import ItemInCard from '../ItemInCard/itemInCard';
 import images from '~/assets/svg';
-import { useAppDispatch } from '~/config/store';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import { handleEditTaskFromGroup } from '~/pages/Board/board.reducer';
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
-interface IPropsCard {
-   task: ITaskCard;
-}
-const ModalCardDetail = ({ task }: IPropsCard) => {
+
+const ModalCardDetail = () => {
    const { iconDesTask } = images;
    const dispatch = useAppDispatch();
+   const task = useAppSelector((state) => state.boardSlice.taskToDisplay)!;
+
    const handleRenameTask = async (
       e: React.FocusEvent<HTMLInputElement, Element>,
       taskID: string,

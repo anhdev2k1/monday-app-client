@@ -15,7 +15,7 @@ import ListType from '~/components/ListTypes/listTypes';
 import { createColumn } from '~/components/MainTable/mainTable.reducer';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
-import ValueTask from './ValueTask/valueTask';
+import ValueTask from './ValueTask/valueTask.v2';
 import { handleAddTaskToGroup, handleDeleteTaskFromGroup } from '~/pages/Board/board.reducer';
 import { SERVER_API_URL } from '~/config/constants';
 interface IPropsTable {
@@ -75,23 +75,13 @@ const Table = ({ data }: IPropsTable) => {
          messageApi.loading('Đợi xý nhé...!');
          if (idBoard && columns) {
             // console.log({ position });
-            if (position === undefined) {
-               await dispatch(
-                  createColumn({
-                     idBoard,
-                     belongType: id,
-                     position: columns.length,
-                  }),
-               );
-            } else {
-               await dispatch(
-                  createColumn({
-                     idBoard,
-                     belongType: id,
-                     position: position + 1,
-                  }),
-               );
-            }
+            await dispatch(
+               createColumn({
+                  idBoard,
+                  belongType: id,
+                  position: position ?? columns.length,
+               }),
+            );
          }
          // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
          messageApi.success(`Thêm mới column thành công!`);
