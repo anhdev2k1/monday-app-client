@@ -20,9 +20,10 @@ import { handleAddTaskToGroup, handleDeleteTaskFromGroup } from '~/pages/Board/b
 import { SERVER_API_URL } from '~/config/constants';
 interface IPropsTable {
    data: IGroup;
+   idBoard?: string;
 }
 
-const Table = ({ data }: IPropsTable) => {
+const Table = ({ data, idBoard }: IPropsTable) => {
    // const [listTask, setListTask] = useState<ITask[]>(data.tasks);
    // useEffect(() => {
    //    setListTask(data.tasks);
@@ -37,7 +38,6 @@ const Table = ({ data }: IPropsTable) => {
    // const handleEditInput = useRef<HTMLInputElement>(null);
 
    const listTypeElement: React.RefObject<HTMLDivElement> = createRef();
-   const { idBoard } = useParams();
    const [idTask, setIdTask] = useState('');
    const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
    const dispatch = useAppDispatch();
@@ -229,10 +229,10 @@ const Table = ({ data }: IPropsTable) => {
                                    return (
                                       <ValueTask
                                          key={index}
+                                         idBoard={idBoard}
                                          colIncludeListValue={colIncludeListValue}
                                          valueOfTask={itemValue}
                                          task={task}
-                                         defaultValueInColumn={colIncludeListValue.defaultValues}
                                       />
                                    );
                                 }
@@ -246,10 +246,10 @@ const Table = ({ data }: IPropsTable) => {
                                    return (
                                       <ValueTask
                                          task={task}
+                                         idBoard={idBoard}
                                          valueOfTask={itemValue}
                                          key={index}
                                          colIncludeListValue={colIncludeListValue}
-                                         defaultValueInColumn={colIncludeListValue.defaultValues}
                                       />
                                    );
                                 }

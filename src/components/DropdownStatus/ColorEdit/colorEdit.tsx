@@ -22,13 +22,13 @@ const ColorEdit = ({ isOpen, handleUpdateValue }: IColorEditProps) => {
          {isOpen && (
             <div className="color__wrapper">
                <div className="list__color">
-                  {colorsData.map((data) => {
+                  {colorsData.map((data, index) => {
                      return (
-                        <Tippy html={<p>{data.title}</p>} position="top">
+                        <Tippy key={index} html={<p>{data.title}</p>} position="top">
                            <div
                               className="color__item"
                               style={{ backgroundColor: data.color }}
-                              onClick={() => handleUpdateValue('color',data.color)}
+                              onClick={() => handleUpdateValue('color', data.color)}
                            ></div>
                         </Tippy>
                      );

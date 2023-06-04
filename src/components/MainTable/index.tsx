@@ -15,12 +15,15 @@ import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
 
-const MainTable = () => {
+interface MainTableProps {
+   idBoard?: string;
+}
+
+const MainTable = ({ idBoard }: MainTableProps) => {
    const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
    const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups);
    const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
    const dispatch = useAppDispatch();
-   const { idBoard } = useParams();
 
    const searchFilter = (dataSearch: string) => {
       const result = listsGroup?.filter(
@@ -87,6 +90,7 @@ const MainTable = () => {
                         handleAddNewGroup={handleAddNewGroup}
                         // columns={currBoard?.columns}
                         key={item._id}
+                        idBoard={idBoard}
                         data={item}
                      />
                   );

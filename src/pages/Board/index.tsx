@@ -8,7 +8,12 @@ import MainTable from '~/components/MainTable';
 import Cards from '~/components/Cards';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { getBoardDetail, handleAddColumn, handleAddValueIntoTask } from './board.reducer';
+import {
+   getBoardDetail,
+   handleAddColumn,
+   handleAddValueIntoTask,
+   setIndexTab,
+} from './board.reducer';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
 import icons from '../../assets/svg/index';
@@ -20,21 +25,21 @@ const Board = () => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
    const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data);
-   const cuurWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
+   const currWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkspace } = useParams();
    const [changeEditName, setChangeEditName] = useState(currBoard?.name);
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const dataCreateCol = useAppSelector((state) => state.mainTableSlice.createCol.data);
 
    useEffect(() => {
-      if (!cuurWorkspace && idWorkspace) {
+      if (!currWorkspace && idWorkspace) {
          dispatch(
             getDetailWorkspace({
                idWorkspace,
             }),
          );
       }
-   }, [cuurWorkspace, dispatch, idWorkspace]);
+   }, [currWorkspace, dispatch, idWorkspace]);
    useEffect(() => {
       setTimeout(() => {
          setIsLoading(false);
@@ -77,6 +82,10 @@ const Board = () => {
       dispatch(resetDataCreateCol());
    }, [dataCreateCol, dispatch]);
 
+   const changeIndexInterface = (index: 0 | 1) => {
+      dispatch(setIndexTab({ index }));
+   };
+
    return (
       <>
          {isLoading ? (
@@ -117,18 +126,24 @@ const Board = () => {
                         {
                            label: (
                               <Tippy position="top" html={<p>Main table</p>}>
-                                 <span style={{ fontSize: '1.4rem', fontWeight: '500' }}>
+                                 <span
+                                    style={{ fontSize: '1.4rem', fontWeight: '500' }}
+                                    onClick={() => changeIndexInterface(0)}
+                                 >
                                     <FontAwesomeIcon className="icon__table" icon={faHouse} />
                                     Main table
                                  </span>
                               </Tippy>
                            ),
-                           info: <MainTable />,
+                           info: <MainTable idBoard={idBoard} />,
                         },
                         {
                            label: (
                               <Tippy position="top" html={<p>Cards</p>}>
-                                 <span style={{ fontSize: '1.4rem', fontWeight: '500' }}>
+                                 <span
+                                    style={{ fontSize: '1.4rem', fontWeight: '500' }}
+                                    onClick={() => changeIndexInterface(1)}
+                                 >
                                     <FontAwesomeIcon
                                        className="icon__table"
                                        icon={faCircleExclamation}
@@ -137,7 +152,7 @@ const Board = () => {
                                  </span>
                               </Tippy>
                            ),
-                           info: <Cards />,
+                           info: <Cards idBoard={idBoard} />,
                         },
                      ]}
                   />

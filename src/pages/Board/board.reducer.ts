@@ -746,6 +746,40 @@ const boardSlice = createSlice({
          }
       },
 
+      updateValueAfterEditing(
+         state,
+         action: PayloadAction<{
+            valueId: string;
+            key: 'color' | 'value';
+            value: string;
+         }>,
+      ) {
+         const { valueId, key, value: editedValue } = action.payload;
+         if (state.currBoard.data) {
+            state.currBoard.data.groups = state.currBoard.data.groups.map((group) => {
+               group.tasks = group.tasks.map((task) => {
+                  task.values = task.values.map((value) => {
+                     if (value.valueId && value.valueId._id === valueId) {
+                        value.valueId = {
+                           ...value.valueId,
+                           [key]: editedValue,
+                        };
+                     }
+                     return value;
+                  });
+                  if (state.taskToDisplay && state.taskToDisplay._id === task._id) {
+                     state.taskToDisplay = {
+                        ...state.taskToDisplay,
+                        ...task,
+                     };
+                  }
+                  return task;
+               });
+               return group;
+            });
+         }
+      },
+
       setTaskToDisplay(
          state,
          action: PayloadAction<{
@@ -754,6 +788,7 @@ const boardSlice = createSlice({
       ) {
          state.taskToDisplay = action.payload.task;
       },
+
    },
 });
 
@@ -784,6 +819,7 @@ export const {
    handleDelColumnAndValueTask,
    // handle value
    handleEmptyValueTask,
+   updateValueAfterEditing,
 
    // Handle value when add a new column
    handleAddValueIntoTask,

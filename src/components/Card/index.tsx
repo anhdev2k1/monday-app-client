@@ -7,10 +7,12 @@ import { useAppDispatch } from '~/config/store';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 import ModalCardDetail from './ModalCardDetail/modalCardDetail';
 import { setTaskToDisplay } from '~/pages/Board/board.reducer';
+import { useParams } from 'react-router-dom';
 interface IPropsCard {
    task: ITaskCard;
+   idBoard?: string;
 }
-const Card = ({ task }: IPropsCard) => {
+const Card = ({ task, idBoard }: IPropsCard) => {
    const { iconDesTask } = images;
    const dispatch = useAppDispatch();
 
@@ -24,7 +26,7 @@ const Card = ({ task }: IPropsCard) => {
       dispatch(
          setDisplayOverlay({
             isDisplay: true,
-            children: <ModalCardDetail />,
+            children: <ModalCardDetail idBoard={idBoard} />,
          }),
       );
    };
@@ -50,6 +52,7 @@ const Card = ({ task }: IPropsCard) => {
                            key={column._id}
                            column={column}
                            value={task.values[index]}
+                           idBoard={idBoard}
                         />
                      );
                   }

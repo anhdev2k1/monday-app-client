@@ -14,13 +14,14 @@ import { handleDelGroup } from '~/pages/Board/board.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 interface IPropsGroup {
    data: IGroup;
+   idBoard?: string;
+   // position: number;
    // columns?: IColumn[];
-   handleAddNewGroup: () => Promise<void>;
+   handleAddNewGroup: (position?: number) => Promise<void>;
 }
-const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
+const Group = ({ data, idBoard, handleAddNewGroup }: IPropsGroup) => {
    const [valueNameInput, setValueNameInput] = useState<string>(data.name);
    const dispatch = useAppDispatch();
-   const { idBoard } = useParams();
    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target as HTMLInputElement;
       setValueNameInput(value);
@@ -52,7 +53,7 @@ const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
          key: '1',
          label: <span>Add group</span>,
          icon: <img src={add} alt="icon-board" />,
-         onClick: handleAddNewGroup,
+         onClick: () => handleAddNewGroup(),
       },
       {
          key: '2',
@@ -131,7 +132,7 @@ const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
             </div>
          </div>
          <div className="group__table">
-            <Table data={data} />
+            <Table data={data} idBoard={idBoard} />
             {/* <HeaderTable columns={columns} data={data} /> */}
 
             {/* {data.tasks.map((task) => {

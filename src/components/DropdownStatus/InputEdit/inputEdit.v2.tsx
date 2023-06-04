@@ -7,19 +7,19 @@ import { useAppDispatch } from '~/config/store';
 import {
    handleDeleteValueListStatus,
    handleEditValueListStatus,
+   updateValueAfterEditing,
 } from '~/pages/Board/board.reducer';
-import { ISetInfoValueTask } from '~/components/Group/Table/ValueTask/valueTask.v2';
 
 interface IValueStatus {
    _id: string;
    color: string;
    value: string;
 }
-interface IInputEditProps extends ISetInfoValueTask {
+interface IInputEditProps {
    data: IValueStatus;
    columnId: string;
 }
-const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
+const InputEdit = ({ data, columnId }: IInputEditProps) => {
    const dispatch = useAppDispatch();
    // const handleEditValueOfTask = (key : "color" | 'value', value : string)=>{
 
@@ -45,6 +45,14 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
                value,
             }),
          );
+         console.log({ data, key, value });
+         dispatch(
+            updateValueAfterEditing({
+               valueId: data._id,
+               key,
+               value,
+            }),
+         );
          // dispatch(
          //    handleUpdateAllSelectedValue({
          //       valueId: data._id,
@@ -52,10 +60,10 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
          //       value,
          //    }),
          // );
-         setChangeStatus({
-            ...data,
-            [key]: value,
-         });
+         // setChangeStatus({
+         //    ...data,
+         //    [key]: value,
+         // });
       }
       await axios.patch(`${SERVER_API_URL}v1/api/values/${data._id}`, {
          [key]: value,
@@ -94,7 +102,7 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
                <input
                   type="text"
                   className="status__item-input"
-                  value={valueInput}
+                  value={valueInput || ''}
                   ref={inputValue}
                   onChange={handleChangeValue}
                   onBlur={() => {

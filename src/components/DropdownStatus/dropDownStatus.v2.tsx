@@ -13,20 +13,19 @@ import { handleAddValueListStatus } from '~/pages/Board/board.reducer';
 import { ISetInfoValueTask } from '../Group/Table/ValueTask/valueTask.v2';
 interface IDropdownStatusProps extends ISetInfoValueTask {
    isOpen: boolean;
+   idBoard?: string;
    setOpenStatusBox: React.Dispatch<React.SetStateAction<boolean>>;
-   listStatus: IDefaultValue[];
    columnId: string;
    valueID: string;
 }
 const DropdownStatus = ({
    isOpen,
+   idBoard,
    setOpenStatusBox,
-   setChangeStatus,
-   listStatus,
+   selectValueHandler,
    columnId,
    valueID,
 }: IDropdownStatusProps) => {
-   const { idBoard } = useParams();
    const indexTab = useAppSelector((state) => state.boardSlice.indexTab);
    useEffect(() => {
       setOpenStatusBox(false);
@@ -43,8 +42,14 @@ const DropdownStatus = ({
    const dropdownElement = useRef<HTMLDivElement>(null);
    const applyElement = useRef<HTMLDivElement>(null);
 
+   const itemColumn = useAppSelector((state) =>
+      state.boardSlice.currBoard.data?.columns.find((col) => col._id === columnId),
+   );
+
    // const [listStatusState, setListStatusState] = useState(listStatus);
-   const [colorsIsSamp, setColorsIsSamp] = useState(listStatus?.map((value) => value.color));
+   const [colorsIsSamp, setColorsIsSamp] = useState(
+      itemColumn?.defaultValues?.map((value) => value.color),
+   );
    // useEffect(() => {
    //    setListStatusState(listStatus);
    //    setColorsIsSamp(listStatus);
@@ -60,7 +65,7 @@ const DropdownStatus = ({
          setIsApply(false);
       };
    }, []);
-   const handleChangeStatus = async (values: IDefaultValue) => {
+   const handleValueSelection = async (values: IDefaultValue) => {
       // setChangeStatus((prev) => {
       //    return {
       //       ...prev,
@@ -69,7 +74,7 @@ const DropdownStatus = ({
       //       color: values.color,
       //    };
       // });
-      setChangeStatus(values);
+      selectValueHandler(values);
       await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueID}`, {
          value: values.value,
          valueId: values._id,
@@ -77,26 +82,30 @@ const DropdownStatus = ({
       setOpenStatusBox(false);
    };
    const handleAddValueStatus = async () => {
-      const ColorsNoSame = colorsData.filter((data) => !colorsIsSamp.includes(data.color));
-      const randomColor = ColorsNoSame[Math.floor(Math.random() * ColorsNoSame.length)];
-      setColorsIsSamp((pre) => [...pre, randomColor.color]);
-      const { color } = randomColor;
+      if (Array.isArray(colorsIsSamp)) {
+         const ColorsNoSame = colorsData.filter((data) => !colorsIsSamp.includes(data.color));
+         const randomColor = ColorsNoSame[Math.floor(Math.random() * ColorsNoSame.length)];
+         setColorsIsSamp((pre) => {
+            if (Array.isArray(pre)) return [...pre, randomColor.color];
+         });
+         const { color } = randomColor;
 
-      //Add value request
-      const res = await axios.post(
-         `${SERVER_API_URL}v1/api/board/${idBoard}/column/${columnId}/values`,
-         { value: '', color },
-      );
-      dispatch(
-         handleAddValueListStatus({
-            columnId,
-            newValueStatus: {
-               _id: res.data.metadata.value._id,
-               color: res.data.metadata.value.color,
-               value: '',
-            },
-         }),
-      );
+         //Add value request
+         const res = await axios.post(
+            `${SERVER_API_URL}v1/api/board/${idBoard}/column/${columnId}/values`,
+            { value: '', color },
+         );
+         dispatch(
+            handleAddValueListStatus({
+               columnId,
+               newValueStatus: {
+                  _id: res.data.metadata.value._id,
+                  color: res.data.metadata.value.color,
+                  value: '',
+               },
+            }),
+         );
+      }
    };
    useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
@@ -136,14 +145,14 @@ const DropdownStatus = ({
                <div className="status__wrapper-flex">
                   {!isEdit ? (
                      <div className="list__status">
-                        {listStatus.map((item) => {
+                        {itemColumn?.defaultValues.map((item) => {
                            return (
                               <div
                                  key={item._id}
                                  className="status__item"
                                  style={{ backgroundColor: item.color }}
                                  data-color={item.color}
-                                 onClick={(e) => handleChangeStatus(item)}
+                                 onClick={(e) => handleValueSelection(item)}
                               >
                                  <span className="status__item-title">{item.value}</span>
                               </div>
@@ -158,15 +167,8 @@ const DropdownStatus = ({
                         }}
                         className="list__status-input"
                      >
-                        {listStatus.map((item) => {
-                           return (
-                              <InputEdit
-                                 data={item}
-                                 key={item._id}
-                                 columnId={columnId}
-                                 setChangeStatus={setChangeStatus}
-                              />
-                           );
+                        {itemColumn?.defaultValues.map((item) => {
+                           return <InputEdit data={item} key={item._id} columnId={columnId} />;
                         })}
                         {isEdit && (
                            <div className="item__add-status" onClick={handleAddValueStatus}>

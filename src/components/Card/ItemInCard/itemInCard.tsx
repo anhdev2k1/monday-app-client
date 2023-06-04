@@ -9,8 +9,9 @@ interface IPropsCard {
    column: IColumn;
    value: IValueOfTask;
    task: ITask;
+   idBoard?: string;
 }
-const ItemInCard = ({ column, value, task }: IPropsCard) => {
+const ItemInCard = ({ column, value, task, idBoard }: IPropsCard) => {
    return (
       <div className="item__in__card">
          <ButtonCustom
@@ -40,7 +41,7 @@ const ItemInCard = ({ column, value, task }: IPropsCard) => {
                      task={task}
                      valueOfTask={value}
                      colIncludeListValue={column}
-                     defaultValueInColumn={column.defaultValues}
+                     idBoard={idBoard}
                   />
                </tr>
             </tbody>

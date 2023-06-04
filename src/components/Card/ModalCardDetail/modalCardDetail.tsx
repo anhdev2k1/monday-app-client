@@ -7,7 +7,11 @@ import { handleEditTaskFromGroup } from '~/pages/Board/board.reducer';
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 
-const ModalCardDetail = () => {
+interface ModalCardDetailProps {
+   idBoard?: string;
+}
+
+const ModalCardDetail = ({ idBoard }: ModalCardDetailProps) => {
    const { iconDesTask } = images;
    const dispatch = useAppDispatch();
    const task = useAppSelector((state) => state.boardSlice.taskToDisplay)!;
@@ -62,6 +66,7 @@ const ModalCardDetail = () => {
                            key={column._id}
                            column={column}
                            value={task.values[index]}
+                           idBoard={idBoard}
                         />
                      );
                   })}

@@ -112,7 +112,6 @@ const ValueTask = ({
                isOpen={openStatusBox}
                setOpenStatusBox={setOpenStatusBox}
                setChangeStatus={setChangeStatus}
-               listStatus={defaultValueInColumn}
                columnId={colIncludeListValue._id}
                valueID={valueOfTask._id}
             />

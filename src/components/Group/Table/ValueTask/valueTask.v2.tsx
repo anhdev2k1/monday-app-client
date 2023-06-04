@@ -1,31 +1,28 @@
-import { useState } from 'react';
-import { useAppDispatch } from '~/config/store';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import { ITask, IValueOfTask } from '~/shared/model/task';
 import { IColumn, IDefaultValue } from '~/shared/model/column';
 import DropdownStatus from '~/components/DropdownStatus/dropDownStatus.v2';
 import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
 import { handleEditValueSelected } from '~/pages/Board/board.reducer';
+import { useParams } from 'react-router-dom';
 interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
+   idBoard?: string;
    task: ITask;
    colIncludeListValue: IColumn;
-   defaultValueInColumn: IDefaultValue[];
 }
 
 export interface ISetInfoValueTask {
-   setChangeStatus: (values: IDefaultValue) => void;
+   selectValueHandler: (values: IDefaultValue) => void;
 }
-const ValueTask = ({
-   valueOfTask,
-   colIncludeListValue,
-   task,
-   defaultValueInColumn,
-}: IValueTaskProps) => {
+const ValueTask = ({ valueOfTask, colIncludeListValue, task, idBoard }: IValueTaskProps) => {
    const [openStatusBox, setOpenStatusBox] = useState<boolean>(false);
    const dispatch = useAppDispatch();
+   const indexTab = useAppSelector((state) => state.boardSlice.indexTab);
 
-   const setChangeStatus = (values: IDefaultValue) => {
+   const selectValueHandler = (values: IDefaultValue) => {
       dispatch(
          handleEditValueSelected({
             idValue: valueOfTask._id,
@@ -37,6 +34,10 @@ const ValueTask = ({
    const toggleStatusBoxHandler = () => {
       setOpenStatusBox((prev) => !prev);
    };
+
+   useEffect(() => {
+      setOpenStatusBox(false);
+   }, [indexTab]);
 
    return (
       <td
@@ -57,9 +58,9 @@ const ValueTask = ({
          {valueOfTask.typeOfValue === 'multiple' ? (
             <DropdownStatus
                isOpen={openStatusBox}
+               idBoard={idBoard}
                setOpenStatusBox={setOpenStatusBox}
-               setChangeStatus={setChangeStatus}
-               listStatus={defaultValueInColumn}
+               selectValueHandler={selectValueHandler}
                columnId={colIncludeListValue._id}
                valueID={valueOfTask._id}
             />
