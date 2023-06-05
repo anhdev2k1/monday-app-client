@@ -15,7 +15,7 @@ import {
    handleEditCurrBoard,
    setIndexTab,
 } from './board.reducer';
-import { getDetailWorkspace } from '../Workspace/workspace.reducer';
+import { editBoardInWorkspace, getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
 import icons from '../../assets/svg/index';
 import { Input } from 'antd';
@@ -57,11 +57,18 @@ const Board = () => {
    const [isEditName, setEditName] = useState(false);
 
    const handleEditBoard = (value: string) => {
-      if (value && value !== currBoard?.name) {
+      if (value && idBoard && value !== currBoard?.name) {
          dispatch(
             handleEditCurrBoard({
                key: 'name',
                value,
+            }),
+         );
+
+         dispatch(
+            editBoardInWorkspace({
+               boardId: idBoard,
+               name: value,
             }),
          );
       }
@@ -108,6 +115,11 @@ const Board = () => {
                            autoFocus
                            onBlur={(e) => {
                               handleEditBoard(e.target.value);
+                           }}
+                           onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                 handleEditBoard((e.target as HTMLInputElement).value);
+                              }
                            }}
                            style={{ width: '60%' }}
                         />

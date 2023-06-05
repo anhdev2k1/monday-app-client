@@ -1,4 +1,5 @@
 import {
+   PayloadAction,
    createAsyncThunk,
    createSlice,
    isFulfilled,
@@ -130,13 +131,13 @@ export const getListlWorkspace = createAsyncThunk(
 // create
 export const createWorkSpace = createAsyncThunk(
    'create-workspace-slice',
-   async (infoCreate: IWorkspace) => {
+   async ({ name }: { name: string }) => {
       const requestUrl = `${baseUrl}v1/api/workspace`;
       return await axios.post<
          IResponseWorkSpace<{
             workspace: IWorkspace;
          }>
-      >(requestUrl, infoCreate);
+      >(requestUrl, name);
    },
    { serializeError: serializeAxiosError },
 );
@@ -274,16 +275,9 @@ export const workspaceSlice = createSlice({
          }
       },
       setNameWorkspace: (state, action) => {
-         return {
-            ...state,
-            currWorkspace: {
-               ...state.currWorkspace,
-               data: {
-                  ...state.currWorkspace.data,
-                  name: action.payload,
-               },
-            },
-         };
+         if (state.currWorkspace.data) {
+            state.currWorkspace.data.name = action.payload;
+         }
       },
       setCurrWorkspaceDefault: (state, action) => {
          if (state.infoListWorkSpace.data) {
@@ -319,6 +313,24 @@ export const workspaceSlice = createSlice({
          state.currWorkspace.mess = '';
          state.currWorkspace.error = false;
       },
+
+      editBoardInWorkspace(
+         state,
+         action: PayloadAction<{
+            boardId: string;
+            name: string;
+         }>,
+      ) {
+         const { boardId, name } = action.payload;
+         if (state.currWorkspace.data) {
+            state.currWorkspace.data.boards = state.currWorkspace.data.boards.map((board) => {
+               if (board._id === boardId) {
+                  board.name = name;
+               }
+               return board;
+            });
+         }
+      },
    },
 });
 
@@ -330,6 +342,7 @@ export const {
    deleteItemBoard,
    setNameWorkspace,
    setDescriptionWorkspace,
+   editBoardInWorkspace,
 } = workspaceSlice.actions;
 
 export default workspaceSlice.reducer;

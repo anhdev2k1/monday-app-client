@@ -1,11 +1,10 @@
-import { IBoard } from "./board";
+import { IBoard } from './board';
 
 export interface IWorkspace {
    _id?: string;
    name: string;
    description?: string;
-   boards?: IBoard[]
-    
+   boards: IBoard[];
 }
 
 export interface IResponseWorkSpace<T> {
@@ -13,4 +12,4 @@ export interface IResponseWorkSpace<T> {
    status: string;
    statusCode: number;
    metadata?: T;
-}  
+}

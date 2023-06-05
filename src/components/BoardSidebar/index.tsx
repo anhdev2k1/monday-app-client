@@ -5,7 +5,12 @@ import { MouseEvent, useEffect, useState } from 'react';
 
 import images from '~/assets/svg';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { deleteBoard, editBoard, resetCurrBoard } from '~/pages/Board/board.reducer';
+import {
+   deleteBoard,
+   editBoard,
+   handleEditCurrBoard,
+   resetCurrBoard,
+} from '~/pages/Board/board.reducer';
 import { IBoard } from '~/shared/model/board';
 import { useNavigate, useParams } from 'react-router-dom';
 import { deleteItemBoard } from '~/pages/Workspace/workspace.reducer';
@@ -38,11 +43,14 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    ) => {
       e.preventDefault();
       const target = e.target as HTMLInputElement;
-      if (!target.value) {
-         setValueInput('Monday');
-      }
 
-      if (target.value !== dataBoard.name) {
+      if (target.value && target.value !== dataBoard.name) {
+         dispatch(
+            handleEditCurrBoard({
+               key: 'name',
+               value: target.value,
+            }),
+         );
          dispatch(
             editBoard({
                idBoard: dataBoard._id,

@@ -160,8 +160,7 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                              return (
                                 <Column
                                    key={col._id}
-                                   name={col.name}
-                                   _id={col._id}
+                                   col={col}
                                    position={index}
                                    handleAddColumn={handleAddColumn}
                                 />
@@ -172,8 +171,7 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                           return (
                              <Column
                                 key={col._id}
-                                name={col.name}
-                                _id={col._id}
+                                col={col}
                                 position={index}
                                 handleAddColumn={handleAddColumn}
                              />

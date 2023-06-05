@@ -6,7 +6,7 @@
    .circle {
       position: absolute;
       top: 35%;
-      right:5%;
+      right: 5%;
       width: 280px;
       height: 280px;
       border-radius: 50%;
@@ -29,12 +29,13 @@
          #569e99
       );
       filter: blur(5px);
-      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+         rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
    }
    .circle_two {
       position: absolute;
       top: 60%;
-      left:10%;
+      left: 10%;
       width: 150px;
       height: 150px;
       border-radius: 50%;
@@ -57,19 +58,22 @@
          #569e99
       );
       filter: blur(5px);
-      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+         rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
    }
    @keyframes fadeDown {
-      from{
+      from {
          transform: translateY(0px);
-      }to{
+      }
+      to {
          transform: translateY(60px);
       }
    }
    @keyframes fadeUp {
-      from{
+      from {
          transform: translateY(0px);
-      }to{
+      }
+      to {
          transform: translateY(-60px);
       }
    }
@@ -89,6 +93,7 @@
       .workspace__content {
          border-radius: 8px;
          padding: 20px;
+         padding-bottom: 50px;
          background-color: white;
          box-shadow: #e6e9ef 0px 3px 12px 0px;
          &-list {
@@ -107,7 +112,6 @@
                padding: 8px;
                border-radius: 8px;
                border: 1px solid #e1e4ee;
-               margin-bottom: 50px;
                margin-top: 10px;
                cursor: pointer;
                transition: all 0.2s;
