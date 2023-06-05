@@ -210,33 +210,37 @@ const boardSlice = createSlice({
    reducers: {
       handleAddGroup: (state, action) => {
          const newGroup = action.payload; // Thông tin của group mới cần thêm vào
-         const updatedGroups = state.currBoard.data?.groups?.concat(newGroup); // Tạo mảng mới kết hợp groups hiện tại và group mới
-         if (state.currBoard.data && state.currBoard.data.groups && updatedGroups) {
-            return {
-               ...state,
-               currBoard: {
-                  ...state.currBoard,
-                  data: {
-                     ...state.currBoard.data,
-                     groups: updatedGroups, // Cập nhật mảng groups bằng mảng mới
-                  },
-               },
-            };
+         // const updatedGroups = state.currBoard.data?.groups?.concat(newGroup); // Tạo mảng mới kết hợp groups hiện tại và group mới
+
+         if (state.currBoard.data) {
+            const copiedGroups = state.currBoard.data.groups;
+            copiedGroups.splice(newGroup.position, 0, newGroup);
+
+            state.currBoard.data.groups = copiedGroups.map((group, index) => {
+               if (group.position !== index) {
+                  group.position = index;
+               }
+               return group;
+            });
          }
       },
-      handleDelGroup: (state, action) => {
-         const groupId = action.payload; // Id của group cần xóa
-         if (state.currBoard.data && state.currBoard.data.groups && groupId) {
-            return {
-               ...state,
-               currBoard: {
-                  ...state.currBoard,
-                  data: {
-                     ...state.currBoard.data,
-                     groups: state.currBoard.data?.groups.filter((group) => group._id !== groupId),
-                  },
-               },
-            };
+      handleDelGroup: (
+         state,
+         action: PayloadAction<{
+            groupId: string;
+            position: number;
+         }>,
+      ) => {
+         const { groupId, position } = action.payload; // Id của group cần xóa
+         if (state.currBoard.data) {
+            const copiedGroups = state.currBoard.data.groups;
+            copiedGroups.splice(position, 1);
+            state.currBoard.data.groups = copiedGroups.map((group, index) => {
+               if (group.position !== index) {
+                  group.position = index;
+               }
+               return group;
+            });
          }
       },
       handleAddTaskToGroup: (
@@ -272,35 +276,29 @@ const boardSlice = createSlice({
             };
          }
       },
-      handleDeleteTaskFromGroup: (
+      handleDeleteTasksFromGroup: (
          state,
-         action: PayloadAction<{ groupId: string; taskId: string }>,
+         action: PayloadAction<{ groupId: string; taskIds: string[] }>,
       ) => {
-         const { groupId, taskId } = action.payload;
+         const { groupId, taskIds } = action.payload;
 
-         const updatedGroups = state.currBoard.data?.groups
-            ?.map((group) => {
-               if (group._id === groupId) {
-                  return {
-                     ...group,
-                     tasks: group.tasks.filter((task) => task._id !== taskId),
-                  };
+         if (state.currBoard.data) {
+            const group = state.currBoard.data.groups.find((group) => group._id === groupId)!;
+
+            const newTasks: ITask[] = [];
+
+            for (const [index, task] of group.tasks.entries()) {
+               if (!taskIds.includes(task._id)) {
+                  newTasks.push({
+                     ...task,
+                     position: index,
+                  });
                }
-               return group;
-            })
-            .filter((group) => group !== undefined);
+            }
 
-         if (state.currBoard.data && updatedGroups) {
-            return {
-               ...state,
-               currBoard: {
-                  ...state.currBoard,
-                  data: {
-                     ...state.currBoard.data,
-                     groups: updatedGroups,
-                  },
-               },
-            };
+            group.tasks = newTasks;
+
+            state.currBoard.data.groups[group.position] = group;
          }
       },
       handleEditTaskFromGroup: (
@@ -788,7 +786,6 @@ const boardSlice = createSlice({
       ) {
          state.taskToDisplay = action.payload.task;
       },
-
    },
 });
 
@@ -806,7 +803,7 @@ export const {
    setSearchValueInput,
    // handle task
    handleAddTaskToGroup,
-   handleDeleteTaskFromGroup,
+   handleDeleteTasksFromGroup,
    handleEditTaskFromGroup,
    setTaskToDisplay,
    // handle filter

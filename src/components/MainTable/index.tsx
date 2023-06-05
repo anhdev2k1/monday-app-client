@@ -8,7 +8,6 @@ import { StatusType } from '~/shared/model/global';
 import { IBoard } from '~/shared/model/board';
 import { IGroup } from '~/shared/model/group';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 // import ShowNotification from '~/utils/showNotification';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
@@ -90,6 +89,7 @@ const MainTable = ({ idBoard }: MainTableProps) => {
                         handleAddNewGroup={handleAddNewGroup}
                         // columns={currBoard?.columns}
                         key={item._id}
+                        position={index}
                         idBoard={idBoard}
                         data={item}
                      />

@@ -1,21 +1,12 @@
 import icons from '../../assets/svg/index';
 import './menuTask.scss';
 interface IMenuTaskProps {
-   tasks: {
-      _id: string;
-   }[];
-   task: string;
-   handleDeleteTask: (taskID: string) => void;
-   setIsChecked: React.Dispatch<
-      React.SetStateAction<
-         {
-            _id: string;
-         }[]
-      >
-   >;
+   tasks: string[];
+   handleDeleteTask: (checkedTasks: string[]) => Promise<void>;
+   setCheckedTasks: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const MenuTask = ({ tasks, task, handleDeleteTask, setIsChecked }: IMenuTaskProps) => {
+const MenuTask = ({ tasks, handleDeleteTask, setCheckedTasks }: IMenuTaskProps) => {
    return (
       <div
          className="menu__wrapper"
@@ -45,8 +36,7 @@ const MenuTask = ({ tasks, task, handleDeleteTask, setIsChecked }: IMenuTaskProp
             <div
                className="menu__feature-item"
                onClick={() => {
-                  handleDeleteTask(task);
-                  setIsChecked([]);
+                  handleDeleteTask(tasks);
                }}
             >
                <img src={icons.deleteTask} alt="" />
@@ -61,7 +51,7 @@ const MenuTask = ({ tasks, task, handleDeleteTask, setIsChecked }: IMenuTaskProp
                <span>Move to</span>
             </div>
          </div>
-         <div className="menu__close">
+         <div className="menu__close" onClick={() => setCheckedTasks([])}>
             <img src={icons.close} alt="" />
          </div>
       </div>

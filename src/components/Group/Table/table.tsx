@@ -2,11 +2,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { IGroup } from '~/shared/model/group';
-import { useState, useRef, Fragment, createRef } from 'react';
+import { useState, useRef, createRef } from 'react';
 import './table.scss';
 import { message } from 'antd';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import MenuTask from '~/components/MenuTask/menuTask';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import TaskEdit from './TaskEdit/taskEdit';
@@ -16,7 +15,7 @@ import { createColumn } from '~/components/MainTable/mainTable.reducer';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask.v2';
-import { handleAddTaskToGroup, handleDeleteTaskFromGroup } from '~/pages/Board/board.reducer';
+import { handleAddTaskToGroup, handleDeleteTasksFromGroup } from '~/pages/Board/board.reducer';
 import { SERVER_API_URL } from '~/config/constants';
 interface IPropsTable {
    data: IGroup;
@@ -24,6 +23,7 @@ interface IPropsTable {
 }
 
 const Table = ({ data, idBoard }: IPropsTable) => {
+   console.log({ group: data });
    // const [listTask, setListTask] = useState<ITask[]>(data.tasks);
    // useEffect(() => {
    //    setListTask(data.tasks);
@@ -38,37 +38,37 @@ const Table = ({ data, idBoard }: IPropsTable) => {
    // const handleEditInput = useRef<HTMLInputElement>(null);
 
    const listTypeElement: React.RefObject<HTMLDivElement> = createRef();
-   const [idTask, setIdTask] = useState('');
-   const [isChecked, setIsChecked] = useState<ITaskChecked[]>([]);
+   const [checkedTasks, setCheckedTasks] = useState<string[]>([]);
+
    const dispatch = useAppDispatch();
    const filterItem = useAppSelector((state) => state.boardSlice.filter);
    // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
 
-   interface ITaskChecked {
-      _id: string;
-   }
    // const handleRenameTask = (e: any, taskID: any) => {
    //    setIsRenameTask(true);
    // };
-   const handleCheckboxChange = (e: any, taskID: any) => {
-      setIdTask(e.target.dataset.id);
+   const toggleCheckedTask = (e: any, taskId: string) => {
       if (e.target.checked) {
-         setIsChecked((pre) => [...pre, { _id: taskID }]);
+         setCheckedTasks((pre) => [...pre, taskId]);
       } else {
-         setIsChecked((pre) => pre.filter((item) => item._id !== taskID));
+         setCheckedTasks((pre) => pre.filter((item) => item !== taskId));
       }
    };
-   const handleDeleteTask = async (taskId: string) => {
+
+   const handleDeleteTask = async (taskIds: string[]) => {
       messageApi.loading('Đợi xý nhé !...');
-      await axios.delete(`${SERVER_API_URL}v1/api/group/${data._id}/task/${taskId}`);
+      await axios.delete(
+         `${SERVER_API_URL}v1/api/group/${data._id}/tasks?ids=${taskIds.join(',')}`,
+      );
       // setListTask((pre) => pre.filter((item) => item._id !== taskId));
       messageApi.success('Xoá task thành công!');
       dispatch(
-         handleDeleteTaskFromGroup({
+         handleDeleteTasksFromGroup({
             groupId: data._id,
-            taskId,
+            taskIds,
          }),
       );
+      setCheckedTasks([]);
    };
    const handleAddColumn = async (id: string, position?: number) => {
       try {
@@ -212,8 +212,9 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                            <input
                               type="checkbox"
                               id="checked"
-                              onChange={(e) => handleCheckboxChange(e, task._id)}
+                              onChange={(e) => toggleCheckedTask(e, task._id)}
                               data-id={task._id}
+                              checked={checkedTasks.includes(task._id)}
                            />
                         </td>
                         <TaskEdit task={task} groupId={data._id} />
@@ -276,10 +277,9 @@ const Table = ({ data, idBoard }: IPropsTable) => {
             </tbody>
          </table>
          <MenuTask
-            setIsChecked={setIsChecked}
-            tasks={isChecked}
+            setCheckedTasks={setCheckedTasks}
+            tasks={checkedTasks}
             handleDeleteTask={handleDeleteTask}
-            task={idTask}
          />
       </>
    );

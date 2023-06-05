@@ -15,19 +15,24 @@ import { isNotification } from '../Notification/notification.reducer';
 interface IPropsGroup {
    data: IGroup;
    idBoard?: string;
-   // position: number;
+   position: number;
    // columns?: IColumn[];
    handleAddNewGroup: (position?: number) => Promise<void>;
 }
-const Group = ({ data, idBoard, handleAddNewGroup }: IPropsGroup) => {
+const Group = ({ data, idBoard, position, handleAddNewGroup }: IPropsGroup) => {
    const [valueNameInput, setValueNameInput] = useState<string>(data.name);
    const dispatch = useAppDispatch();
    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target as HTMLInputElement;
       setValueNameInput(value);
    };
-   const handleDeleteGroup = (id: string) => {
-      dispatch(handleDelGroup(id));
+   const handleDeleteGroup = (id: string, position: number) => {
+      dispatch(
+         handleDelGroup({
+            groupId: id,
+            position,
+         }),
+      );
       dispatch(
          isNotification({
             type: 'success',
@@ -53,7 +58,7 @@ const Group = ({ data, idBoard, handleAddNewGroup }: IPropsGroup) => {
          key: '1',
          label: <span>Add group</span>,
          icon: <img src={add} alt="icon-board" />,
-         onClick: () => handleAddNewGroup(),
+         onClick: () => handleAddNewGroup(position + 1),
       },
       {
          key: '2',
@@ -79,7 +84,7 @@ const Group = ({ data, idBoard, handleAddNewGroup }: IPropsGroup) => {
          label: <span>Delete group</span>,
          icon: <img src={deleteIcon} alt="icon-board" />,
          onClick: () => {
-            handleDeleteGroup(data._id);
+            handleDeleteGroup(data._id, data.position);
          },
       },
    ];
