@@ -1,13 +1,10 @@
 import DropdownStatus from '~/components/DropdownStatus/dropdownStatus';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task';
-import axios from 'axios';
-import { SERVER_API_URL } from '~/config/constants';
-import { useParams } from 'react-router-dom';
 import { IColumn, IDefaultValue } from '~/shared/model/column';
 import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { handleEditValueListStatus, handleEditValueSelected } from '~/pages/Board/board.reducer';
+import { handleEditValueSelected } from '~/pages/Board/board.reducer';
 interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
@@ -33,29 +30,29 @@ const ValueTask = ({ valueOfTask, task }: IValueTaskProps) => {
       _id: string;
       idSelected: string | null;
       value: string | null;
-      color: string | null;
+      color: string;
    }>({
       _id: valueOfTask._id,
       idSelected: valueOfTask.valueId?._id || null,
       value: valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null,
-      color: valueOfTask.valueId?.color || null,
+      color: valueOfTask.valueId?.color,
    });
 
-   useEffect(() => {
-      if (valueOfTask.valueId?.color || valueOfTask.valueId?.value) {
-         setChangeStatus((prev) => {
-            return {
-               ...prev,
-               idSelected: valueOfTask.valueId?._id,
-               value: valueOfTask.valueId?.value,
-               color: valueOfTask.valueId?.color,
-            };
-         });
-      }
-   }, [valueOfTask.valueId?._id, valueOfTask.valueId?.color, valueOfTask.valueId?.value]);
+   // useEffect(() => {
+   //    if (valueOfTask.valueId?.color || valueOfTask.valueId?.value) {
+   //       setChangeStatus((prev) => {
+   //          return {
+   //             ...prev,
+   //             idSelected: valueOfTask.valueId?._id,
+   //             value: valueOfTask.valueId?.value,
+   //             color: valueOfTask.valueId?.color,
+   //          };
+   //       });
+   //    }
+   // }, [valueOfTask.valueId?._id, valueOfTask.valueId?.color, valueOfTask.valueId?.value]);
 
    useEffect(() => {
-      if (changeStatus.idSelected) {
+      if (changeStatus.idSelected && valueOfTask.typeOfValue === 'multiple') {
          dispatch(
             handleEditValueSelected({
                idValue: changeStatus._id,

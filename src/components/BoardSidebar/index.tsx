@@ -20,7 +20,6 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const [valueInput, setValueInput] = useState<string>(dataBoard.name);
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
    const [visible, setVisible] = useState(false);
-   console.log(dataBoard);
 
    const handleOpenChange = (open: boolean) => {
       setVisible((prev) => !prev);

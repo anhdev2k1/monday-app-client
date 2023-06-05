@@ -21,26 +21,25 @@ import { Input } from 'antd';
 import LoadingLogo from '~/components/LoadingLogo/loadingLogo';
 import { getListTypes } from '~/components/ListTypes/listTypes.reducer';
 import { resetDataCreateCol } from '~/components/MainTable/mainTable.reducer';
-import { IGroup } from '~/shared/model/group';
 const Board = () => {
    const { idBoard } = useParams();
    const dispatch = useAppDispatch();
    const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data);
-   const cuurWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
+   const currWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkspace } = useParams();
    const [changeEditName, setChangeEditName] = useState(currBoard?.name);
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const dataCreateCol = useAppSelector((state) => state.mainTableSlice.createCol.data);
 
    useEffect(() => {
-      if (!cuurWorkspace && idWorkspace) {
+      if (!currWorkspace && idWorkspace) {
          dispatch(
             getDetailWorkspace({
                idWorkspace,
             }),
          );
       }
-   }, [cuurWorkspace, dispatch, idWorkspace]);
+   }, [currWorkspace, dispatch, idWorkspace]);
    useEffect(() => {
       setTimeout(() => {
          setIsLoading(false);
@@ -65,12 +64,9 @@ const Board = () => {
       dispatch(getListTypes());
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, []);
-   console.log('board render');
 
    useEffect(() => {
       if (dataCreateCol !== undefined) {
-         console.log('dataCreateCol', { dataCreateCol });
-
          dispatch(
             handleAddColumn({
                newData: dataCreateCol.column,
@@ -85,6 +81,10 @@ const Board = () => {
       }
       dispatch(resetDataCreateCol());
    }, [dataCreateCol, dispatch]);
+
+   const changeIndexInterface = (index: 0 | 1) => {
+      dispatch(setIndexTab({ index }));
+   };
 
    return (
       <>
@@ -126,18 +126,24 @@ const Board = () => {
                         {
                            label: (
                               <Tippy position="top" html={<p>Main table</p>}>
-                                 <span style={{ fontSize: '1.4rem', fontWeight: '500' }}>
+                                 <span
+                                    style={{ fontSize: '1.4rem', fontWeight: '500' }}
+                                    onClick={() => changeIndexInterface(0)}
+                                 >
                                     <FontAwesomeIcon className="icon__table" icon={faHouse} />
                                     Main table
                                  </span>
                               </Tippy>
                            ),
-                           info: <MainTable currBoard={currBoard} />,
+                           info: <MainTable idBoard={idBoard} />,
                         },
                         {
                            label: (
                               <Tippy position="top" html={<p>Cards</p>}>
-                                 <span style={{ fontSize: '1.4rem', fontWeight: '500' }}>
+                                 <span
+                                    style={{ fontSize: '1.4rem', fontWeight: '500' }}
+                                    onClick={() => changeIndexInterface(1)}
+                                 >
                                     <FontAwesomeIcon
                                        className="icon__table"
                                        icon={faCircleExclamation}
@@ -146,7 +152,7 @@ const Board = () => {
                                  </span>
                               </Tippy>
                            ),
-                           info: <Cards currBoard={currBoard} />,
+                           info: <Cards idBoard={idBoard} />,
                         },
                      ]}
                   />

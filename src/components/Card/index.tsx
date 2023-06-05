@@ -6,20 +6,31 @@ import Tippy from '../Tippy';
 import { useAppDispatch } from '~/config/store';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 import ModalCardDetail from './ModalCardDetail/modalCardDetail';
+import { setTaskToDisplay } from '~/pages/Board/board.reducer';
+import { useParams } from 'react-router-dom';
 interface IPropsCard {
    task: ITaskCard;
+   idBoard?: string;
 }
-const Card = ({ task }: IPropsCard) => {
+const Card = ({ task, idBoard }: IPropsCard) => {
    const { iconDesTask } = images;
    const dispatch = useAppDispatch();
+
    const handleShowModalCartDetail = () => {
+      dispatch(
+         setTaskToDisplay({
+            task: task,
+         }),
+      );
+
       dispatch(
          setDisplayOverlay({
             isDisplay: true,
-            children: <ModalCardDetail task={task} />,
+            children: <ModalCardDetail idBoard={idBoard} />,
          }),
       );
    };
+
    return (
       <div onClick={handleShowModalCartDetail} className="card__item">
          <div className="card__item-title">
@@ -41,6 +52,7 @@ const Card = ({ task }: IPropsCard) => {
                            key={column._id}
                            column={column}
                            value={task.values[index]}
+                           idBoard={idBoard}
                         />
                      );
                   }

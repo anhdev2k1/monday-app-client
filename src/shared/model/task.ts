@@ -1,7 +1,7 @@
 export interface IItemInListValueSelect {
    _id: string;
    value: string | null;
-   color: string | null;
+   color: string;
 }
 export interface IValueOfTask {
    belongColumn: string;
@@ -9,7 +9,6 @@ export interface IValueOfTask {
    _id: string;
    value: string;
    valueId: IItemInListValueSelect;
-   name: string;
 }
 export interface ITask {
    _id: string;

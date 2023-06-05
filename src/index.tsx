@@ -5,7 +5,6 @@ import App from './App';
 import { Provider } from 'react-redux';
 import config from './config';
 import setupAxiosInterceptors from './config/axios-interceptor';
-import { NotificationProvider } from './components/NotificationProvider/notificationProvider';
 import Overlay from './components/Overlay';
 import Notification from './components/NotificationProvider/Notification/notification';
 

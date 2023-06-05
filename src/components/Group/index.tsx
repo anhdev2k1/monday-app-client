@@ -3,35 +3,36 @@ import { faAngleDown, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import './group.scss';
 import { useRef, useState } from 'react';
 import Tippy from '../Tippy';
-import Row from '../Row';
 import { IGroup } from '~/shared/model/group';
-import { IColumn } from '~/shared/model/column';
 import { Dropdown, MenuProps } from 'antd';
 import images from '~/assets/svg';
-import { SERVER_API_URL } from '~/config/constants';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { IResponseData } from '~/shared/model/global';
-import { useAppDispatch, useAppSelector } from '~/config/store';
+import { useAppDispatch } from '~/config/store';
 import { deleteGroup, updateGroup } from './group.reducer';
 import Table from './Table/table';
 import { handleDelGroup } from '~/pages/Board/board.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 interface IPropsGroup {
    data: IGroup;
+   idBoard?: string;
+   position: number;
    // columns?: IColumn[];
-   handleAddNewGroup: () => Promise<void>;
+   handleAddNewGroup: (position?: number) => Promise<void>;
 }
-const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
+const Group = ({ data, idBoard, position, handleAddNewGroup }: IPropsGroup) => {
    const [valueNameInput, setValueNameInput] = useState<string>(data.name);
    const dispatch = useAppDispatch();
-   const { idBoard } = useParams();
    const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target as HTMLInputElement;
       setValueNameInput(value);
    };
-   const handleDeleteGroup = (id: string) => {
-      dispatch(handleDelGroup(id));
+   const handleDeleteGroup = (id: string, position: number) => {
+      dispatch(
+         handleDelGroup({
+            groupId: id,
+            position,
+         }),
+      );
       dispatch(
          isNotification({
             type: 'success',
@@ -57,7 +58,7 @@ const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
          key: '1',
          label: <span>Add group</span>,
          icon: <img src={add} alt="icon-board" />,
-         onClick: handleAddNewGroup,
+         onClick: () => handleAddNewGroup(position + 1),
       },
       {
          key: '2',
@@ -83,7 +84,7 @@ const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
          label: <span>Delete group</span>,
          icon: <img src={deleteIcon} alt="icon-board" />,
          onClick: () => {
-            handleDeleteGroup(data._id);
+            handleDeleteGroup(data._id, data.position);
          },
       },
    ];
@@ -136,7 +137,7 @@ const Group = ({ data, handleAddNewGroup }: IPropsGroup) => {
             </div>
          </div>
          <div className="group__table">
-            <Table data={data} />
+            <Table data={data} idBoard={idBoard} />
             {/* <HeaderTable columns={columns} data={data} /> */}
 
             {/* {data.tasks.map((task) => {

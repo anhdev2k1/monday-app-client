@@ -4,6 +4,7 @@ import { IChildrenComponentProps } from '~/shared/model/global';
 // import { resetSelectLabel } from '../SelectLabel/SelectLabel.reducer';
 import './overlay.scss';
 import { setDisplayOverlay } from './overlay.reducer';
+import { setTaskToDisplay } from '~/pages/Board/board.reducer';
 // import { setDisplayOverlay } from './overlay.reducer';
 const Overlay: React.FC<IChildrenComponentProps> = () => {
    const dispatch = useAppDispatch();
@@ -14,6 +15,11 @@ const Overlay: React.FC<IChildrenComponentProps> = () => {
          setDisplayOverlay({
             isDisplay: false,
             children: <></>,
+         }),
+      );
+      dispatch(
+         setTaskToDisplay({
+            task: undefined,
          }),
       );
    };

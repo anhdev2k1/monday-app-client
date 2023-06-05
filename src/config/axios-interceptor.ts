@@ -8,6 +8,11 @@ axios.defaults.withCredentials = true;
 
 const setupAxiosInterceptors = () => {
    const onRequestSuccess = (config: any) => {
+      let userID: string | null = localStorage.getItem('userId');
+      if (userID) {
+         config.headers['client-id'] = userID;
+         // config.headers['Content-Type'] = 'multipart/form-data';
+      }
       return config;
    };
    const onResponseSuccess = (response: any) => {

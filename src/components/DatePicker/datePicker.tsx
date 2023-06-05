@@ -22,8 +22,6 @@ const DateTimePicker: React.FC<IPropsDatePicker> = ({ valueTask, icon, task }) =
    const dispatch = useAppDispatch();
    const handleDateChange = (date: Dayjs | null, dateString: string) => {
       setSelectedDate(dateString);
-      console.log('Ngày được chọn:', date);
-      console.log('Ngày được chọn dưới dạng chuỗi:', dateString);
    };
 
    const handleEmptyValue = () => {

@@ -1,32 +1,27 @@
-import { faDotCircle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './column.scss';
 import { Dropdown, MenuProps } from 'antd';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import images from '~/assets/svg';
 import { useParams } from 'react-router-dom';
-import {
-   ICreateColumn,
-   IDeleteColumn,
-   createColumn,
-   deleteColumn,
-   deleteColumnMainTable,
-   editColumn,
-   renameColMainTable,
-} from '../MainTable/mainTable.reducer';
+import { IDeleteColumn, deleteColumn, editColumn } from '../MainTable/mainTable.reducer';
 import { handleDelColumnAndValueTask, handleEditColumn } from '~/pages/Board/board.reducer';
 interface IPropsColumn {
-   index: number;
    name: string;
    _id: string;
    position: number;
    handleAddColumn: (id: string, position?: number) => Promise<void>;
 }
+
+interface IHandleDeleteColumn extends IDeleteColumn {
+   position: number;
+}
+
 const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
    const listTypes = useAppSelector((state) => state.listTypesSlice.listTypes.datas);
-   const listColumns = useAppSelector((state) => state.mainTableSlice.listColumns.datas);
    //    const dataCreateCol = useAppSelector((state) => state.columnSlice.createColumn.data);
    //    const statusDeleteCol = useAppSelector((state) => state.columnSlice.deleteColumn.status);
    const { edit, deleteIcon, add } = images;
@@ -35,16 +30,17 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
    const dispatch = useAppDispatch();
    // const [valueInput, setValueInput] = useState<string>(name);
 
-   const handleDeleteColumn = ({ idBoard, idColumn }: IDeleteColumn) => {
-      dispatch(
+   const handleDeleteColumn = async ({ idBoard, idColumn, position }: IHandleDeleteColumn) => {
+      await dispatch(
          deleteColumn({
             idBoard,
             idColumn,
          }),
       );
+
       dispatch(
          handleDelColumnAndValueTask({
-            idColumn,
+            position,
          }),
       );
       // const newArr = listColumns.filter((column) => column._id !== _id);
@@ -83,7 +79,7 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
                key: `2-${index}`,
                label: item.name,
                icon: <img src={add} alt="dropdow--icon" />,
-               onClick: () => handleAddColumn(item._id, position),
+               onClick: () => handleAddColumn(item._id, position + 1),
             };
          }),
       },
@@ -117,18 +113,14 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
                handleDeleteColumn({
                   idColumn: _id,
                   idBoard,
+                  position,
                });
          },
       },
    ];
 
    return (
-      <th
-         onClick={() => {
-            console.log(name);
-         }}
-         className="column__group"
-      >
+      <th className="column__group">
          {isEditInput ? (
             <input
                className="col__item--input"
