@@ -208,6 +208,19 @@ const boardSlice = createSlice({
          });
    },
    reducers: {
+      // handle board
+      handleEditCurrBoard: (
+         state,
+         action: PayloadAction<{
+            key: 'name' | 'description';
+            value: string;
+         }>,
+      ) => {
+         const { value, key } = action.payload;
+         if (state.currBoard.data) {
+            state.currBoard.data[key] = value;
+         }
+      },
       handleAddGroup: (state, action) => {
          const newGroup = action.payload; // Thông tin của group mới cần thêm vào
          // const updatedGroups = state.currBoard.data?.groups?.concat(newGroup); // Tạo mảng mới kết hợp groups hiện tại và group mới
@@ -790,7 +803,10 @@ const boardSlice = createSlice({
 });
 
 export const {
+   // handle board
+   handleEditCurrBoard,
    resetCurrBoard,
+
    handleAddValueListStatus,
    handleEditValueListStatus,
    handleDeleteValueListStatus,

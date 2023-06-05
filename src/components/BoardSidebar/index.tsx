@@ -1,7 +1,7 @@
 import { Dropdown, MenuProps } from 'antd';
 import './boardSidebar.scss';
 import Tippy from '../Tippy';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 
 import images from '~/assets/svg';
 import { useAppDispatch, useAppSelector } from '~/config/store';
@@ -18,6 +18,10 @@ interface IPropsBoardSidebar {
 
 const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const [valueInput, setValueInput] = useState<string>(dataBoard.name);
+
+   useEffect(() => {
+      setValueInput(dataBoard.name);
+   }, [dataBoard.name]);
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
    const [visible, setVisible] = useState(false);
 
