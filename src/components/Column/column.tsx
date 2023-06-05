@@ -8,9 +8,9 @@ import images from '~/assets/svg';
 import { useParams } from 'react-router-dom';
 import { IDeleteColumn, deleteColumn, editColumn } from '../MainTable/mainTable.reducer';
 import { handleDelColumnAndValueTask, handleEditColumn } from '~/pages/Board/board.reducer';
+import { IColumn } from '~/shared/model/column';
 interface IPropsColumn {
-   name: string;
-   _id: string;
+   col: IColumn;
    position: number;
    handleAddColumn: (id: string, position?: number) => Promise<void>;
 }
@@ -19,7 +19,7 @@ interface IHandleDeleteColumn extends IDeleteColumn {
    position: number;
 }
 
-const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
+const Column = ({ col, position, handleAddColumn }: IPropsColumn) => {
    const [isEditInput, setIsEditInput] = useState<boolean>(false);
    const listTypes = useAppSelector((state) => state.listTypesSlice.listTypes.datas);
    //    const dataCreateCol = useAppSelector((state) => state.columnSlice.createColumn.data);
@@ -47,16 +47,16 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
 
    const handleEditNameCol = (e: React.FocusEvent<HTMLInputElement, Element>) => {
       const target = e.target as HTMLInputElement;
-      if (target.value !== name) {
+      if (target.value !== col.name) {
          dispatch(
             editColumn({
-               idColumn: _id,
+               idColumn: col._id,
                name: target.value,
             }),
          );
          dispatch(
             handleEditColumn({
-               idColumn: _id,
+               idColumn: col._id,
                key: 'name',
                value: target.value,
             }),
@@ -67,14 +67,24 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
    const items: MenuProps['items'] = [
       {
          key: '1',
-         label: <span>Add new colunm</span>,
+         label: <span>Add colunm to the right</span>,
          icon: <img src={add} alt="icon-board" />,
          //    onClick: handleAddNewGroup,
          children: listTypes?.map((item, index) => {
             return {
                key: `2-${index}`,
                label: item.name,
-               icon: <img src={add} alt="dropdow--icon" />,
+               icon: (
+                  <img
+                     style={{
+                        width: '20px',
+                        height: '20px',
+                        backgroundColor: item.color,
+                     }}
+                     src={item.icon}
+                     alt="dropdow--icon"
+                  />
+               ),
                onClick: () => handleAddColumn(item._id, position + 1),
             };
          }),
@@ -96,7 +106,7 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
          onClick: () => {
             if (idBoard)
                handleDeleteColumn({
-                  idColumn: _id,
+                  idColumn: col._id,
                   idBoard,
                   position,
                });
@@ -112,14 +122,14 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
                ref={inputElement}
                autoFocus
                onBlur={(e) => {
-                  if (e.target.value && e.target.value !== name) {
+                  if (e.target.value && e.target.value !== col.name) {
                      handleEditNameCol(e);
                   }
                   setIsEditInput(false);
                }}
                type="text"
                onChange={(e) => {}}
-               defaultValue={name}
+               defaultValue={col.name}
             />
          ) : (
             <span
@@ -127,14 +137,14 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
                   setIsEditInput(true);
                }}
             >
-               {name}
+               {col.name}
             </span>
          )}
          {!isEditInput && (
             <Dropdown
                placement="bottomRight"
                overlayStyle={{
-                  width: '250px',
+                  width: 'auto',
                }}
                trigger={['click']}
                menu={{ items }}

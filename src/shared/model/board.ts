@@ -5,7 +5,7 @@ export interface IBoard {
    _id: string;
    name: string;
    belongWorkspace?: string;
-   description?: string;
+   description: string;
    groups: IGroup[];
    columns: IColumn[];
 }
