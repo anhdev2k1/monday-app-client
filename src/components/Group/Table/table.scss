@@ -58,6 +58,7 @@
          &:hover {
             .default__value--task {
                display: flex;
+               border-color: #ccc;
                .value__task--btn,
                .icon__value--task {
                   display: flex;
