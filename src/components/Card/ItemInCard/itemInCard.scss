@@ -18,5 +18,22 @@
       text-align: center;
       color: #fff;
       font-size: 1.6rem;
+      .value__task--btn {
+         align-items: center;
+         padding: 0 8px;
+         cursor: pointer;
+      }
+      .table__data-task-value {
+         &:hover {
+            .default__value--task {
+               display: flex;
+               border-color: #ccc;
+               .value__task--btn,
+               .icon__value--task {
+                  display: flex;
+               }
+            }
+         }
+      }
    }
 }

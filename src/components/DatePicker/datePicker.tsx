@@ -16,6 +16,9 @@ interface IPropsDatePicker {
 
 const DateTimePicker: React.FC<IPropsDatePicker> = ({ valueTask, icon, task }) => {
    const [selectedDate, setSelectedDate] = useState<string | null>(valueTask.value);
+   useEffect(() => {
+      setSelectedDate(valueTask.value);
+   }, [valueTask.value]);
    const dispatch = useAppDispatch();
    const handleDateChange = (date: Dayjs | null, dateString: string) => {
       setSelectedDate(dateString);
@@ -31,13 +34,13 @@ const DateTimePicker: React.FC<IPropsDatePicker> = ({ valueTask, icon, task }) =
          if (selectedDate !== valueTask.value) {
             dispatch(
                handleSetValueTask({
-                  newValue: selectedDate,
+                  newValue: selectedDate || '',
                   taskId: task._id,
                   valueId: valueTask._id,
                }),
             );
             await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueTask._id}`, {
-               value: selectedDate,
+               value: selectedDate || '',
                valueId: null,
             });
          }

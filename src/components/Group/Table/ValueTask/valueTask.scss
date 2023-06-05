@@ -38,6 +38,7 @@
          background-color: transparent;
          color: var(--text-btn-color);
          display: none;
+         z-index: 11;
       }
       .icon__value--task,
       .value__task--btn {
