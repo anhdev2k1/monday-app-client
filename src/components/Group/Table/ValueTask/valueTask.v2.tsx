@@ -66,7 +66,7 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task, idBoard }: IValueTa
             toggleStatusBoxHandler();
          }}
       >
-         {valueOfTask.typeOfValue === 'multiple' && valueOfTask.valueId.value}
+         <span>{valueOfTask.typeOfValue === 'multiple' && valueOfTask.valueId.value}</span>
          {valueOfTask.typeOfValue === 'multiple' ? (
             <DropdownStatus
                isOpen={openStatusBox}

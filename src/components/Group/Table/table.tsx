@@ -23,29 +23,16 @@ interface IPropsTable {
 }
 
 const Table = ({ data, idBoard }: IPropsTable) => {
-   // const [listTask, setListTask] = useState<ITask[]>(data.tasks);
-   // useEffect(() => {
-   //    setListTask(data.tasks);
-   // }, [data.tasks]);
    const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns);
-
-   // const [isRenameTask, setIsRenameTask] = useState(false);
-   // const [valueTask, setValueTask] = useState('');
    const [valueAddTask, setValueAddTask] = useState('');
    const [messageApi, contextHolder] = message.useMessage();
    const handleValueAdd = useRef<any>();
-   // const handleEditInput = useRef<HTMLInputElement>(null);
 
    const listTypeElement: React.RefObject<HTMLDivElement> = createRef();
    const [checkedTasks, setCheckedTasks] = useState<string[]>([]);
 
    const dispatch = useAppDispatch();
    const filterItem = useAppSelector((state) => state.boardSlice.filter);
-   // const currGroup = useAppSelector(state => state.groupSlice.editGroup.data)
-
-   // const handleRenameTask = (e: any, taskID: any) => {
-   //    setIsRenameTask(true);
-   // };
    const toggleCheckedTask = (e: any, taskId: string) => {
       if (e.target.checked) {
          setCheckedTasks((pre) => [...pre, taskId]);
@@ -59,7 +46,6 @@ const Table = ({ data, idBoard }: IPropsTable) => {
       await axios.delete(
          `${SERVER_API_URL}v1/api/group/${data._id}/tasks?ids=${taskIds.join(',')}`,
       );
-      // setListTask((pre) => pre.filter((item) => item._id !== taskId));
       messageApi.success('Xoá task thành công!');
       dispatch(
          handleDeleteTasksFromGroup({
@@ -73,7 +59,6 @@ const Table = ({ data, idBoard }: IPropsTable) => {
       try {
          messageApi.loading('Đợi xý nhé...!');
          if (idBoard && columns) {
-            // console.log({ position });
             await dispatch(
                createColumn({
                   idBoard,
@@ -82,7 +67,6 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                }),
             );
          }
-         // messageApi.success(`Thêm mới column ${res.data.metadata.column.name} thành công!`);
          messageApi.success(`Thêm mới column thành công!`);
       } catch (error) {
          messageApi.error(`${error}`);
@@ -101,13 +85,6 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                position: data.tasks.length,
             });
             if (res.data.metadata) {
-               // setListTask((pre) => {
-               //    const newTask = res.data.metadata?.task;
-               //    if (newTask) {
-               //       return [...pre, newTask];
-               //    }
-               //    return pre;
-               // });
                dispatch(
                   handleAddTaskToGroup({
                      groupId: data._id,
@@ -123,13 +100,6 @@ const Table = ({ data, idBoard }: IPropsTable) => {
          messageApi.error('Vui lòng nhập tên task');
       }
    };
-   // const filterValue = (data: IColumn[]) => {
-   //    const result = filterItem.map(item => {
-   //       data.find(col => col._id === item._id)
-   //    })
-   //    return result;
-   // };
-   // console.log(filterValue(columns!));
    const [isOpenAddColumn, setIsOpenAddColumn] = useState<boolean>(false);
    const dropdownColumn = useRef<any>(null);
    useEffect(() => {
@@ -153,7 +123,7 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                      <label htmlFor="checked"></label>
                      <input type="checkbox" id="checked" />
                   </th>
-                  <th className="column__group">Task</th>
+                  <th className="column__group" style={{width: "300px"}}>Task</th>
                   {filterItem.length > 0
                      ? columns?.map((col, index) => {
                           if (filterItem.includes(col._id)) {
@@ -186,27 +156,6 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                   >
                      <input
                         defaultChecked={false}
-                        // onChange={(event) => {
-                        //    const isChecked = event.target.checked;
-                        //    if (!isChecked) {
-                        //       if (listTypeElement.current !== null) {
-                        //          listTypeElement.current.style.display = 'none';
-                        //       }
-                        //    } else {
-                        //       if (listTypeElement.current !== null) {
-                        //          listTypeElement.current.style.display = 'block';
-                        //       }
-                        //    }
-                        // }}
-                        // onBlur={(event) => {
-                        //    const isChecked = event.target.checked;
-                        //    if (isChecked) {
-                        //       if (listTypeElement.current !== null) {
-                        //          listTypeElement.current.style.display = 'none';
-                        //       }
-                        //       event.target.checked = false;
-                        //    }
-                        // }}
                         className="col__group--check"
                         type="checkbox"
                         id={`plus--col--${data._id}`}

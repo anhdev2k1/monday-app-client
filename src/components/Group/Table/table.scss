@@ -49,16 +49,32 @@
             transition: all 0.2s;
          }
       }
-
       .table__data-task-value {
          border-bottom: 0.2px solid #edeef4;
          border-right: 0.2px solid #edeef4;
-         width: 140px;
+         max-width: 140px;
          position: relative;
+         span{
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            padding: 0 2px;
+         }
+         .default__value--task--wrapper {
+            overflow: hidden;
+            p {
+               display: -webkit-box;
+               -webkit-line-clamp: 1;
+               -webkit-box-orient: vertical;
+               overflow: hidden;
+            }
+         }
          &:hover {
             .default__value--task {
                display: flex;
                border-color: #ccc;
+               
                .value__task--btn,
                .icon__value--task {
                   display: flex;
@@ -69,7 +85,7 @@
             width: 50px;
          }
          &:nth-child(2) {
-            width: 300px;
+            max-width: 300px;
          }
          &:last-child {
             flex: 1;

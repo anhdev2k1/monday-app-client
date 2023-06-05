@@ -22,12 +22,17 @@
          align-items: center;
          padding: 0 8px;
          cursor: pointer;
-      }
+      }  
       .table__data-task-value {
+        width: 300px;
+        .default__value--task--wrapper{
+         overflow: hidden;
+        }
          &:hover {
             .default__value--task {
                display: flex;
                border-color: #ccc;
+               
                .value__task--btn,
                .icon__value--task {
                   display: flex;
@@ -36,4 +41,13 @@
          }
       }
    }
+   .status__item{
+      overflow: hidden;
+      .status__item-title{
+         display: -webkit-box;
+         -webkit-line-clamp: 1;
+         -webkit-box-orient: vertical;
+      }
+   }
+   
 }

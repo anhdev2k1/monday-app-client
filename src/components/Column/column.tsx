@@ -43,10 +43,6 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
             position,
          }),
       );
-      // const newArr = listColumns.filter((column) => column._id !== _id);
-      // //          console.log(newArr);
-
-      // dispatch(deleteColumnMainTable(newArr));
    };
 
    const handleEditNameCol = (e: React.FocusEvent<HTMLInputElement, Element>) => {
@@ -83,17 +79,6 @@ const Column = ({ name, _id, position, handleAddColumn }: IPropsColumn) => {
             };
          }),
       },
-      //   {
-      //      key: '2',
-      //      label: <span>Move to</span>,
-      //      //    icon: <img src={move} alt="icon-board" />,
-      //      children: [
-      //         {
-      //            key: '2-1',
-      //            label: 'Move to board',
-      //         },
-      //      ],
-      //   },
       {
          key: '2',
          label: <span>Rename column</span>,

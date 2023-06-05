@@ -109,10 +109,12 @@ const ValueTask = ({ valueOfTask, task }: IValueTaskProps) => {
             handleOpenStatus();
          }}
       >
-         {changeValueSelected()?.value
-            ? changeValueSelected()?.value
-            : changeStatus.value ||
-              (valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null)}
+         <span className='data__value'>
+            {changeValueSelected()?.value
+               ? changeValueSelected()?.value
+               : changeStatus.value ||
+                 (valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null)}
+         </span>
          {valueOfTask.typeOfValue === 'multiple' ? (
             <DropdownStatus
                isOpen={openStatusBox}
