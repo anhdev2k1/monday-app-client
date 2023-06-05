@@ -139,7 +139,7 @@ const WorkspaceManagement = () => {
    return (
       <>
          {isLoading ? (
-            <LoadingLogo height='100%' />
+            <LoadingLogo height="100%" />
          ) : (
             <div className="workspace__container">
                <div className="workspace__cover">

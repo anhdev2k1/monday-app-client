@@ -127,9 +127,9 @@ const Sidebar: React.FC = () => {
       }, 1500);
    }, []);
    const handleValueSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValueSearch(e.target.value)
-       //Dispatch action search
-   }
+      setValueSearch(e.target.value);
+      //Dispatch action search
+   };
    return (
       <>
          {contextHolder}
@@ -280,7 +280,7 @@ const Sidebar: React.FC = () => {
                </div>
             )}
             {isLoading ? (
-               <Loading height='30px' />
+               <Loading height="30px" />
             ) : (
                currentWorkSpace?.boards &&
                currentWorkSpace.boards.map((dataBoard, index) => {

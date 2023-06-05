@@ -63,6 +63,10 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task, idBoard }: IValueTa
          }}
          className="table__data-task-value data-status"
          onClick={(e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest('.item__value')) {
+               e.stopPropagation();
+            }
             toggleStatusBoxHandler();
          }}
       >

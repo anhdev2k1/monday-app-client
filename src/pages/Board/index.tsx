@@ -12,6 +12,7 @@ import {
    getBoardDetail,
    handleAddColumn,
    handleAddValueIntoTask,
+   handleEditCurrBoard,
    setIndexTab,
 } from './board.reducer';
 import { getDetailWorkspace } from '../Workspace/workspace.reducer';
@@ -27,7 +28,6 @@ const Board = () => {
    const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data);
    const currWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const { idWorkspace } = useParams();
-   const [changeEditName, setChangeEditName] = useState(currBoard?.name);
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const dataCreateCol = useAppSelector((state) => state.mainTableSlice.createCol.data);
 
@@ -56,7 +56,15 @@ const Board = () => {
    }, [dispatch, idBoard]);
    const [isEditName, setEditName] = useState(false);
 
-   const handleEditBoard = () => {
+   const handleEditBoard = (value: string) => {
+      if (value && value !== currBoard?.name) {
+         dispatch(
+            handleEditCurrBoard({
+               key: 'name',
+               value,
+            }),
+         );
+      }
       setEditName(false);
    };
 
@@ -96,11 +104,12 @@ const Board = () => {
                   <div className="wrapper__title-heading">
                      {isEditName ? (
                         <Input
-                           value={changeEditName}
+                           defaultValue={currBoard?.name}
                            autoFocus
-                           onBlur={handleEditBoard}
+                           onBlur={(e) => {
+                              handleEditBoard(e.target.value);
+                           }}
                            style={{ width: '60%' }}
-                           onChange={(e) => setChangeEditName(e.target.value)}
                         />
                      ) : (
                         <h2 onClick={() => setEditName(true)}>{currBoard?.name}</h2>
