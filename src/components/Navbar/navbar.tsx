@@ -1,16 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
 import './_navbar.scss';
-import { useAppSelector } from '~/config/store';
+import { useAppDispatch, useAppSelector } from '~/config/store';
 import axios from 'axios';
 import { message } from 'antd';
+import { resetUser } from '~/shared/reducers/user.reducer';
 const Navbar = () => {
    const currentUser = useAppSelector((state) => state.userSlice.user.data);
    const navigate = useNavigate();
+   const dispatch = useAppDispatch();
    const [messageApi, contextHolder] = message.useMessage();
    const handleLogout = async () => {
       messageApi.loading('Đợi 1 tý nhé!...');
       const userId = localStorage.getItem('userId');
       localStorage.removeItem('userId');
+      dispatch(resetUser());
       await axios.post(
          'http://localhost:3001/v1/api/auth/logout',
          {},

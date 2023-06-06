@@ -6,9 +6,10 @@ import { useEffect, useState } from 'react';
 import { Info } from '~/components/Notification';
 import { IDataLogin, IInfoNotifi } from '../Register';
 import Notification from '~/components/Notification';
-import { loginAccount, resetLogin } from '~/shared/reducers/user.reducer';
+import { loginAccount } from '~/shared/reducers/user.reducer';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { isNotification } from '~/components/Notification/notification.reducer';
 
 const LoginStep2 = () => {
    const dispatch = useAppDispatch();
@@ -26,17 +27,42 @@ const LoginStep2 = () => {
    const userLogin = useAppSelector((state) => state.userSlice.user);
 
    const onFinish = async (values: IDataLogin) => {
-      try {
-         if (values.email && values.password) {
+      if (values.email && values.password) {
+         try {
             await dispatch(loginAccount(values));
-            if (typeof userLogin.data?.user !== 'undefined') {
-               navigate('/');
+         } catch (error: unknown) {
+            console.log('xin chao cac ban');
+            if (axios.isAxiosError(error)) {
+               const axiosError = error as AxiosError;
+               if (axiosError.response) {
+                  const responseData = axiosError.response.data as { message: string };
+                  console.log(responseData);
+                  if (responseData) {
+                     const errorMessage = responseData;
+                     dispatch(
+                        isNotification({
+                           isOpen: true,
+                           message: errorMessage.message,
+                           type: 'error',
+                           autoClose: 1000,
+                        }),
+                     );
+                  } else {
+                     console.log('Phản hồi từ máy chủ không hợp lệ', responseData);
+                  }
+               }
+               // setListStatusState((pre) => pre.filter((value) => value._id !== valueID));
             }
          }
-      } catch (error) {
-         console.log(error);
       }
    };
+   useEffect(() => {
+      if (typeof userLogin.data?.user !== 'undefined') {
+         console.log('tai dept trai');
+         navigate('/');
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [userLogin.data?.user]);
 
    return (
       <div className="form__container">
