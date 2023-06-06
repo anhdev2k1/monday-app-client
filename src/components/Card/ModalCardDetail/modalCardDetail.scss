@@ -1,6 +1,6 @@
 .modal__card--detail {
    margin: auto;
-   min-width: 542px;
+   width: 542px;
    min-height: 400px;
    background-color: white;
    border: 1px solid #ecedf5;
@@ -73,6 +73,9 @@
          .item__value {
             flex: 1;
          }
+      }
+      .table__data-task-value.data-status {
+         max-width: 100%;
       }
    }
 }

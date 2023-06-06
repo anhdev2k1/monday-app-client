@@ -109,7 +109,7 @@ const MainTable = ({ idBoard }: MainTableProps) => {
          </div>
 
          <ButtonCustom
-            onClick={handleAddNewGroup}
+            onClick={() => handleAddNewGroup()}
             statusType={StatusType.Boder}
             title="Add new group"
             leftIcon={<FontAwesomeIcon icon={faPlus} />}
