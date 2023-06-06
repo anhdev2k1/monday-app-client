@@ -8,9 +8,11 @@
    //    }
    // }
    .main__group__wrap {
-      height: max-content;
+      // width: 1000px;
+      width: 74vw;
+      height: 70vh;
       padding-left: 22px;
-      overflow-y: scroll;
+      overflow: scroll;
       margin-bottom: 40px;
       
    }

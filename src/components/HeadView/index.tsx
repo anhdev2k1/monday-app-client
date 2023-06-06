@@ -171,10 +171,10 @@ const HeadView = () => {
             </div>
          </Tippy>
          <Tippy position="top" html={<p>Sort by any column</p>}>
-            <ButtonCustom title="Sort" leftIcon={<FontAwesomeIcon icon={faSort} />} />
+            <ButtonCustom title="Sort" leftIcon={<FontAwesomeIcon icon={faSort} />} statusType={StatusType.Disabled} />
          </Tippy>
          <Tippy position="top" html={<p>Hidden columns</p>}>
-            <ButtonCustom title="Hide" leftIcon={<FontAwesomeIcon icon={faEyeSlash} />} />
+            <ButtonCustom title="Hide" leftIcon={<FontAwesomeIcon icon={faEyeSlash} />}  statusType={StatusType.Disabled}/>
          </Tippy>
       </div>
    );

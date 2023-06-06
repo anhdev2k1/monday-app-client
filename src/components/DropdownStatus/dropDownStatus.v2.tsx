@@ -105,30 +105,6 @@ const DropdownStatus = ({
          );
       }
    };
-   // useEffect(() => {
-   //    const handleClickOutside = (event: MouseEvent) => {
-   //       const targetElement = event.target as HTMLElement;
-   //       const parentElement = dropdownElement.current?.closest('.table__data-task-value');
-   //       // const childrenElemt = targetElement.closest('.status__wrapper-flex');
-
-   //       if (
-   //          dropdownElement.current &&
-   //          !dropdownElement.current.contains(event.target as Node) &&
-   //          targetElement !== parentElement
-   //          // &&
-   //          // childrenElemt === parentElement
-   //       ) {
-   //          setOpenStatusBox(false);
-   //       }
-   //    };
-
-   //    document.addEventListener('click', handleClickOutside);
-   //    return () => {
-   //       document.removeEventListener('click', handleClickOutside);
-   //    };
-   //    // eslint-disable-next-line react-hooks/exhaustive-deps
-   // }, []);
-
    return (
       <>
          {isOpen && (

@@ -123,7 +123,7 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                      <label htmlFor="checked"></label>
                      <input type="checkbox" id="checked" />
                   </th>
-                  <th className="column__group" style={{width: "300px"}}>Task</th>
+                  <th className="column__group">Task</th>
                   {filterItem.length > 0
                      ? columns?.map((col, index) => {
                           if (filterItem.includes(col._id)) {
