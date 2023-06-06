@@ -1,7 +1,7 @@
 import icons from '~/assets/svg/index';
 import { useCallback, useRef, useState } from 'react';
 import ColorEdit from '../ColorEdit/colorEdit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { useAppDispatch } from '~/config/store';
 import {
@@ -9,6 +9,7 @@ import {
    handleEditValueListStatus,
    updateValueAfterEditing,
 } from '~/pages/Board/board.reducer';
+import { isNotification } from '~/components/Notification/notification.reducer';
 
 interface IValueStatus {
    _id: string;
@@ -70,14 +71,38 @@ const InputEdit = ({ data, columnId }: IInputEditProps) => {
       });
    };
    const handleDeleteValue = async (valueID: string) => {
-      dispatch(
-         handleDeleteValueListStatus({
-            columnId,
-            valueSelectId: data._id,
-         }),
-      );
-      // setListStatusState((pre) => pre.filter((value) => value._id !== valueID));
-      await axios.delete(`${SERVER_API_URL}v1/api/column/${columnId}/values/${valueID}`);
+      try {
+         await axios.delete(`${SERVER_API_URL}v1/api/column/${columnId}/values/${valueID}`);
+
+         dispatch(
+            handleDeleteValueListStatus({
+               columnId,
+               valueSelectId: data._id,
+            }),
+         );
+      } catch (error: unknown) {
+         if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response) {
+               const responseData = axiosError.response.data as { message: string };
+               console.log(responseData);
+               if (responseData) {
+                  const errorMessage = responseData;
+                  dispatch(
+                     isNotification({
+                        isOpen: true,
+                        message: errorMessage.message,
+                        type: 'error',
+                        autoClose: 1000,
+                     }),
+                  );
+               } else {
+                  console.log('Phản hồi từ máy chủ không hợp lệ', responseData);
+               }
+            }
+            // setListStatusState((pre) => pre.filter((value) => value._id !== valueID));
+         }
+      }
    };
    return (
       <>
