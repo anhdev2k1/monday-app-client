@@ -40,6 +40,16 @@
             }
          }
       }
+      .table__data-task-value.data-status {
+         overflow: hidden;
+         display: -webkit-box;
+         -webkit-line-clamp: 1;
+         -webkit-box-orient: vertical;
+         height: 100%;
+         line-height: 33px;
+         width: 100%;
+         max-width: 165px;
+      }
    }
    .status__item{
       overflow: hidden;

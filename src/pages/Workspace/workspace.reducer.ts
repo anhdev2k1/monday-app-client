@@ -137,7 +137,7 @@ export const createWorkSpace = createAsyncThunk(
          IResponseWorkSpace<{
             workspace: IWorkspace;
          }>
-      >(requestUrl, name);
+      >(requestUrl, { name });
    },
    { serializeError: serializeAxiosError },
 );
