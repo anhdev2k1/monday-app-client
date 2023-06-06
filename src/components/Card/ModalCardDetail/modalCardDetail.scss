@@ -51,6 +51,10 @@
 }
 .modal__card--detail {
    .card__title-features {
+      .item__value--group {
+         color: #111;
+         font-weight: 600;
+      }
       .item__in__card {
          margin: 10px 0;
          width: 100%;

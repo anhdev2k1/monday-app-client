@@ -26,7 +26,7 @@ const Card = ({ task, idBoard }: IPropsCard) => {
       dispatch(
          setDisplayOverlay({
             isDisplay: true,
-            children: <ModalCardDetail idBoard={idBoard} />,
+            children: <ModalCardDetail taskInGroup={task} idBoard={idBoard} />,
          }),
       );
    };
