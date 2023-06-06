@@ -14,7 +14,7 @@ import ListType from '~/components/ListTypes/listTypes';
 import { createColumn } from '~/components/MainTable/mainTable.reducer';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
-import ValueTask from './ValueTask/valueTask.v2';
+import ValueTask from './ValueTask/valueTask';
 import { handleAddTaskToGroup, handleDeleteTasksFromGroup } from '~/pages/Board/board.reducer';
 import { SERVER_API_URL } from '~/config/constants';
 interface IPropsTable {

@@ -1,25 +1,26 @@
 import icons from '~/assets/svg/index';
 import { useCallback, useRef, useState } from 'react';
 import ColorEdit from '../ColorEdit/colorEdit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
 import { useAppDispatch } from '~/config/store';
 import {
    handleDeleteValueListStatus,
    handleEditValueListStatus,
+   updateValueAfterEditing,
 } from '~/pages/Board/board.reducer';
-import { ISetInfoValueTask } from '~/components/Group/Table/ValueTask/valueTask';
+import { isNotification } from '~/components/Notification/notification.reducer';
 
 interface IValueStatus {
    _id: string;
    color: string;
    value: string;
 }
-interface IInputEditProps extends ISetInfoValueTask {
+interface IInputEditProps {
    data: IValueStatus;
    columnId: string;
 }
-const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
+const InputEdit = ({ data, columnId }: IInputEditProps) => {
    const dispatch = useAppDispatch();
    // const handleEditValueOfTask = (key : "color" | 'value', value : string)=>{
 
@@ -45,6 +46,14 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
                value,
             }),
          );
+         console.log({ data, key, value });
+         dispatch(
+            updateValueAfterEditing({
+               valueId: data._id,
+               key,
+               value,
+            }),
+         );
          // dispatch(
          //    handleUpdateAllSelectedValue({
          //       valueId: data._id,
@@ -52,14 +61,9 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
          //       value,
          //    }),
          // );
-         // setChangeStatus((prev) => {
-         //    if (data._id && data._id === prev.idSelected) {
-         //       return {
-         //          ...prev,
-         //          [key]: value,
-         //       };
-         //    }
-         //    return prev;
+         // setChangeStatus({
+         //    ...data,
+         //    [key]: value,
          // });
       }
       await axios.patch(`${SERVER_API_URL}v1/api/values/${data._id}`, {
@@ -67,14 +71,38 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
       });
    };
    const handleDeleteValue = async (valueID: string) => {
-      dispatch(
-         handleDeleteValueListStatus({
-            columnId,
-            valueSelectId: data._id,
-         }),
-      );
-      // setListStatusState((pre) => pre.filter((value) => value._id !== valueID));
-      await axios.delete(`${SERVER_API_URL}v1/api/column/${columnId}/values/${valueID}`);
+      try {
+         await axios.delete(`${SERVER_API_URL}v1/api/column/${columnId}/values/${valueID}`);
+
+         dispatch(
+            handleDeleteValueListStatus({
+               columnId,
+               valueSelectId: data._id,
+            }),
+         );
+      } catch (error: unknown) {
+         if (axios.isAxiosError(error)) {
+            const axiosError = error as AxiosError;
+            if (axiosError.response) {
+               const responseData = axiosError.response.data as { message: string };
+               console.log(responseData);
+               if (responseData) {
+                  const errorMessage = responseData;
+                  dispatch(
+                     isNotification({
+                        isOpen: true,
+                        message: errorMessage.message,
+                        type: 'error',
+                        autoClose: 1000,
+                     }),
+                  );
+               } else {
+                  console.log('Phản hồi từ máy chủ không hợp lệ', responseData);
+               }
+            }
+            // setListStatusState((pre) => pre.filter((value) => value._id !== valueID));
+         }
+      }
    };
    return (
       <>
@@ -99,7 +127,7 @@ const InputEdit = ({ data, columnId, setChangeStatus }: IInputEditProps) => {
                <input
                   type="text"
                   className="status__item-input"
-                  value={valueInput}
+                  value={valueInput || ''}
                   ref={inputValue}
                   onChange={handleChangeValue}
                   onBlur={() => {

@@ -1,83 +1,43 @@
-import DropdownStatus from '~/components/DropdownStatus/dropdownStatus';
-import { useState, useEffect, useRef } from 'react';
-import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task';
-import { IColumn, IDefaultValue } from '~/shared/model/column';
-import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
+import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '~/config/store';
+import { ITask, IValueOfTask } from '~/shared/model/task';
+import { IColumn, IDefaultValue } from '~/shared/model/column';
+import DropdownStatus from '~/components/DropdownStatus/dropDownStatus';
+import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
 import { handleEditValueSelected } from '~/pages/Board/board.reducer';
+import { useParams } from 'react-router-dom';
 interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
+   idBoard?: string;
    task: ITask;
+   colIncludeListValue: IColumn;
 }
 
-interface ISelectedOfValueTask extends IItemInListValueSelect {
-   idSelected: string | null;
-}
 export interface ISetInfoValueTask {
-   setChangeStatus: React.Dispatch<React.SetStateAction<ISelectedOfValueTask>>;
+   selectValueHandler: (values: IDefaultValue) => void;
 }
-const ValueTask = ({ valueOfTask, task }: IValueTaskProps) => {
-   const valuesSelect = useAppSelector((state) =>
-      state.boardSlice.currBoard.data?.columns.flatMap((item) => item.defaultValues),
-   );
+const ValueTask = ({ valueOfTask, colIncludeListValue, task, idBoard }: IValueTaskProps) => {
+   const [openStatusBox, setOpenStatusBox] = useState<boolean>(false);
    const dispatch = useAppDispatch();
-   const itemColumn = useAppSelector((state) =>
-      state.boardSlice.currBoard.data?.columns.find((col) => col._id === valueOfTask.belongColumn),
-   );
-   const [openStatusBox, setOpenStatusBox] = useState(false);
-   const [changeStatus, setChangeStatus] = useState<{
-      _id: string;
-      idSelected: string | null;
-      value: string | null;
-      color: string;
-   }>({
-      _id: valueOfTask._id,
-      idSelected: valueOfTask.valueId?._id || null,
-      value: valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null,
-      color: valueOfTask.valueId?.color,
-   });
+   const indexTab = useAppSelector((state) => state.boardSlice.indexTab);
 
-   // useEffect(() => {
-   //    if (valueOfTask.valueId?.color || valueOfTask.valueId?.value) {
-   //       setChangeStatus((prev) => {
-   //          return {
-   //             ...prev,
-   //             idSelected: valueOfTask.valueId?._id,
-   //             value: valueOfTask.valueId?.value,
-   //             color: valueOfTask.valueId?.color,
-   //          };
-   //       });
-   //    }
-   // }, [valueOfTask.valueId?._id, valueOfTask.valueId?.color, valueOfTask.valueId?.value]);
+   const selectValueHandler = (values: IDefaultValue) => {
+      dispatch(
+         handleEditValueSelected({
+            idValue: valueOfTask._id,
+            data: values,
+         }),
+      );
+   };
+
+   const toggleStatusBoxHandler = () => {
+      setOpenStatusBox((prev) => !prev);
+   };
 
    useEffect(() => {
-      if (changeStatus.idSelected && valueOfTask.typeOfValue === 'multiple') {
-         dispatch(
-            handleEditValueSelected({
-               idValue: changeStatus._id,
-               data: {
-                  _id: changeStatus.idSelected,
-                  color: changeStatus.color,
-                  value: changeStatus.value,
-               },
-            }),
-         );
-      }
-   }, [changeStatus.idSelected]);
-
-   // const { idBoard } = useParams();
-   // const [listStatus, setListStatus] = useState([]);
-   const handleOpenStatus = () => {
-      setOpenStatusBox((pre) => !pre);
-   };
-
-   const changeValueSelected = () => {
-      if (valuesSelect) {
-         const temp = valuesSelect.find((value) => value._id === changeStatus.idSelected);
-         return temp;
-      }
-   };
+      setOpenStatusBox(false);
+   }, [indexTab]);
 
    const refValueElement = useRef<HTMLTableCellElement>(null);
    useEffect(() => {
@@ -88,10 +48,10 @@ const ValueTask = ({ valueOfTask, task }: IValueTaskProps) => {
    });
    const handleClickOutside = (event: any) => {
       if (refValueElement.current && !refValueElement.current.contains(event.target)) {
-         console.log('asdsa');
          setOpenStatusBox(false);
       }
    };
+
    return (
       <td
          ref={valueOfTask.typeOfValue === 'multiple' ? refValueElement : undefined}
@@ -99,35 +59,32 @@ const ValueTask = ({ valueOfTask, task }: IValueTaskProps) => {
          style={{
             color: `${valueOfTask.typeOfValue === 'multiple' ? '#FFF' : 'var(--text-btn-color)'}`,
             // color: `#111`,
-            backgroundColor: `${
-               changeValueSelected()?.color ? changeValueSelected()?.color : changeStatus.color
-               // changeStatus.color || (value.typeOfValue === 'multiple' ? value.valueId.color : null)
-            }`,
+            backgroundColor: valueOfTask.valueId ? valueOfTask.valueId.color : undefined,
          }}
          className="table__data-task-value data-status"
          onClick={(e) => {
-            handleOpenStatus();
+            const target = e.target as HTMLElement;
+            if (target.closest('.item__value')) {
+               e.stopPropagation();
+            }
+            toggleStatusBoxHandler();
          }}
       >
-         <span className='data__value'>
-            {changeValueSelected()?.value
-               ? changeValueSelected()?.value
-               : changeStatus.value ||
-                 (valueOfTask.typeOfValue === 'multiple' ? valueOfTask.valueId?.value : null)}
-         </span>
+         <span>{valueOfTask.typeOfValue === 'multiple' && valueOfTask.valueId.value}</span>
          {valueOfTask.typeOfValue === 'multiple' ? (
             <DropdownStatus
                isOpen={openStatusBox}
+               idBoard={idBoard}
                setOpenStatusBox={setOpenStatusBox}
-               setChangeStatus={setChangeStatus}
-               columnId={valueOfTask.belongColumn}
+               selectValueHandler={selectValueHandler}
+               columnId={colIncludeListValue._id}
                valueID={valueOfTask._id}
             />
          ) : (
             <ValueCustomizedByColumnType
                task={task}
                valueTask={valueOfTask}
-               nameOfType={itemColumn?.belongType.name}
+               nameOfType={colIncludeListValue.belongType.name}
             />
          )}
       </td>

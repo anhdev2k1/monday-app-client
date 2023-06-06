@@ -2,29 +2,28 @@ import './dropdownStatus.scss';
 import { useEffect, useRef, useState } from 'react';
 import icons from '~/assets/svg/index';
 import InputEdit from './InputEdit/inputEdit';
-import { IColors, colorsData } from './ColorEdit/colorsData';
+import { colorsData } from './ColorEdit/colorsData';
 import axios from 'axios';
 import { SERVER_API_URL } from '~/config/constants';
-import { useParams } from 'react-router-dom';
-import { IValueOfTask } from '~/shared/model/task';
 import { IDefaultValue } from '~/shared/model/column';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { handleAddValueListStatus } from '~/pages/Board/board.reducer';
 import { ISetInfoValueTask } from '../Group/Table/ValueTask/valueTask';
 interface IDropdownStatusProps extends ISetInfoValueTask {
    isOpen: boolean;
+   idBoard?: string;
    setOpenStatusBox: React.Dispatch<React.SetStateAction<boolean>>;
    columnId: string;
    valueID: string;
 }
 const DropdownStatus = ({
    isOpen,
+   idBoard,
    setOpenStatusBox,
-   setChangeStatus,
+   selectValueHandler,
    columnId,
    valueID,
 }: IDropdownStatusProps) => {
-   const { idBoard } = useParams();
    const indexTab = useAppSelector((state) => state.boardSlice.indexTab);
    useEffect(() => {
       setOpenStatusBox(false);
@@ -64,15 +63,16 @@ const DropdownStatus = ({
          setIsApply(false);
       };
    }, []);
-   const handleChangeStatus = async (values: IDefaultValue) => {
-      setChangeStatus((prev) => {
-         return {
-            ...prev,
-            idSelected: values._id,
-            value: values.value,
-            color: values.color,
-         };
-      });
+   const handleValueSelection = async (values: IDefaultValue) => {
+      // setChangeStatus((prev) => {
+      //    return {
+      //       ...prev,
+      //       idSelected: values._id,
+      //       value: values.value,
+      //       color: values.color,
+      //    };
+      // });
+      selectValueHandler(values);
       await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueID}`, {
          value: values.value,
          valueId: values._id,
@@ -91,7 +91,7 @@ const DropdownStatus = ({
          //Add value request
          const res = await axios.post(
             `${SERVER_API_URL}v1/api/board/${idBoard}/column/${columnId}/values`,
-            { value: null, color },
+            { value: '', color },
          );
          dispatch(
             handleAddValueListStatus({
@@ -126,7 +126,7 @@ const DropdownStatus = ({
                                  className="status__item"
                                  style={{ backgroundColor: item.color }}
                                  data-color={item.color}
-                                 onClick={(e) => handleChangeStatus(item)}
+                                 onClick={(e) => handleValueSelection(item)}
                               >
                                  <span className="status__item-title">{item.value}</span>
                               </div>
@@ -142,14 +142,7 @@ const DropdownStatus = ({
                         className="list__status-input"
                      >
                         {itemColumn?.defaultValues.map((item) => {
-                           return (
-                              <InputEdit
-                                 data={item}
-                                 key={item._id}
-                                 columnId={columnId}
-                                 setChangeStatus={setChangeStatus}
-                              />
-                           );
+                           return <InputEdit data={item} key={item._id} columnId={columnId} />;
                         })}
                         {isEdit && (
                            <div className="item__add-status" onClick={handleAddValueStatus}>

@@ -4,7 +4,7 @@ import ButtonCustom from '~/components/Button/ButtonCustom';
 import { SizeType, StatusType } from '~/shared/model/global';
 import { IColumn } from '~/shared/model/column';
 import { ITask, IValueOfTask } from '~/shared/model/task';
-import ValueTask from '~/components/Group/Table/ValueTask/valueTask.v2';
+import ValueTask from '~/components/Group/Table/ValueTask/valueTask';
 interface IPropsCard {
    column: IColumn;
    value: IValueOfTask;
