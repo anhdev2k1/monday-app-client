@@ -6,10 +6,13 @@ import { useEffect, useState } from 'react';
 import { Info } from '~/components/Notification';
 import { IDataLogin, IInfoNotifi } from '../Register';
 import Notification from '~/components/Notification';
-import { loginAccount } from '~/shared/reducers/user.reducer';
+import { loginAccount, setUser } from '~/shared/reducers/user.reducer';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import axios, { AxiosError } from 'axios';
 import { isNotification } from '~/components/Notification/notification.reducer';
+import { SERVER_API_URL } from '~/config/constants';
+import { setDisplayOverlay } from '~/components/Overlay/overlay.reducer';
+import LoadingHandleEvent from '~/components/LoadingHandleEvent/loadingHandleEvent';
 
 const LoginStep2 = () => {
    const dispatch = useAppDispatch();
@@ -29,9 +32,26 @@ const LoginStep2 = () => {
    const onFinish = async (values: IDataLogin) => {
       if (values.email && values.password) {
          try {
-            await dispatch(loginAccount(values));
+            // await dispatch(loginAccount(values));
+            dispatch(
+               setDisplayOverlay({
+                  isDisplay: true,
+                  children: <LoadingHandleEvent />,
+               }),
+            );
+            const res = await axios.post(`${SERVER_API_URL}v1/api/auth/signin`, values);
+            if(res.data.status === 'success'){
+               dispatch(setUser(res.data.metadata));
+               navigate('/');
+            }
+            
+            dispatch(
+               setDisplayOverlay({
+                  isDisplay: false,
+                  children: <LoadingHandleEvent />,
+               }),
+            );
          } catch (error: unknown) {
-            console.log('xin chao cac ban');
             if (axios.isAxiosError(error)) {
                const axiosError = error as AxiosError;
                if (axiosError.response) {
@@ -47,6 +67,12 @@ const LoginStep2 = () => {
                            autoClose: 1000,
                         }),
                      );
+                     dispatch(
+                        setDisplayOverlay({
+                           isDisplay: false,
+                           children: <LoadingHandleEvent />,
+                        }),
+                     );
                   } else {
                      console.log('Phản hồi từ máy chủ không hợp lệ', responseData);
                   }
@@ -56,13 +82,12 @@ const LoginStep2 = () => {
          }
       }
    };
-   useEffect(() => {
-      if (typeof userLogin.data?.user !== 'undefined') {
-         console.log('tai dept trai');
-         navigate('/');
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [userLogin.data?.user]);
+   // useEffect(() => {
+   //    if (typeof userLogin.data?.user !== 'undefined') {
+   //       navigate('/');
+   //    }
+   //    // eslint-disable-next-line react-hooks/exhaustive-deps
+   // }, [userLogin.data?.user]);
 
    return (
       <div className="form__container">

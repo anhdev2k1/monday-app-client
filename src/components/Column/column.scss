@@ -1,15 +1,19 @@
 .column__group {
    position: relative;
-   // border-right: transparent;
-   // align-items: center;
-   // text-align: center;
-   // justify-content: center;
+   // overflow: hidden;
+   width: 140px;
    .col__item--input {
       padding: 4px;
       width: 80%;
       &:focus {
          border: 0.5px;
       }
+   }
+   span {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
    }
    .btn__option--col {
       position: absolute;

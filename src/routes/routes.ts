@@ -1,7 +1,7 @@
 import config from '~/config';
 import LayoutWorkspace from '~/layouts/LayoutWorkspace';
 import Board from '~/pages/Board';
-import LoginStep2 from '~/pages/Login/loginStep2';
+import Login from '~/pages/Login/login';
 import Register from '~/pages/Register';
 import Workspace from '~/pages/Workspace/workspace';
 import { IRoutes } from '~/shared/model/global';
@@ -10,7 +10,7 @@ import Trash from '~/pages/Trash/trash';
 
 // Public routes
 const publicRoutes: IRoutes[] = [
-   { path: config.routes.login, component: LoginStep2 },
+   { path: config.routes.login, component: Login },
    { path: config.routes.register, component: Register },
 ];
 // Public routes

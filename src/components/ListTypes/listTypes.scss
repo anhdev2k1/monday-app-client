@@ -5,16 +5,14 @@
    background-color: #fff;
    box-shadow: 0 4px 17px 6px rgba(0, 0, 0, 0.1);
    border-radius: 4px;
-   padding: 20px;
+   padding: 10px;
    z-index: 11;
    .list__types {
       min-width: 300px;
-      //   display: flex;
+      display: flex;
+      flex-wrap: wrap;
       .type__item {
-         display: inline-flex;
-         //  padding: 4px;
-         margin: 6px;
-         width: 45%;
+         width: calc(calc(100% / 2) - 10px );
          > button {
             width: 100%;
             justify-content: flex-start;

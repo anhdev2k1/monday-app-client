@@ -138,11 +138,6 @@ const Group = ({ data, idBoard, position, handleAddNewGroup }: IPropsGroup) => {
          </div>
          <div className="group__table">
             <Table data={data} idBoard={idBoard} />
-            {/* <HeaderTable columns={columns} data={data} /> */}
-
-            {/* {data.tasks.map((task) => {
-               return <Row task={task} key={task._id} />;
-            })} */}
          </div>
       </div>
    );

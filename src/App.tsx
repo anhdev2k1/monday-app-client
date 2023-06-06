@@ -10,17 +10,18 @@ import { getCurrentUser } from './shared/reducers/user.reducer';
 function App() {
    const dispatch = useAppDispatch();
    const currentUser = useAppSelector((state) => state.userSlice.user);
-
+   console.log(currentUser.data);
+   
    useEffect(() => {
       dispatch(getCurrentUser());
    }, []);
 
    useEffect(() => {
       if (currentUser && currentUser.data) {
-         localStorage.setItem('userId', currentUser.data.user._id);
+         localStorage.setItem('userId', currentUser.data.user?._id);
       }
    }, [currentUser]);
-
+   
    return (
       <Router>
          <div className="App">

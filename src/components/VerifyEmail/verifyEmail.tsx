@@ -7,34 +7,38 @@ import { StatusType } from '~/shared/model/global';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
+import { setDisplayOverlay } from '../Overlay/overlay.reducer';
+import LoadingHandleEvent from '../LoadingHandleEvent/loadingHandleEvent';
 
 const VerifyEmail = () => {
    const dispatch = useAppDispatch();
    const { state } = useLocation();
    const { email } = state;
-
-   const currentUser = useAppSelector((state) => state.userSlice.user.data);
+   console.log(email);
+   
    const navigate = useNavigate();
    const onFinish = async (values: IDataVerifyAcc) => {
-      const res = await axios.post("http://localhost:3001/v1/api/auth/verify",{
+      dispatch(
+         setDisplayOverlay({
+            isDisplay: true,
+            children: <LoadingHandleEvent />,
+         }),
+      );
+      const res = await axios.post('http://localhost:3001/v1/api/auth/verify', {
          email,
-         code: values.code
-      })
-      console.log(res.data.status);
-      if(res.data.status === "success"){
-         dispatch(setUser(res.data.metadata))
-         navigate("/")
+         code: values.code,
+      });
+      dispatch(
+         setDisplayOverlay({
+            isDisplay: false,
+            children: <LoadingHandleEvent />,
+         }),
+      );
+      if (res.data.status === 'success') {
+         dispatch(setUser(res.data.metadata));
+         navigate('/');
       }
-      // if (values.code) {
-      //    dispatch(verifyEmail(values));
-      // }
    };
-
-   // useEffect(() => {
-   //    if (currentUser && Object.keys(currentUser).length > 0) {
-   //       navigate('/');
-   //    }
-   // });
 
    return (
       <Form
@@ -68,7 +72,7 @@ const VerifyEmail = () => {
                statusType={StatusType.Primary}
                type="submit"
                className="form__container-btn"
-               title="Submit"
+               title="Verify"
             />
          </Form.Item>
       </Form>

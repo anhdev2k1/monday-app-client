@@ -8,7 +8,7 @@ const LayoutWorkspace: React.FC<IChildrenComponentProps> = ({ children }) => {
          <NavbarTop />
          <div
             className="wrapper"
-            style={{ display: 'flex', backgroundColor: '#eceff8', gap: '15px' , paddingTop: "60px"}}
+            style={{ display: 'flex', backgroundColor: '#eceff8', gap: '15px' , paddingTop: "60px", minHeight: "100vh", paddingBottom:"30px"}}
          >
             <Sidebar />
             <div

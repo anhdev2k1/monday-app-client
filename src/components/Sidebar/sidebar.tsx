@@ -213,7 +213,7 @@ const Sidebar: React.FC = () => {
                      {toggleWorkspace && <ToggleWorkspace />}
                   </div>
                   <div className="sidebar__header-menu">
-                     <Dropdown menu={{ items }}>
+                     <Dropdown menu={{ items }} trigger={['click']}>
                         <div onClick={(e) => e.preventDefault()}>
                            <Space>
                               <svg

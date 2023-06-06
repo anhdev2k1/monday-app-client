@@ -150,7 +150,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
                   <span className="board__title">{valueInput}</span>
                )}
             </div>
-            <Dropdown onOpenChange={handleOpenChange} menu={{ items }}>
+            <Dropdown onOpenChange={handleOpenChange} menu={{ items }} trigger={['click']}>
                <button
                   onClick={(e) => {
                      e.stopPropagation();

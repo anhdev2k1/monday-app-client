@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createBoard, createWorkSpace } from '~/pages/Workspace/workspace.reducer';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 import { isNotification } from '../Notification/notification.reducer';
+import LoadingHandleEvent from '../LoadingHandleEvent/loadingHandleEvent';
 interface IInfoModal {
    type: string;
    valueCreate: string;
@@ -17,92 +18,114 @@ const ModalCustom = ({ type, valueCreate, title, idWorkspace }: IInfoModal) => {
    const dispatch = useAppDispatch();
    const handleSubmitModal = async () => {
       if (type === 'Workspace' && valueCreate) {
+         dispatch(
+            setDisplayOverlay({
+               isDisplay: true,
+               children: <LoadingHandleEvent/>,
+            }),
+         );
          const response = await dispatch(
             createWorkSpace({
                name: valueCreateInput,
             }),
          );
-         
+
          if (response.payload) {
             dispatch(
                setDisplayOverlay({
-                  isOpenModal: false,
+                  isDisplay: false,
                   children: <></>,
                }),
             );
          }
-         
+         dispatch(
+            isNotification({
+               isOpen: true,
+               message: 'Thêm mới thành công',
+               type: 'success',
+               autoClose: 1000,
+            }),
+         );
       } else if (type === 'Board' && valueCreate && idWorkspace) {
-
          // const currentUrl = window.location.href;
+         dispatch(
+            setDisplayOverlay({
+               isDisplay: true,
+               children: <LoadingHandleEvent/>,
+            }),
+         );
          const response = await dispatch(
             createBoard({
-               // idWorkspace: currentUrl.substring(currentUrl.lastIndexOf('/') + 1),
                idWorkspace,
                name: valueCreateInput,
             }),
          );
+         
          if (response.payload) {
             dispatch(
                setDisplayOverlay({
-                  isOpenModal: false,
+                  isDisplay: false,
                   children: <></>,
                }),
             );
          }
-         dispatch(isNotification({
-            isOpen: true,
-            message: "Thêm mới thành công",
-            type: 'success',
-            autoClose: 1000
-         }))
+         dispatch(
+            isNotification({
+               isOpen: true,
+               message: 'Thêm mới thành công',
+               type: 'success',
+               autoClose: 1000,
+            }),
+         );
       }
    };
 
    return (
-      <div
-         onClick={(e) => {
-            e.stopPropagation();
-         }}
-         className="modal__custom"
-      >
-         <h3 className="modal__title">{title}</h3>
-         {type === 'Workspace' && (
-            <div className="workspace__color">
-               <span>W</span>
-            </div>
-         )}
-         <p className="modal__type">{type} name</p>
-         <input
-            onChange={(e) => {
-               setValueCreateInput(e.target.value);
+      <>
+         <div
+            onClick={(e) => {
+               e.stopPropagation();
             }}
-            className="modal__input"
-            type="text"
-            value={valueCreateInput}
-         />
-
-         <div className="modal__option">
-            <ButtonCustom
-               onClick={() => {
-                  dispatch(
-                     setDisplayOverlay({
-                        isOpenModal: false,
-                        children: <></>,
-                     }),
-                  );
+            className="modal__custom"
+         >
+            <h3 className="modal__title">{title}</h3>
+            {type === 'Workspace' && (
+               <div className="workspace__color">
+                  <span>W</span>
+               </div>
+            )}
+            <p className="modal__type">{type} name</p>
+            <input
+               onChange={(e) => {
+                  setValueCreateInput(e.target.value);
                }}
-               className="option__cancel"
-               title="Cancel"
+               className="modal__input"
+               type="text"
+               value={valueCreateInput}
             />
-            <ButtonCustom
-               onClick={handleSubmitModal}
-               statusType={StatusType.Primary}
-               className="option__create"
-               title={`Create ${type}`}
-            />
+
+            <div className="modal__option">
+               <ButtonCustom
+                  onClick={() => {
+                     dispatch(
+                        setDisplayOverlay({
+                           isOpenModal: false,
+                           children: <></>,
+                        }),
+                     );
+                  }}
+                  className="option__cancel"
+                  title="Cancel"
+               />
+               <ButtonCustom
+                  onClick={handleSubmitModal}
+                  statusType={StatusType.Primary}
+                  className="option__create"
+                  title={`Create ${type}`}
+               />
+            </div>
          </div>
-      </div>
+      </>
    );
 };
 

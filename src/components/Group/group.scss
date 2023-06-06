@@ -1,6 +1,6 @@
 .group {
    margin-top: 40px;
-   max-width: calc(var(--width-default-layout) - 100px);
+   min-width: calc(var(--width-default-layout) - 100px);
    
    .group__head {
       display: flex;
@@ -71,7 +71,7 @@
          }
          .group__table {
             margin-top: 10px;
-            overflow-x: scroll;
+            // overflow-x: scroll;
             
             .cols__group {
                display: flex;

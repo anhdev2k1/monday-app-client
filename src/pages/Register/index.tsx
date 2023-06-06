@@ -11,6 +11,8 @@ import { NotificationPlacement } from 'antd/es/notification/interface';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { registerAccount } from '~/shared/reducers/user.reducer';
 import VerifyEmail from '~/components/VerifyEmail/verifyEmail';
+import { setDisplayOverlay } from '~/components/Overlay/overlay.reducer';
+import LoadingHandleEvent from '~/components/LoadingHandleEvent/loadingHandleEvent';
 
 export interface IDataLogin {
    email: string;
@@ -47,14 +49,13 @@ const Register = () => {
       let timerId: NodeJS.Timeout;
       if (infoAuthUser.status === 'success' && !infoAuthUser.data?.user) {
          // console.log("infoAuthUser",infoAuthUser.data?.user.email);
-         setTimeout(() => {
-            navigate('/register/verification',{
-               state:{
-                  email: navigateEmail
-               }
-            });
-         },500)
+         navigate('/register/verification',{
+            state:{
+               email: navigateEmail
+            }
+         });
       } else if (infoAuthUser.status === 'success' && infoAuthUser.data?.user) {
+         
          timerId = setTimeout(() => {
             navigate('/');
          }, 1000);
@@ -63,9 +64,22 @@ const Register = () => {
    }, [infoAuthUser.data, infoAuthUser.status]);
 
    const onFinish = async (values: IDataRegister) => {
+      setNavigateEmail(values.email)
       if (values.email && values.password && values.name) {
-         dispatch(registerAccount(values));
-         setNavigateEmail(values.email)
+         dispatch(
+            setDisplayOverlay({
+               isDisplay: true,
+               children: <LoadingHandleEvent/>,
+            }),
+         );
+         await dispatch(registerAccount(values));
+         dispatch(
+            setDisplayOverlay({
+               isDisplay: false,
+               children: <LoadingHandleEvent/>,
+            }),
+         );
+         
          
       }
    };

@@ -8,7 +8,7 @@
    &-header {
       .column__group {
          position: relative;
-         min-width: 140px;
+         width: 140px;
          border-bottom: 1px solid #edeef4;
          border-right: 1px solid #edeef4;
          height: 36px;
@@ -52,7 +52,7 @@
       .table__data-task-value {
          border-bottom: 0.2px solid #edeef4;
          border-right: 0.2px solid #edeef4;
-         max-width: 140px;
+         width: 140px;
          position: relative;
          span{
             display: -webkit-box;

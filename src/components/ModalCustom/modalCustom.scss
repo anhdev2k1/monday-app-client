@@ -1,7 +1,7 @@
 .modal__custom {
    //    display: flex;
    background-color: #fff;
-   min-height: 50vh;
+   height: max-content;
    // max-height: 50vh;
    min-width: 30vw;
    margin: auto;
@@ -42,11 +42,16 @@
       outline: none;
    }
    .modal__option {
-      position: absolute;
-      bottom: 40px;
-      width: 100%;
-      right: 20px;
+      // position: absolute;
+      // bottom: 40px;
+      // width: 100%;
+      // right: 20px;
+      // display: flex;
+      // justify-content: flex-end;
+      width: max-content;
       display: flex;
-      justify-content: flex-end;
+      margin-top: 50px;
+      margin-left: auto;
+      margin-right: 0;
    }
 }

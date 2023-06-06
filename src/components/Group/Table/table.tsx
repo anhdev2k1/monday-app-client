@@ -205,10 +205,6 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                                 }
                              })
                            : task.values.map((itemValue, index) => {
-                                //   return (
-                                //      <ValueTask task={task} valueOfTask={itemValue} key={index} />
-                                //   );
-
                                 const colIncludeListValue = columns?.find(
                                    (col) => col._id === itemValue.belongColumn,
                                 );
