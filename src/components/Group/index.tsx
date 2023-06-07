@@ -9,7 +9,7 @@ import images from '~/assets/svg';
 import { useAppDispatch } from '~/config/store';
 import { deleteGroup, updateGroup } from './group.reducer';
 import Table from './Table/table';
-import { handleDelGroup } from '~/pages/Board/board.reducer';
+import { handleDelGroup, handleRenameGroup } from '~/pages/Board/board.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 interface IPropsGroup {
   data: IGroup;
@@ -102,13 +102,19 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
   const handleRenameInput = async (e: React.FocusEvent<HTMLInputElement, Element>) => {
     const target = e.target as HTMLInputElement;
     if (target.value !== data.name) {
-      dispatch(
+      await dispatch(
         updateGroup({
           idGroup: data._id,
           name: target.value,
         }),
       );
       // Call API EDIT NAME
+      dispatch(
+        handleRenameGroup({
+          newName: target.value,
+          position,
+        }),
+      );
     }
   };
   return (

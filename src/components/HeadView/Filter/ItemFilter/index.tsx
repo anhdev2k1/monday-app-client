@@ -9,7 +9,7 @@ type ItemFilterProps = {
   [key in keyof IItemFilter]: IItemFilter[key];
 };
 
-const ItemFilter = ({ value, counter, color = '#ccc' }: ItemFilterProps) => {
+const ItemFilter = ({ value, counter, color }: ItemFilterProps) => {
   return (
     <div className={styles.itemFilter}>
       <span

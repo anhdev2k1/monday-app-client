@@ -26,6 +26,24 @@
     .menuContainerWrapper {
       width: 100%;
       overflow-x: scroll;
+      /* CSS cho thanh cuộn trên Chrome và Safari */
+      &::-webkit-scrollbar {
+        width: 8px; /* Độ rộng của thanh cuộn */
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Màu nền của vùng track (vùng không có thanh cuộn) */
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: #888; /* Màu nền của thanh cuộn */
+        border-radius: 4px; /* Độ cong của viền thanh cuộn */
+      }
+
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: #555; /* Màu nền của thanh cuộn khi hover */
+      }
+
       .menuContainerTitle {
         text-align: left;
         margin: 20px 0;

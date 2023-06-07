@@ -777,6 +777,20 @@ const boardSlice = createSlice({
     ) {
       state.taskToDisplay = action.payload.task;
     },
+
+    handleRenameGroup(
+      state,
+      action: PayloadAction<{
+        newName: string;
+        position: number;
+      }>,
+    ) {
+      const { newName, position } = action.payload;
+
+      if (state.currBoard.data) {
+        state.currBoard.data.groups[position].name = newName;
+      }
+    },
   },
 });
 
@@ -789,6 +803,7 @@ export const {
   handleEditValueListStatus,
   handleDeleteValueListStatus,
   handleAddGroup,
+  handleRenameGroup,
   handleDelGroup,
   handleSetValueTask,
   handleEditValueTask,
