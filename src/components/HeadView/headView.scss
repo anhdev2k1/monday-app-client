@@ -1,173 +1,174 @@
 .table__head {
-   display: flex;
-   align-items: center;
-   background-color: #fff;
-   padding: 10px 0 ;
-   // border-bottom: 1px solid #e3e3e3;
-   .search {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 0;
+  // border-bottom: 1px solid #e3e3e3;
+  .search {
+    width: max-content;
+    height: 35px;
+    // border: 1px solid #e3e3e3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 4px;
+
+    &:focus-within {
+      border: 1px solid #0073ea;
+    }
+    &-active .search__input {
+      width: 200px;
+      transition: all 0.2s;
+    }
+    &__btn {
+      width: 20px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+    &__input {
+      width: 80px;
+      border: none;
+      outline: none;
+      background: none;
+      font-size: 1.5rem;
+      transition: all 0.2s;
+      &::placeholder {
+        color: #333;
+      }
+    }
+  }
+  .filter {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    position: relative;
+    &__icon {
+      width: 20px;
+      height: max-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    span {
+      font-size: 1.6rem;
+    }
+    &__down {
+      margin-left: 5px;
+      width: 30px;
+      height: 100%;
+      font-size: 1.5rem;
+    }
+    &__menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 700px;
       width: max-content;
-      height: 35px;
-      // border: 1px solid #e3e3e3;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-left: 10px;
-      padding: 5px;
+      min-height: 200px;
+      background-color: white;
+      border: 1px solid #e3e3e3;
       border-radius: 4px;
-
-      &:focus-within {
-         border: 1px solid #0073ea;
+      padding: 20px;
+      z-index: 2;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+      &-header {
+        display: flex;
+        justify-content: space-between;
+        .filter__menu-clear-btn {
+          width: 80px;
+          height: 30px;
+          border: none;
+          outline: none;
+          background-color: #0073ea;
+          color: white;
+          border-radius: 4px;
+          cursor: pointer;
+          font-weight: 500;
+          font-size: 1.3rem;
+          &:hover {
+            background-color: #0060b9;
+            transition: all 0.2s;
+          }
+        }
       }
-      &-active .search__input {
-         width: 200px;
-         transition: all 0.2s;
-      }
-      &__btn {
-         width: 20px;
-         height: 100%;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         font-size: 1.4rem;
-      }
-      &__input {
-         width: 80px;
-         border: none;
-         outline: none;
-         background: none;
-         font-size: 1.5rem;
-         transition: all 0.2s;
-         &::placeholder {
-            color: #333;
-         }
-      }
-   }
-   .filter {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      padding: 5px;
-      border-radius: 4px;
-      position: relative;
-      &__icon {
-         width: 20px;
-         height: max-content;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-      }
-      span {
-         font-size: 1.6rem;
-
-      }
-      &__down {
-         margin-left: 5px;
-         width: 30px;
-         height: 100%;
-         font-size: 1.5rem;
-      }
-      &__menu {
-         position: absolute;
-         top: 100%;
-         left: 0;
-         min-width: 700px;
-         width: max-content;
-         min-height: 200px;
-         background-color: white;
-         border: 1px solid #e3e3e3;
-         border-radius: 4px;
-         padding: 20px;
-         z-index: 2;
-         box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
-         &-header {
-            display: flex;
-            justify-content: space-between;
-            .filter__menu-clear-btn{
-               width: 80px;
-               height: 30px;
-               border: none;
-               outline: none;
-               background-color: #0073ea;
-               color: white;
-               border-radius: 4px;
-               cursor: pointer;
-               font-weight: 500;
-               font-size: 1.3rem;
-               &:hover{
-                  background-color: #0060b9;
-                  transition: all .2s;
-               }
-            }
-         }
-         &-content {
-            margin-top: 20px;
+      &-content {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        .filter__menu-column {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          width: 700px;
+          min-height: 200px;
+          .filter__menu-column-wrapper {
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            .filter__menu-column{
-               display: flex;
-               flex-direction: column;
-               gap: 10px;
-               width: 700px;
-               min-height: 200px;
-               .filter__menu-column-wrapper{
-                  width: 100%;
-                  display: flex;
-                  flex-direction: column;
-                  gap: 25px;
-                  .menu__column-wrapper-heading{
-                     font-size: 1.4rem;
-                     color: #676879;
-                     font-weight: 500;
-                  }
-                  .menu__column-list{
-                     display: flex;
-                     flex-direction: column;
-                     // flex-wrap: nowrap;
-                     gap: 7px;
-                     margin-top: 10px;
-                     height: max-content;
-                     .menu__column-item{
-                        display: flex;
-                        align-items: center;
-                        gap: 5px;
-                        padding: 5px 10px;
-                        background-color: #f5f6f8;
-                        width: 150px;
-                        border-radius: 4px;
-                        &-icon{
-                           width: 25px;
-                           height: 25px;
-                           border-radius: 4px;
-                        }
-                        &:hover{
-                           background-color: #eceff8;
-                           transition: .2s;
-                        }
-                        span{
-                           font-size: 1.3rem;
-                           display: block;
-                           width: 70px;
-                           font-weight: 400;
-                           display: -webkit-box;
-                           -webkit-box-orient: vertical;
-                           overflow: hidden;
-                           -webkit-line-clamp: 1;
-                        }
-                     }
-                     .active{
-                        background-color: #cce5ff;
-                        // transition: all .2s;
-                     }
-                  }
-               }
-               
+            gap: 25px;
+            .menu__column-wrapper-heading {
+              font-size: 1.4rem;
+              color: #676879;
+              font-weight: 500;
             }
-         }
+            .menu__column-list {
+              display: flex;
+              flex-direction: column;
+              // flex-wrap: nowrap;
+              gap: 7px;
+              margin-top: 10px;
+              height: max-content;
+              .menu__column-item {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                padding: 5px 10px;
+                background-color: #f5f6f8;
+                width: 150px;
+                border-radius: 4px;
+                &-icon {
+                  width: 25px;
+                  height: 25px;
+                  border-radius: 4px;
+                }
+                &:hover {
+                  background-color: #eceff8;
+                  transition: 0.2s;
+                }
+                span {
+                  font-size: 1.3rem;
+                  display: block;
+                  width: 70px;
+                  font-weight: 400;
+                  display: -webkit-box;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                  -webkit-line-clamp: 1;
+                }
+              }
+              .active {
+                background-color: #cce5ff;
+                // transition: all .2s;
+              }
+            }
+          }
+        }
       }
-   }
-   .filter__active{
-      background-color: #cce5ff;
-   }
+    }
+  }
+  .filter__active {
+    background-color: #cce5ff;
+  }
+  .btn__filter {
+    position: relative;
+  }
 }
