@@ -2,7 +2,7 @@
    display: flex;
    align-items: center;
    background-color: #fff;
-   padding: 10px 0 ;
+   padding: 10px 0;
    // border-bottom: 1px solid #e3e3e3;
    .search {
       width: max-content;
@@ -59,7 +59,6 @@
       }
       span {
          font-size: 1.6rem;
-
       }
       &__down {
          margin-left: 5px;
@@ -83,7 +82,7 @@
          &-header {
             display: flex;
             justify-content: space-between;
-            .filter__menu-clear-btn{
+            .filter__menu-clear-btn {
                width: 80px;
                height: 30px;
                border: none;
@@ -94,9 +93,9 @@
                cursor: pointer;
                font-weight: 500;
                font-size: 1.3rem;
-               &:hover{
+               &:hover {
                   background-color: #0060b9;
-                  transition: all .2s;
+                  transition: all 0.2s;
                }
             }
          }
@@ -105,30 +104,30 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            .filter__menu-column{
+            .filter__menu-column {
                display: flex;
                flex-direction: column;
                gap: 10px;
                width: 700px;
                min-height: 200px;
-               .filter__menu-column-wrapper{
+               .filter__menu-column-wrapper {
                   width: 100%;
                   display: flex;
                   flex-direction: column;
                   gap: 25px;
-                  .menu__column-wrapper-heading{
+                  .menu__column-wrapper-heading {
                      font-size: 1.4rem;
                      color: #676879;
                      font-weight: 500;
                   }
-                  .menu__column-list{
+                  .menu__column-list {
                      display: flex;
                      flex-direction: column;
                      // flex-wrap: nowrap;
                      gap: 7px;
                      margin-top: 10px;
                      height: max-content;
-                     .menu__column-item{
+                     .menu__column-item {
                         display: flex;
                         align-items: center;
                         gap: 5px;
@@ -136,16 +135,16 @@
                         background-color: #f5f6f8;
                         width: 150px;
                         border-radius: 4px;
-                        &-icon{
+                        &-icon {
                            width: 25px;
                            height: 25px;
                            border-radius: 4px;
                         }
-                        &:hover{
+                        &:hover {
                            background-color: #eceff8;
-                           transition: .2s;
+                           transition: 0.2s;
                         }
-                        span{
+                        span {
                            font-size: 1.3rem;
                            display: block;
                            width: 70px;
@@ -156,18 +155,17 @@
                            -webkit-line-clamp: 1;
                         }
                      }
-                     .active{
+                     .active {
                         background-color: #cce5ff;
                         // transition: all .2s;
                      }
                   }
                }
-               
             }
          }
       }
    }
-   .filter__active{
+   .filter__active {
       background-color: #cce5ff;
    }
 }
