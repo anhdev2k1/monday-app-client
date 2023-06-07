@@ -76,9 +76,6 @@ const MainTable = ({ idBoard }: MainTableProps) => {
 
    return (
       <div className="main-table">
-         {/* <p className="board__title">
-            <span>{currBoard?.name}</span> <FontAwesomeIcon icon={faCircleExclamation} />
-         </p> */}
          <HeadView />
          <div className="main__group__wrap">
             {searchFilter(getValueSearch)!?.length > 0 ? (
@@ -113,6 +110,7 @@ const MainTable = ({ idBoard }: MainTableProps) => {
             statusType={StatusType.Boder}
             title="Add new group"
             leftIcon={<FontAwesomeIcon icon={faPlus} />}
+            className='main__table-add'
          />
       </div>
    );

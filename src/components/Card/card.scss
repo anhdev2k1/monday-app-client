@@ -4,8 +4,9 @@
    display: flex;
    flex-direction: column;
    background-color: white;
-   border: 1px solid #ecedf5;
-   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   border: 1px solid #e3e3e3;
+   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+   border-radius: 8px;
    cursor: pointer;
    &-img {
       display: flex;
@@ -27,6 +28,13 @@
          align-items: center;
          font-size: 1.6rem;
          padding: 20px 0;
+         &--heading{
+            display: block;
+            width: 80%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+         }
          .card__icon--plus {
             position: absolute;
             top: 0;

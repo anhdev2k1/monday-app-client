@@ -1,29 +1,42 @@
 .board__wrapper {
-   // overflow: hidden;
    margin-left: 14px;
    display: flex;
    flex-direction: column;
    background-color: #ffffff;
-   border-top-left-radius: 24px;
+   border-top-right-radius: 12px;
+   border-bottom-right-radius: 12px;
    .icon__table {
       margin: 0 10px 0 0px;
+   }
+   .css-dev-only-do-not-override-1fviqcj.ant-tabs .ant-tabs-tab{
+      border: 1px solid #e3e3e3 !important;
+      border-bottom: none !important;
    }
    &-title {
       display: flex;
       flex-direction: column;
       width: 100%;
       min-height: 50px;
+      margin-bottom: 10px;
+      // background-color: red;
       .wrapper__title-heading {
          > input {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 600;
          }
          display: flex;
          align-items: center;
          gap: 10px;
          min-height: 50px;
-         h2 {
+         h3 {
+            width: 40%;
+            display: block;
+            height: 100%;
             font-size: 3rem;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            padding: 8px 0;
          }
          .boar__wrap-title-item {
             display: flex;

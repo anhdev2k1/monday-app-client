@@ -57,32 +57,21 @@ const Group = ({ data, idBoard, position, handleAddNewGroup }: IPropsGroup) => {
       {
          key: '1',
          label: <span>Add group</span>,
-         icon: <img src={add} alt="icon-board" />,
+         icon: <img src={add} alt="icon-board" className='icon__group'/>,
          onClick: () => handleAddNewGroup(position + 1),
       },
       {
          key: '2',
-         label: <span>Move to</span>,
-         icon: <img src={move} alt="icon-board" />,
-         children: [
-            {
-               key: '2-1',
-               label: 'Move to board',
-            },
-         ],
-      },
-      {
-         key: '3',
          label: <span>Rename group</span>,
-         icon: <img src={edit} alt="icon-board" />,
+         icon: <img src={edit} alt="icon-board" className='icon__group'/>,
          onClick: () => {
             inputElement.current?.focus();
          },
       },
       {
-         key: '4',
+         key: '3',
          label: <span>Delete group</span>,
-         icon: <img src={deleteIcon} alt="icon-board" />,
+         icon: <img src={deleteIcon} alt="icon-board" className='icon__group'/>,
          onClick: () => {
             handleDeleteGroup(data._id, data.position);
          },

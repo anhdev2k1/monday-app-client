@@ -124,7 +124,7 @@ const Board = () => {
                            style={{ width: '60%' }}
                         />
                      ) : (
-                        <h2 onClick={() => setEditName(true)}>{currBoard?.name}</h2>
+                        <h3 onClick={() => setEditName(true)}>{currBoard?.name}</h3>
                      )}
                      <Tippy html="Show board description" position="bottom">
                         <div className="boar__wrap-title-item">

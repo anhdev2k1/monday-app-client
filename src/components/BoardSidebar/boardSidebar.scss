@@ -14,11 +14,18 @@
       transition: all .3s;
    }
    .board__info {
+      width: 90%;
       display: flex;
       align-items: center;
+      gap: 5px;
       .board__title {
-         margin-left: 6px;
-         min-height: 20px;
+         width: 100%;
+         display: block;
+         // background-color: red;
+         white-space: nowrap;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         
       }
       .board__title--input {
          border-color: #0073ea;

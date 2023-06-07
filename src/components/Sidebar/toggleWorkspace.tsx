@@ -1,15 +1,10 @@
-import React, { useEffect } from 'react';
-import { DeleteOutlined, SearchOutlined, PlusOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { useEffect } from 'react';
+import { SearchOutlined } from '@ant-design/icons';
 import './sidebar.scss';
-import ButtonCustom from '../Button/ButtonCustom';
-import { SizeType } from '~/shared/model/global';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from '~/config/store';
-import { setDisplayOverlay } from '../Overlay/overlay.reducer';
-import ModalCustom from '../ModalCustom/modalCustom';
 import { getListlWorkspace } from '~/pages/Workspace/workspace.reducer';
 import ItemWorkspace from './itemWorkspace';
+import icons from '../../assets/svg/index';
 const ToggleWorkspace = () => {
    const dispatch = useAppDispatch();
    const listlWorkspace = useAppSelector((state) => state.workspaceSlice.infoListWorkSpace.data);
@@ -35,44 +30,17 @@ const ToggleWorkspace = () => {
          </div>
          <div className="workspace__modal-list">
             <h3>My workspaces</h3>
-            {/* <div className="workspace__modal-item">
-               <div className="workspace__modal-item-avt">
-                  <span>F</span>
-               </div>
-               <span className="workspace__modal-item-name">Full Product Developer</span>
-            </div> */}
+
             {listlWorkspace &&
                listlWorkspace.map((data, index) => {
                   return <ItemWorkspace key={index} name={data.name} />;
                })}
          </div>
          <div className="workspace__modal-feature">
-            <ButtonCustom
-               onClick={() => {
-                  dispatch(
-                     setDisplayOverlay({
-                        isDisplay: true,
-                        children: (
-                           <ModalCustom
-                              title="Add new workspace"
-                              type="Workspace"
-                              valueCreate="New Workspace"
-                           />
-                        ),
-                     }),
-                  );
-               }}
-               leftIcon={<FontAwesomeIcon icon={faPlus} />}
-               sizeType={SizeType.Medium}
-               className="modal__feature--add"
-               title="Add workspace"
-            />
-            <ButtonCustom
-               leftIcon={<FontAwesomeIcon icon={faPlus} />}
-               sizeType={SizeType.Medium}
-               className="modal__feature--browse"
-               title="Browse all"
-            />
+            <div className="workspace__modal-feature--item">
+               <img src={icons.add} alt="" />
+               <span>Add workspace</span>
+            </div>
          </div>
       </div>
    );

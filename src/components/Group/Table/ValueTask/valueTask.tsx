@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { ITask, IValueOfTask } from '~/shared/model/task';
 import { IColumn, IDefaultValue } from '~/shared/model/column';
-import DropdownStatus from '~/components/DropdownStatus/dropDownStatus';
+// import DropdownStatus from '~/components/DropdownStatus/dropDownStatus';
 import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
 import { handleEditValueSelected } from '~/pages/Board/board.reducer';
 import { useParams } from 'react-router-dom';
+import DropdownStatus from '~/components/DropdownStatus/dropdownStatus';
 interface IValueTaskProps {
    valueOfTask: IValueOfTask;
    // columnID: string;
