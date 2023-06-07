@@ -1,7 +1,7 @@
 .group {
    margin-top: 40px;
    min-width: calc(var(--width-default-layout) - 100px);
-   
+
    .group__head {
       display: flex;
       align-items: center;
@@ -72,7 +72,7 @@
          .group__table {
             margin-top: 10px;
             // overflow-x: scroll;
-            
+
             .cols__group {
                display: flex;
                .col__group__item {
@@ -102,7 +102,6 @@
                }
             }
          }
-         
       }
    }
 }
