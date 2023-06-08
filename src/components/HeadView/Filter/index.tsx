@@ -3,7 +3,9 @@ import Tippy from '~/components/Tippy';
 import { useAppSelector } from '~/config/store';
 import ListFilter from './ListFilter';
 import { IItemFilter } from './ItemFilter';
-
+import styles from './filter.module.scss';
+import ButtonCustom from '~/components/Button/ButtonCustom';
+import { StatusType } from '~/shared/model/global';
 interface FilterProps {
   ref: React.RefObject<HTMLDivElement>;
 }
@@ -14,7 +16,7 @@ interface FilterColumn {
   defaultValues: Map<string, IItemFilter>;
 }
 
-const Filter = React.forwardRef(({ ref }: FilterProps) => {
+const Filter = React.forwardRef<HTMLDivElement>((props, ref) => {
   const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data)!;
   const tasksMap = new Map<string, IItemFilter>();
 
@@ -68,9 +70,6 @@ const Filter = React.forwardRef(({ ref }: FilterProps) => {
       });
     });
 
-    console.log({ tasksMap });
-    console.log({ transformedColumns });
-
     return {
       _id: group._id,
       value: group.name,
@@ -80,22 +79,23 @@ const Filter = React.forwardRef(({ ref }: FilterProps) => {
   });
 
   return (
-    <Tippy position="top" html={<p>Filter by anything</p>}>
-      <div className="filter" ref={ref}>
-        <div className="filter__menu">
-          <div>
-            <div>
-              <h4>Quick filters</h4>
-              <span>
-                Showing {'all'} of {} tasks
-              </span>
-              {/* <FontAwesomeIcon icon={} /> */}
-            </div>
-            <span>Clear All</span>
-          </div>
+    <div className={styles.filter} ref={ref}>
+      <div className={styles.filterMenu}>
+        <div className={styles.filterMenuHeader}>
+          <h4 className={styles.menuHeaderTitle}>Quick filters</h4>
+          <span className={styles.menuHeaderInfo}>
+            Showing {'all'} of {} tasks
+          </span>
+          <ButtonCustom
+            title="Clear all"
+            statusType={false ? StatusType.Transparent : StatusType.Disabled}
+          />
+        </div>
 
-          <h3>All columns</h3>
-          <div className="filter__container">
+        <div className={styles.menuContainerWrapper}>
+          <h3 className={styles.menuContainerTitle}>All columns</h3>
+
+          <div className={styles.menuContainer}>
             <ListFilter name="Group" items={transformedGroups} />
 
             <ListFilter name="Name" items={[...tasksMap.values()]} />
@@ -110,7 +110,7 @@ const Filter = React.forwardRef(({ ref }: FilterProps) => {
           </div>
         </div>
       </div>
-    </Tippy>
+    </div>
   );
 });
 

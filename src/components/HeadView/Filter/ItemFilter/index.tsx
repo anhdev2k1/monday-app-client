@@ -1,3 +1,4 @@
+import styles from './itemFilter.module.scss';
 export interface IItemFilter {
   value: string;
   counter: number;
@@ -10,12 +11,15 @@ type ItemFilterProps = {
 
 const ItemFilter = ({ value, counter, color }: ItemFilterProps) => {
   return (
-    <div>
-      <div>
-        <div className={color ?? ''}></div>
-        <span>{value}</span>
-      </div>
-      <span>{counter}</span>
+    <div className={styles.itemFilter}>
+      <span
+        className={`${color && styles.itemIsColor} ${styles.itemColor}`}
+        style={{
+          backgroundColor: color,
+        }}
+      ></span>
+      <p className={styles.itemTitle}>{value}</p>
+      <span className={styles.itemCounter}>{counter}</span>
     </div>
   );
 };

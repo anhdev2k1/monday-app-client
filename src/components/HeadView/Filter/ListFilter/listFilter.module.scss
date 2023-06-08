@@ -1,0 +1,42 @@
+.listFilter {
+  margin-right: 10px;
+
+  .listFilterName {
+    text-align: left;
+    height: 34px;
+    line-height: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .listFilterWrapper {
+    max-height: 188px;
+    // min-width: 142px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    /* CSS cho thanh cuộn trên Chrome và Safari */
+    &::-webkit-scrollbar {
+      height: 2px !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      // background-color: #f1f1f1;
+      // margin: 10px !important; /* Khoảng cách margin xung quanh vùng track */
+      padding: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #d0d4e4 !important;
+      border-radius: 4px;
+      width: 3px;
+      margin: 5px; /* Khoảng cách margin xung quanh thanh cuộn */
+      padding: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #555;
+    }
+  }
+}
