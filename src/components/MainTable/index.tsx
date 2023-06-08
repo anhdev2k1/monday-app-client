@@ -105,13 +105,13 @@ const MainTable = ({ idBoard }: MainTableProps) => {
             )}
          </div>
 
-         <ButtonCustom
+         {/* <ButtonCustom
             onClick={() => handleAddNewGroup()}
             statusType={StatusType.Boder}
             title="Add new group"
             leftIcon={<FontAwesomeIcon icon={faPlus} />}
             className='main__table-add'
-         />
+         /> */}
       </div>
    );
 };

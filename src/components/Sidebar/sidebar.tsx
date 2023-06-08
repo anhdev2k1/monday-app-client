@@ -130,12 +130,23 @@ const Sidebar: React.FC = () => {
       setValueSearch(e.target.value);
       //Dispatch action search
    };
+   const menuWorkspaceElement = useRef<HTMLDivElement>(null);
+   useEffect(() => {
+      document.addEventListener('click', handleClickOutside);
+      return () => {
+         document.removeEventListener('click', handleClickOutside);
+      };
+   });
+   const handleClickOutside = (e: any) => {
+      if( menuWorkspaceElement.current &&!menuWorkspaceElement.current.contains(e.target)){
+         setToggleWorkspace(false)
+      }
+   };
    return (
       <>
          {contextHolder}
          <div className="sidebar__wrapper">
             <div className="sidebar__header">
-               {/* <span className="sidebar__header-heading">Workspace</span> */}
                {isLoading ? (
                   <Loading height="20px" />
                ) : (
@@ -172,7 +183,11 @@ const Sidebar: React.FC = () => {
                <Loading height="30px" />
             ) : (
                <div className="sidebar__menu-flex">
-                  <div className="sidebar__menu-container" onClick={ToggleWorkspaces}>
+                  <div
+                     className="sidebar__menu-container"
+                     onClick={ToggleWorkspaces}
+                     ref={menuWorkspaceElement}
+                  >
                      <div className="sidebar__menu-container--icon">
                         <span>{currentWorkSpace?.name.substring(0, 1)}</span>
                      </div>

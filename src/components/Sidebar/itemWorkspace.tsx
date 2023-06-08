@@ -1,13 +1,15 @@
+import { Link, useNavigate } from "react-router-dom";
+import { IWorkspace } from "~/shared/model/workSpace";
 
 interface IPropsItemWorkpsace {
-   name: string;
+   dataWorkspace: IWorkspace;
 }
-const ItemWorkspace = ({ name }: IPropsItemWorkpsace) => {
+const ItemWorkspace = ({ dataWorkspace }: IPropsItemWorkpsace) => {
    return (
-      <div className="workspace__modal-item">
-         <p className="workspace__modal-item-avt">{name[0]}</p>
-         <p className="workspace__modal-item-name">{name}</p>
-      </div>
+      <Link to={`/workspace/${dataWorkspace._id}`} className="workspace__modal-item">
+         <p className="workspace__modal-item-avt">{dataWorkspace.name[0]}</p>
+         <p className="workspace__modal-item-name">{dataWorkspace.name}</p>
+      </Link>
    );
 };
 

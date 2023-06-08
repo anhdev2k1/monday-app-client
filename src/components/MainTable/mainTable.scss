@@ -1,12 +1,12 @@
 .main-table {
-   width: 100%;
-   height: 100%;
+   // width: 100%;
+   // height: 100%;
    display: flex;
    flex-direction: column;
    position: relative;
    .main__group__wrap {
-      height: 380px;
-      width: 1235px;
+      height: 450px;
+      width: 100%;
       overflow-y: scroll;
    }
    .main__table-add {

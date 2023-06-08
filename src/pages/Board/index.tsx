@@ -121,12 +121,12 @@ const Board = () => {
                                  handleEditBoard((e.target as HTMLInputElement).value);
                               }
                            }}
-                           style={{ width: '60%' }}
+                           style={{ width: '100%' }}
                         />
                      ) : (
                         <h3 onClick={() => setEditName(true)}>{currBoard?.name}</h3>
                      )}
-                     <Tippy html="Show board description" position="bottom">
+                     {/* <Tippy html="Show board description" position="bottom">
                         <div className="boar__wrap-title-item">
                            <img src={icons.info} alt="" />
                         </div>
@@ -136,7 +136,7 @@ const Board = () => {
                         <div className="boar__wrap-title-item">
                            <img src={icons.heart} alt="" />
                         </div>
-                     </Tippy>
+                     </Tippy> */}
                   </div>
                </div>
                {!currBoard ? (

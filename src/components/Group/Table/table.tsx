@@ -33,7 +33,10 @@ const Table = ({ data, idBoard }: IPropsTable) => {
 
    const dispatch = useAppDispatch();
    const filterItem = useAppSelector((state) => state.boardSlice.filter);
+   const [groupChecked, setGroupChecked] = useState('')
    const toggleCheckedTask = (e: any, taskId: string) => {
+      setGroupChecked(e.target.dataset.groupid);
+      
       if (e.target.checked) {
          setCheckedTasks((pre) => [...pre, taskId]);
       } else {
@@ -113,6 +116,8 @@ const Table = ({ data, idBoard }: IPropsTable) => {
          setIsOpenAddColumn(false);
       }
    };
+   console.log('checkedTasks',checkedTasks);
+   
    return (
       <>
          <table className="table__group">
@@ -181,6 +186,8 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                               onChange={(e) => toggleCheckedTask(e, task._id)}
                               data-id={task._id}
                               checked={checkedTasks.includes(task._id)}
+                              data-groupid={data._id}
+                           
                            />
                         </td>
                         <TaskEdit task={task} groupId={data._id} />

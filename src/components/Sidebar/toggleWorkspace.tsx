@@ -33,7 +33,7 @@ const ToggleWorkspace = () => {
 
             {listlWorkspace &&
                listlWorkspace.map((data, index) => {
-                  return <ItemWorkspace key={index} name={data.name} />;
+                  return <ItemWorkspace key={index} dataWorkspace={data} />;
                })}
          </div>
          <div className="workspace__modal-feature">

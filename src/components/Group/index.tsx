@@ -105,9 +105,9 @@ const Group = ({ data, idBoard, position, handleAddNewGroup }: IPropsGroup) => {
                </button>
             </Dropdown>
             <div className="head__input--wrap">
-               <Tippy position="top" html={<p>Collapse group</p>}>
+               {/* <Tippy position="top" html={<p>Collapse group</p>}>
                   <FontAwesomeIcon className="input--icon" icon={faAngleDown} />
-               </Tippy>
+               </Tippy> */}
 
                <Tippy position="top" html={<p>Click to edit</p>}>
                   <input

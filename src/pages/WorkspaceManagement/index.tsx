@@ -49,7 +49,7 @@ const WorkspaceManagement = () => {
          }
       };
       getWorkspace();
-   }, []);
+   }, [idWorkspace]);
 
    useEffect(() => {
       return () => {
