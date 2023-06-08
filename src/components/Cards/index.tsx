@@ -1,11 +1,11 @@
 import Card from '../Card';
 import './cards.scss';
+import HeadView from '../HeadView';
 import { IGroup } from '~/shared/model/group';
 import { ITask } from '~/shared/model/task';
 import { IColumn } from '~/shared/model/column';
 import { Col, Row } from 'antd';
 import { useAppSelector } from '~/config/store';
-import { useParams } from 'react-router-dom';
 export interface ITaskCard extends ITask {
    columns: IColumn[];
    group: IGroup;
@@ -30,6 +30,7 @@ const Cards = ({ idBoard }: CardsProps) => {
 
    return (
       <div className="cards">
+         <HeadView />
          <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]}>
             {taskArray.map((task) => {
                return (
