@@ -14,6 +14,7 @@ import { message } from 'antd';
 import axios from 'axios';
 import { ITask } from '~/shared/model/task';
 import images from '~/assets/svg';
+import Tippy from '../Tippy';
 
 const HeadView = () => {
   const { idBoard } = useParams();
@@ -38,7 +39,9 @@ const HeadView = () => {
   });
   const handleClickOutside = (event: any) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsOpenFilter(false);
+      if (!event.target.closest('.btn__filter--wrapper')) {
+        setIsOpenFilter(false);
+      }
     }
   };
 
@@ -116,15 +119,21 @@ const HeadView = () => {
           onChange={handleSearchInput}
         />
       </div>
-      <ButtonCustom
-        statusType={StatusType.Transparent}
-        title="Filter"
-        leftIcon={<img src={images.filter} alt="" />}
-        rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
-        className="btn__filter"
-      >
-        {true && <Filter ref={dropdownRef} />}
-      </ButtonCustom>
+      <div className="btn__filter--wrapper">
+        <Tippy html={<p>Filter by anything</p>} position="top">
+          <ButtonCustom
+            onClick={() => {
+              setIsOpenFilter((prev) => !prev);
+              // setIsOpenFilter(true);
+            }}
+            statusType={StatusType.Transparent}
+            title="Filter"
+            leftIcon={<img src={images.filter} alt="" />}
+            rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
+          ></ButtonCustom>
+        </Tippy>
+        {isOpenFilter && <Filter ref={dropdownRef} />}
+      </div>
     </div>
   );
 };
