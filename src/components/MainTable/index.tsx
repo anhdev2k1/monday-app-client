@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
+import { group } from 'console';
 
 interface MainTableProps {
   idBoard?: string;
@@ -20,6 +21,8 @@ interface MainTableProps {
 const MainTable = ({ idBoard }: MainTableProps) => {
   const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
   const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups)!;
+  const filterGroup = useAppSelector((state) => state.boardSlice.currBoard.filterGroup);
+
   const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
   const dispatch = useAppDispatch();
 
@@ -82,18 +85,34 @@ const MainTable = ({ idBoard }: MainTableProps) => {
       <div className="main__group__wrap">
         {searchFilter(getValueSearch)!?.length > 0 ? (
           searchFilter(getValueSearch)!.map((item: IGroup, index) => {
-            return (
-              <Group
-                // handleDeleteGroup={handleDeleteGroup}
-                handleAddNewGroup={handleAddNewGroup}
-                // columns={currBoard?.columns}
-                numberOfGroup={listsGroup.length}
-                key={item._id}
-                position={index}
-                idBoard={idBoard}
-                data={item}
-              />
-            );
+            if (filterGroup.size !== 0 && filterGroup.has(item._id)) {
+              return (
+                <Group
+                  // handleDeleteGroup={handleDeleteGroup}
+                  handleAddNewGroup={handleAddNewGroup}
+                  // columns={currBoard?.columns}
+                  numberOfGroup={listsGroup.length}
+                  key={item._id}
+                  position={index}
+                  idBoard={idBoard}
+                  data={item}
+                />
+              );
+            }
+            if (filterGroup.size === 0) {
+              return (
+                <Group
+                  // handleDeleteGroup={handleDeleteGroup}
+                  handleAddNewGroup={handleAddNewGroup}
+                  // columns={currBoard?.columns}
+                  numberOfGroup={listsGroup.length}
+                  key={item._id}
+                  position={index}
+                  idBoard={idBoard}
+                  data={item}
+                />
+              );
+            }
           })
         ) : (
           <div className="search__empty" style={{ textAlign: 'center', padding: '20px 0' }}>

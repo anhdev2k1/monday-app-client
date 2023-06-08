@@ -1,11 +1,22 @@
 .itemFilter {
   display: flex;
   width: 142px;
-  padding: 8px 12px;
+  padding: 5px 12px;
   align-items: center;
   background-color: #f5f6f8;
   margin-bottom: 10px;
+  margin-right: 4px;
   border-radius: 4px;
+  cursor: pointer;
+
+  &.active {
+    background-color: #cce5ff;
+  }
+
+  &:hover {
+    background-color: #dcdfec;
+  }
+
   .itemColor {
     display: none;
     width: 10px;
@@ -23,6 +34,7 @@
     display: block;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 1.3rem;
   }
   .itemCounter {
   }

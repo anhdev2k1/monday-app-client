@@ -3,6 +3,7 @@ import styles from './listFilter.module.scss';
 interface ListFilterProps {
   name: string;
   items: IItemFilter[];
+  addFilterHandler: (id?: string, name?: string) => void;
 }
 
 const ListFilter = ({ name, items }: ListFilterProps) => {

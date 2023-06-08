@@ -29,6 +29,9 @@ interface IInitState {
   };
   currBoard: {
     data?: IBoard;
+    filterGroup: Map<string, number>;
+    filterTask: Map<string, number>;
+    filterValueInColumns: Map<string, number>[];
     loading: boolean;
     error: boolean;
     status: string | number;
@@ -36,7 +39,6 @@ interface IInitState {
   };
   indexTab: number;
   searchValue: string;
-  filter: string[];
   activeFilterItem: string[];
   taskToDisplay?: ITaskCard;
 }
@@ -51,6 +53,9 @@ const initialState: IInitState = {
   },
   currBoard: {
     data: undefined,
+    filterGroup: new Map(),
+    filterTask: new Map(),
+    filterValueInColumns: [],
     loading: false,
     error: false,
     status: '',
@@ -58,7 +63,6 @@ const initialState: IInitState = {
   },
   indexTab: 0,
   searchValue: '',
-  filter: [],
   activeFilterItem: [],
   taskToDisplay: undefined,
 };
@@ -672,38 +676,17 @@ const boardSlice = createSlice({
       return state;
     },
 
-    setFilterColumn: (state, action) => {
-      let listFilter = state.filter;
-      if (listFilter.length > 0) {
-        const foundFilter = listFilter.find((item) => item === action.payload);
-        if (foundFilter) {
-          const removeItem = listFilter.filter((col) => col !== foundFilter);
-          state.filter = removeItem;
-        } else state.filter.push(action.payload);
-      } else state.filter.push(action.payload);
-    },
-    setActiveFilterItem: (state, action) => {
-      let listActive = state.activeFilterItem;
-      if (listActive.length > 0) {
-        const foundActive = listActive.find((item) => item === action.payload);
-        if (foundActive) {
-          const removeItem = listActive.filter((col) => col !== foundActive);
-          state.activeFilterItem = removeItem;
-        } else state.activeFilterItem.push(action.payload);
-      } else state.activeFilterItem.push(action.payload);
-    },
     resetCurrBoard(state) {
       state.currBoard = {
         data: undefined,
+        filterGroup: new Map(),
+        filterTask: new Map(),
+        filterValueInColumns: [],
         loading: false,
         error: false,
         status: '',
         mess: '',
       };
-    },
-    resetFilter(state) {
-      state.filter = [];
-      state.activeFilterItem = [];
     },
 
     handleAddValueIntoTask(
@@ -791,6 +774,36 @@ const boardSlice = createSlice({
         state.currBoard.data.groups[position].name = newName;
       }
     },
+
+    // Filter
+
+    handleAddFilterGroup(
+      state,
+      action: PayloadAction<{
+        groupId: string;
+      }>,
+    ) {
+      const { groupId } = action.payload;
+      const foundFilterGroup = state.currBoard.filterGroup.get(groupId);
+      if (foundFilterGroup) {
+        state.currBoard.filterGroup.set(groupId, 1);
+      }
+    },
+
+    handleAddFilterTask(
+      state,
+      action: PayloadAction<{
+        taskName: string;
+      }>,
+    ) {},
+
+    handleAddFilterColumn(
+      state,
+      action: PayloadAction<{
+        key: string;
+        valueName: string;
+      }>,
+    ) {},
   },
 });
 
@@ -815,10 +828,6 @@ export const {
   handleDeleteTasksFromGroup,
   handleEditTaskFromGroup,
   setTaskToDisplay,
-  // handle filter
-  setFilterColumn,
-  setActiveFilterItem,
-  resetFilter,
   // handle column
   handleAddColumn,
   handleEditColumn,
@@ -829,6 +838,11 @@ export const {
 
   // Handle value when add a new column
   handleAddValueIntoTask,
+
+  // Filter
+  handleAddFilterGroup,
+  handleAddFilterTask,
+  handleAddFilterColumn,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

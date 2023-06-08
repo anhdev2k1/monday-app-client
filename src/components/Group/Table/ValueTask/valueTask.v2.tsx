@@ -5,22 +5,23 @@ import { IColumn, IDefaultValue } from '~/shared/model/column';
 import DropdownStatus from '~/components/DropdownStatus/dropDownStatus.v2';
 import ValueCustomizedByColumnType from './valueCustomizedByColumnType';
 import { handleEditValueSelected } from '~/pages/Board/board.reducer';
-import { useParams } from 'react-router-dom';
 interface IValueTaskProps {
   valueOfTask: IValueOfTask;
+  index: number;
   // columnID: string;
   idBoard?: string;
   task: ITask;
-  colIncludeListValue: IColumn;
+  column: IColumn;
 }
 
 export interface ISetInfoValueTask {
   selectValueHandler: (values: IDefaultValue) => void;
 }
-const ValueTask = ({ valueOfTask, colIncludeListValue, task, idBoard }: IValueTaskProps) => {
-  const [openStatusBox, setOpenStatusBox] = useState<boolean>(false);
+const ValueTask = ({ valueOfTask, index, column, task, idBoard }: IValueTaskProps) => {
   const dispatch = useAppDispatch();
   const indexTab = useAppSelector((state) => state.boardSlice.indexTab);
+
+  const [openStatusBox, setOpenStatusBox] = useState<boolean>(false);
 
   const selectValueHandler = (values: IDefaultValue) => {
     dispatch(
@@ -77,14 +78,14 @@ const ValueTask = ({ valueOfTask, colIncludeListValue, task, idBoard }: IValueTa
           idBoard={idBoard}
           setOpenStatusBox={setOpenStatusBox}
           selectValueHandler={selectValueHandler}
-          columnId={colIncludeListValue._id}
+          columnId={column._id}
           valueID={valueOfTask._id}
         />
       ) : (
         <ValueCustomizedByColumnType
           task={task}
           valueTask={valueOfTask}
-          nameOfType={colIncludeListValue.belongType.name}
+          nameOfType={column.belongType.name}
         />
       )}
     </td>
