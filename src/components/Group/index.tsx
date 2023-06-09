@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import './group.scss';
 import { useRef, useState } from 'react';
 import Tippy from '../Tippy';
@@ -61,7 +61,7 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
   };
 
   const inputElement = useRef<HTMLInputElement>(null);
-  const { edit, add, move, deleteIcon } = images;
+  const { edit, add, deleteIcon } = images;
 
   const items: MenuProps['items'] = [
     {

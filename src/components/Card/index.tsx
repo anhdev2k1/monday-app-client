@@ -1,19 +1,16 @@
 import './card.scss';
 import { ITaskCard } from '../Cards';
 import ItemInCard from './ItemInCard/itemInCard';
-import images from '~/assets/svg';
 import Tippy from '../Tippy';
 import { useAppDispatch } from '~/config/store';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 import ModalCardDetail from './ModalCardDetail/modalCardDetail';
 import { setTaskToDisplay } from '~/pages/Board/board.reducer';
-import { useParams } from 'react-router-dom';
 interface IPropsCard {
   task: ITaskCard;
   idBoard?: string;
 }
 const Card = ({ task, idBoard }: IPropsCard) => {
-  const { iconDesTask } = images;
   const dispatch = useAppDispatch();
 
   const handleShowModalCartDetail = () => {

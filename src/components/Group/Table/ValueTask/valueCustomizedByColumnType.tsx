@@ -5,45 +5,49 @@ import ValueIsText from '~/components/ValueIsText/valueIsText';
 import { ITask, IValueOfTask } from '~/shared/model/task';
 
 interface ITypeValue {
-   nameOfType?: string;
-   valueTask: IValueOfTask;
-   task: ITask;
+  nameOfType?: string;
+  valueTask: IValueOfTask;
+  position: number;
+  task: ITask;
 }
 
 type IDataRenderTask = {
-   [key: string]: JSX.Element;
+  [key: string]: JSX.Element;
 };
 
-const ValueCustomizedByColumnType = ({ nameOfType, valueTask, task }: ITypeValue) => {
-   const { iconText, iconDatePicker } = images;
+const ValueCustomizedByColumnType = ({ nameOfType, valueTask, position, task }: ITypeValue) => {
+  const { iconText, iconDatePicker } = images;
 
-   const dataRenderTask: IDataRenderTask = {
-      date: (
-         <DateTimePicker
-            task={task}
-            valueTask={valueTask}
-            icon={<img className="icon__value--task" src={iconDatePicker} alt="icon__value" />}
-         />
-      ),
-      text: (
-         <ValueIsText
-            type="text"
-            task={task}
-            valueTask={valueTask}
-            icon={<img className="icon__value--task" src={iconText} alt="icon__value" />}
-         />
-      ),
-      number: (
-         <ValueIsText
-            type="number"
-            task={task}
-            valueTask={valueTask}
-            icon={<img className="icon__value--task" src={iconText} alt="icon__value" />}
-         />
-      ),
-   };
+  const dataRenderTask: IDataRenderTask = {
+    Date: (
+      <DateTimePicker
+        task={task}
+        position={position}
+        valueTask={valueTask}
+        icon={<img className="icon__value--task" src={iconDatePicker} alt="icon__value" />}
+      />
+    ),
+    Text: (
+      <ValueIsText
+        type="text"
+        task={task}
+        position={position}
+        valueTask={valueTask}
+        icon={<img className="icon__value--task" src={iconText} alt="icon__value" />}
+      />
+    ),
+    Number: (
+      <ValueIsText
+        type="number"
+        task={task}
+        position={position}
+        valueTask={valueTask}
+        icon={<img className="icon__value--task" src={iconText} alt="icon__value" />}
+      />
+    ),
+  };
 
-   return (nameOfType && dataRenderTask[nameOfType]) || null;
+  return (nameOfType && dataRenderTask[nameOfType]) || null;
 };
 
 export default ValueCustomizedByColumnType;

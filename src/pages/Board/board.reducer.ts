@@ -10,6 +10,7 @@ import {
 import axios from 'axios';
 import { ITaskCard } from '~/components/Cards';
 import { SERVER_API_URL } from '~/config/constants';
+import { TypeActions } from '~/shared/model';
 import { IBoard, IBoardResponse, IBoardsResponse } from '~/shared/model/board';
 import { IColumn } from '~/shared/model/column';
 import { IResponseData } from '~/shared/model/global';
@@ -165,6 +166,13 @@ const boardSlice = createSlice({
       })
       .addMatcher(isFulfilled(getBoardDetail), (state, action) => {
         state.currBoard.data = action.payload.data.metadata?.board;
+        const filterValueInColumns: Map<string, number>[] = [];
+        action.payload.data.metadata?.board.columns.forEach((column) => {
+          filterValueInColumns.push(new Map());
+        });
+        state.currBoard.filterValueInColumns = filterValueInColumns;
+        state.currBoard.filterGroup = new Map();
+        state.currBoard.filterTask = new Map();
         state.listBoard.error = false;
         state.listBoard.loading = false;
         state.listBoard.status = action.payload.data.status;
@@ -399,7 +407,6 @@ const boardSlice = createSlice({
       return state;
     },
 
-    // asbdkjasbdkabskdjas
     handleEditValueSelected: (
       state,
       action: PayloadAction<{
@@ -456,6 +463,7 @@ const boardSlice = createSlice({
       if (state.currBoard.data) {
         const newColumn = action.payload.newData;
         const copiedColumns = state.currBoard.data.columns;
+        state.currBoard.filterValueInColumns.push(new Map());
         copiedColumns.splice(newColumn.position, 0, newColumn);
         state.currBoard.data.columns = copiedColumns.map((column, index) => {
           if (column.position !== index) {
@@ -500,6 +508,7 @@ const boardSlice = createSlice({
       }>,
     ) => {
       const { position } = action.payload;
+      state.currBoard.filterValueInColumns.splice(position, 1);
       if (state.currBoard.data) {
         const copiedColumns = state.currBoard.data.columns;
         copiedColumns.splice(position, 1);
@@ -518,37 +527,6 @@ const boardSlice = createSlice({
           return group;
         });
       }
-
-      // Xóa cột khỏi mảng columns
-      // const newColumns = state.currBoard.data?.columns.filter(
-      //    (column: IColumn) => column._id !== idColumn,
-      // );
-
-      // Xóa giá trị có belongColumn là idColumn trong mỗi task
-      // const newGroups = state.currBoard.data?.groups.map((group) => {
-      //    const newTasks = group.tasks.map((task) => {
-      //       const newValues = task.values.filter((value) => value.belongColumn !== idColumn);
-      //       return { ...task, values: newValues };
-      //    });
-
-      //    return { ...group, tasks: newTasks };
-      // });
-      // console.log('newGroups', newGroups);
-      // if (newGroups && newColumns && state.currBoard.data) {
-      //    return {
-      //       ...state,
-      //       currBoard: {
-      //          ...state.currBoard,
-      //          data: {
-      //             ...state.currBoard.data,
-      //             groups: newGroups,
-      //             columns: newColumns,
-      //          },
-      //       },
-      //    };
-      // }
-
-      // return state;
     },
 
     setIndexTab: (
@@ -566,114 +544,33 @@ const boardSlice = createSlice({
       state,
       action: PayloadAction<{
         taskId: string;
-        valueId: string;
-        newValue: string | null;
+        positionOfTask: number;
+        positionOfValueTask: number;
+        newValue: string;
       }>,
     ) => {
-      const { taskId, valueId, newValue } = action.payload;
+      const { newValue, positionOfTask, positionOfValueTask, taskId } = action.payload;
 
-      const updatedData = JSON.parse(JSON.stringify(state));
-
-      const groups = updatedData.currBoard.data?.groups;
-      if (groups) {
-        // Find the task by id
-        for (const group of groups) {
-          const tasks = group.tasks;
-          if (tasks) {
-            for (const task of tasks) {
-              if (task._id === taskId) {
-                // Find the value in the task by valueId
-                const values = task.values;
-                if (values) {
-                  for (const value of values) {
-                    if (value._id === valueId) {
-                      // Update the new value
-                      value.value = newValue;
-                      break;
-                    }
-                  }
-                }
-                break;
-              }
-            }
+      if (state.currBoard.data) {
+        state.currBoard.data.groups = state.currBoard.data.groups.map((group) => {
+          const foundTask = group.tasks[positionOfTask];
+          if (foundTask._id === taskId) {
+            foundTask.values[positionOfValueTask].value = newValue;
+            group.tasks[positionOfTask] = foundTask;
           }
-        }
+          return group;
+        });
       }
-      console.log('updatedData', updatedData);
-
-      return updatedData;
     },
 
-    handleEditValueTask: (
+    handleEmptyValueTask: (
       state,
       action: PayloadAction<{
         taskId: string;
         valueId: string;
-        newValue: string;
       }>,
     ) => {
-      const { taskId, valueId, newValue } = action.payload;
-
-      const updatedData = JSON.parse(JSON.stringify(state));
-
-      const groups = updatedData.currBoard.data?.groups;
-      if (groups) {
-        // Find the task by id
-        for (const group of groups) {
-          const tasks = group.tasks;
-          if (tasks) {
-            for (const task of tasks) {
-              if (task._id === taskId) {
-                // Find the value in the task by valueId
-                const values = task.values;
-                if (values) {
-                  for (const value of values) {
-                    if (value._id === valueId && value.value !== newValue) {
-                      // Update the new value or set it to null
-                      value.value = newValue;
-                      break;
-                    }
-                  }
-                }
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      return updatedData;
-    },
-    handleEmptyValueTask: (state, action) => {
       const { taskId, valueId } = action.payload;
-
-      const newGroups = state.currBoard.data?.groups.map((group) => {
-        const newTasks = group.tasks.map((task) => {
-          if (task._id === taskId) {
-            const newValues = task.values.map((value) =>
-              value._id === valueId ? { ...value, value: '' } : value,
-            );
-            return { ...task, values: newValues };
-          }
-          return task;
-        });
-        return { ...group, tasks: newTasks };
-      });
-
-      if (newGroups && state.currBoard.data && state.currBoard.data.columns) {
-        return {
-          ...state,
-          currBoard: {
-            ...state.currBoard,
-            data: {
-              ...state.currBoard.data,
-              groups: newGroups,
-            },
-          },
-        };
-      }
-
-      return state;
     },
 
     resetCurrBoard(state) {
@@ -777,33 +674,63 @@ const boardSlice = createSlice({
 
     // Filter
 
-    handleAddFilterGroup(
+    handleFilterGroup(
       state,
       action: PayloadAction<{
+        type: TypeActions;
         groupId: string;
       }>,
     ) {
-      const { groupId } = action.payload;
-      const foundFilterGroup = state.currBoard.filterGroup.get(groupId);
-      if (foundFilterGroup) {
+      const { type, groupId } = action.payload;
+      state.currBoard.filterGroup = new Map(state.currBoard.filterGroup);
+      if (type === TypeActions.ADD) {
         state.currBoard.filterGroup.set(groupId, 1);
+      } else {
+        state.currBoard.filterGroup.delete(groupId);
       }
     },
 
-    handleAddFilterTask(
+    handleFilterTask(
       state,
       action: PayloadAction<{
+        type: TypeActions;
         taskName: string;
       }>,
-    ) {},
+    ) {
+      const { type, taskName } = action.payload;
+      state.currBoard.filterTask = new Map(state.currBoard.filterTask);
 
-    handleAddFilterColumn(
+      if (type === TypeActions.ADD) {
+        state.currBoard.filterTask.set(taskName, 1);
+      } else {
+        state.currBoard.filterTask.delete(taskName);
+      }
+    },
+
+    handleFilterColumn(
       state,
       action: PayloadAction<{
-        key: string;
+        type: TypeActions;
+        position: number;
         valueName: string;
       }>,
-    ) {},
+    ) {
+      const { type, position, valueName } = action.payload;
+      state.currBoard.filterValueInColumns = [...state.currBoard.filterValueInColumns];
+
+      if (type === TypeActions.ADD) {
+        state.currBoard.filterValueInColumns[position].set(valueName, 1);
+      } else {
+        state.currBoard.filterValueInColumns[position].delete(valueName);
+      }
+    },
+
+    clearFilters(state) {
+      state.currBoard.filterGroup = new Map();
+      state.currBoard.filterTask = new Map();
+      const newFilterColumns = state.currBoard.filterValueInColumns.map((_) => new Map());
+      state.currBoard.filterValueInColumns = newFilterColumns;
+    },
   },
 });
 
@@ -819,7 +746,6 @@ export const {
   handleRenameGroup,
   handleDelGroup,
   handleSetValueTask,
-  handleEditValueTask,
   handleEditValueSelected,
   setIndexTab,
   setSearchValueInput,
@@ -840,9 +766,10 @@ export const {
   handleAddValueIntoTask,
 
   // Filter
-  handleAddFilterGroup,
-  handleAddFilterTask,
-  handleAddFilterColumn,
+  handleFilterGroup,
+  handleFilterTask,
+  handleFilterColumn,
+  clearFilters,
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

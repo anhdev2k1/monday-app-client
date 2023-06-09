@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import styles from './itemFilter.module.scss';
+import { TypeActions } from '~/shared/model';
 export interface IItemFilter {
   _id: string;
   value: string;
@@ -7,20 +7,28 @@ export interface IItemFilter {
   color?: string;
 }
 
-type ItemFilterProps = {
-  [key in keyof IItemFilter]: IItemFilter[key];
-};
+interface ItemFilterProps extends IItemFilter {
+  name: string;
+  isActived: boolean;
+  handleFilter: (value: string, type: TypeActions) => void;
+}
 
-const ItemFilter = ({ value, counter, color }: ItemFilterProps) => {
-  const [isActive, setIsActive] = useState(false);
-
+const ItemFilter = ({
+  _id,
+  name,
+  isActived,
+  value,
+  counter,
+  color,
+  handleFilter,
+}: ItemFilterProps) => {
   const activeItemHandler = () => {
-    setIsActive((prev) => !prev);
+    handleFilter(name === 'Group' ? _id : value, !isActived ? TypeActions.ADD : TypeActions.REMOVE);
   };
 
   return (
     <div
-      className={`${styles.itemFilter} ${isActive && styles.active}`}
+      className={`${styles.itemFilter} ${isActived && styles.active}`}
       onClick={activeItemHandler}
     >
       <span
@@ -30,7 +38,7 @@ const ItemFilter = ({ value, counter, color }: ItemFilterProps) => {
         }}
       ></span>
       <p className={styles.itemTitle}>{value || 'Blank'}</p>
-      <span className={styles.itemCounter}>{counter}</span>
+      <span className={styles.itemCounter}>{counter || ''}</span>
     </div>
   );
 };

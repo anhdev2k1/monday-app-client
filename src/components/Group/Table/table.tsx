@@ -24,7 +24,6 @@ interface IPropsTable {
 
 const Table = ({ data, idBoard }: IPropsTable) => {
   const columns = useAppSelector((state) => state.boardSlice.currBoard.data?.columns)!;
-  const filterTask = useAppSelector((state) => state.boardSlice.currBoard.filterTask);
 
   const [valueAddTask, setValueAddTask] = useState('');
   const [messageApi, contextHolder] = message.useMessage();
@@ -149,60 +148,31 @@ const Table = ({ data, idBoard }: IPropsTable) => {
         </thead>
         <tbody className="table__data">
           {data.tasks.map((task) => {
-            if (filterTask.size !== 0 && filterTask.has(task.name)) {
-              return (
-                <tr className="table__data-task" key={task._id}>
-                  <td className="table__data-task-value">
-                    <label htmlFor="checked"></label>
-                    <input
-                      type="checkbox"
-                      id="checked"
-                      onChange={(e) => toggleCheckedTask(e, task._id)}
-                      data-id={task._id}
-                      checked={checkedTasks.includes(task._id)}
-                    />
-                  </td>
-                  <TaskEdit task={task} groupId={data._id} />
-                  {task.values.map((value, index) => (
-                    <ValueTask
-                      key={index}
-                      index={index}
-                      idBoard={idBoard}
-                      valueOfTask={value}
-                      task={task}
-                      column={columns[index]}
-                    />
-                  ))}
-                </tr>
-              );
-            }
-            if (filterTask.size === 0) {
-              return (
-                <tr className="table__data-task" key={task._id}>
-                  <td className="table__data-task-value">
-                    <label htmlFor="checked"></label>
-                    <input
-                      type="checkbox"
-                      id="checked"
-                      onChange={(e) => toggleCheckedTask(e, task._id)}
-                      data-id={task._id}
-                      checked={checkedTasks.includes(task._id)}
-                    />
-                  </td>
-                  <TaskEdit task={task} groupId={data._id} />
-                  {task.values.map((value, index) => (
-                    <ValueTask
-                      key={index}
-                      index={index}
-                      idBoard={idBoard}
-                      valueOfTask={value}
-                      task={task}
-                      column={columns[index]}
-                    />
-                  ))}
-                </tr>
-              );
-            }
+            return (
+              <tr className="table__data-task" key={task._id}>
+                <td className="table__data-task-value">
+                  <label htmlFor="checked"></label>
+                  <input
+                    type="checkbox"
+                    id="checked"
+                    onChange={(e) => toggleCheckedTask(e, task._id)}
+                    data-id={task._id}
+                    checked={checkedTasks.includes(task._id)}
+                  />
+                </td>
+                <TaskEdit task={task} groupId={data._id} />
+                {task.values.map((value, index) => (
+                  <ValueTask
+                    key={index}
+                    index={index}
+                    idBoard={idBoard}
+                    valueOfTask={value}
+                    task={task}
+                    column={columns[index]}
+                  />
+                ))}
+              </tr>
+            );
           })}
           <tr className="table__data-task">
             <td className="table__data-task-value">

@@ -170,5 +170,14 @@
   }
   .btn__filter--wrapper {
     position: relative;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #dcdfec;
+    }
+
+    .btn__filter-active {
+      background-color: #cce5ff;
+    }
   }
 }

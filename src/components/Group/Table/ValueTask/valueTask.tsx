@@ -84,6 +84,7 @@ const ValueTask = ({ valueOfTask, index, column, task, idBoard }: IValueTaskProp
       ) : (
         <ValueCustomizedByColumnType
           task={task}
+          position={index}
           valueTask={valueOfTask}
           nameOfType={column.belongType.name}
         />

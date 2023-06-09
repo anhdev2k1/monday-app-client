@@ -18,6 +18,20 @@ import Tippy from '../Tippy';
 
 const HeadView = () => {
   const { idBoard } = useParams();
+  const filterGroup = useAppSelector((state) => state.boardSlice.currBoard.filterGroup);
+  const filterTask = useAppSelector((state) => state.boardSlice.currBoard.filterTask);
+  const filterValueInColumns = useAppSelector(
+    (state) => state.boardSlice.currBoard.filterValueInColumns,
+  );
+
+  let totalFilter = 0;
+  totalFilter += filterGroup.size !== 0 ? 1 : 0;
+  totalFilter += filterTask.size !== 0 ? 1 : 0;
+  totalFilter += filterValueInColumns.reduce(
+    (total, currFilter) => total + (currFilter.size !== 0 ? 1 : 0),
+    0,
+  );
+
   const [focusSearch, setFocusSearch] = useState<boolean>(false);
   const [valueSearch, setValueSearch] = useState<string>('');
   const [messageApi, contextHolder] = message.useMessage();
@@ -122,17 +136,26 @@ const HeadView = () => {
       <div className="btn__filter--wrapper">
         <Tippy html={<p>Filter by anything</p>} position="top">
           <ButtonCustom
+            className={isOpenFilter ? 'btn__filter-active' : ''}
             onClick={() => {
               setIsOpenFilter((prev) => !prev);
               // setIsOpenFilter(true);
             }}
             statusType={StatusType.Transparent}
-            title="Filter"
+            title={`Filter${totalFilter !== 0 ? ` / ${totalFilter}` : ''}`}
             leftIcon={<img src={images.filter} alt="" />}
             rightIcon={<FontAwesomeIcon icon={faAngleDown} />}
           ></ButtonCustom>
         </Tippy>
-        {isOpenFilter && <Filter ref={dropdownRef} />}
+        {isOpenFilter && (
+          <Filter
+            totalFilter={totalFilter}
+            ref={dropdownRef}
+            filterGroup={filterGroup}
+            filterTask={filterTask}
+            filterValueInColumns={filterValueInColumns}
+          />
+        )}
       </div>
     </div>
   );

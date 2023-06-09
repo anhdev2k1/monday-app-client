@@ -1,18 +1,14 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonCustom from '../Button/ButtonCustom';
 import Group from '../Group';
 import HeadView from '../HeadView/';
 import './mainTable.scss';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { StatusType } from '~/shared/model/global';
-import { IGroup } from '~/shared/model/group';
 import { useEffect } from 'react';
 // import ShowNotification from '~/utils/showNotification';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
-import { group } from 'console';
+import { decideRenderTask } from '~/utils/decideRenderTask';
+import { ITask } from '~/shared/model/task';
 
 interface MainTableProps {
   idBoard?: string;
@@ -22,18 +18,44 @@ const MainTable = ({ idBoard }: MainTableProps) => {
   const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
   const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups)!;
   const filterGroup = useAppSelector((state) => state.boardSlice.currBoard.filterGroup);
+  const filterTask = useAppSelector((state) => state.boardSlice.currBoard.filterTask);
+  const filterValueInColumns = useAppSelector(
+    (state) => state.boardSlice.currBoard.filterValueInColumns,
+  );
+
+  const transformedGroups = listsGroup.map((group) => {
+    let isChoose = true;
+    if (filterGroup.size === 0) isChoose &&= true;
+    else if (!filterGroup.has(group._id)) isChoose &&= false;
+    else isChoose &&= true;
+    const newTasks: ITask[] = [];
+    group.tasks.forEach((task) => {
+      const isRender = decideRenderTask({
+        filterTask,
+        filterValueInColumns,
+        taskName: task.name,
+        valuesInTask: task.values,
+      });
+      if (isRender) newTasks.push(task);
+    });
+    const updatedGroup = { ...group, tasks: newTasks };
+    if (newTasks.length !== 0 && isChoose) return updatedGroup;
+  });
 
   const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
   const dispatch = useAppDispatch();
 
   const searchFilter = (dataSearch: string) => {
-    const result = listsGroup?.filter(
-      (group) =>
-        group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
-        group.tasks.some((task) =>
-          task.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
-        ),
-    );
+    const result = transformedGroups?.filter((group) => {
+      if (group) {
+        return (
+          group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
+          group.tasks.some((task) =>
+            task.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
+          )
+        );
+      }
+    });
     return result;
   };
 
@@ -84,36 +106,21 @@ const MainTable = ({ idBoard }: MainTableProps) => {
       <HeadView />
       <div className="main__group__wrap">
         {searchFilter(getValueSearch)!?.length > 0 ? (
-          searchFilter(getValueSearch)!.map((item: IGroup, index) => {
-            if (filterGroup.size !== 0 && filterGroup.has(item._id)) {
-              return (
+          searchFilter(getValueSearch)!.map(
+            (group, index) =>
+              group && (
                 <Group
                   // handleDeleteGroup={handleDeleteGroup}
                   handleAddNewGroup={handleAddNewGroup}
                   // columns={currBoard?.columns}
                   numberOfGroup={listsGroup.length}
-                  key={item._id}
+                  key={group._id}
                   position={index}
                   idBoard={idBoard}
-                  data={item}
+                  data={group}
                 />
-              );
-            }
-            if (filterGroup.size === 0) {
-              return (
-                <Group
-                  // handleDeleteGroup={handleDeleteGroup}
-                  handleAddNewGroup={handleAddNewGroup}
-                  // columns={currBoard?.columns}
-                  numberOfGroup={listsGroup.length}
-                  key={item._id}
-                  position={index}
-                  idBoard={idBoard}
-                  data={item}
-                />
-              );
-            }
-          })
+              ),
+          )
         ) : (
           <div className="search__empty" style={{ textAlign: 'center', padding: '20px 0' }}>
             <img
@@ -122,7 +129,6 @@ const MainTable = ({ idBoard }: MainTableProps) => {
               style={{ width: '300px' }}
             />
             <h3>No result found</h3>
-            <p>Searching 10 of 10 column on this board</p>
           </div>
         )}
       </div>
