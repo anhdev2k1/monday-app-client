@@ -117,8 +117,8 @@ const Table = ({ data, idBoard }: IPropsTable) => {
         <thead className="table__group-header">
           <tr>
             <th className="column__group-check">
-              <label htmlFor="checked"></label>
-              <input type="checkbox" id="checked" disabled />
+              {/* <label htmlFor="checked"></label>
+              <input type="checkbox" id="checked" disabled /> */}
             </th>
             <th className="column__group-task">Task</th>
             {columns?.map((col, index) => (
@@ -162,8 +162,8 @@ const Table = ({ data, idBoard }: IPropsTable) => {
                     onChange={(e) => toggleCheckedTask(e, task._id)}
                     data-id={task._id}
                     checked={checkedTasks.includes(task._id)}
+                    style={{transform: "scale(1.4)"}}
                   />
-                  
                 </td>
                 <TaskEdit task={task} groupId={data._id} />
                 {task.values.map((value, index) => (
@@ -180,10 +180,7 @@ const Table = ({ data, idBoard }: IPropsTable) => {
             );
           })}
           <tr className="table__data-task">
-            <td className="table__data-task-value">
-              <label htmlFor="checked"></label>
-              <input type="checkbox" id="checked" disabled />
-            </td>
+            <td className="table__data-task-value"></td>
             <td className="table__data-add-task">
               <input
                 type="text"

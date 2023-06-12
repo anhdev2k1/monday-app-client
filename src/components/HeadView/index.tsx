@@ -132,6 +132,7 @@ const HeadView = () => {
       <div
         className={`search ${focusSearch ? 'search-active' : ''}`}
         onClick={() => setFocusSearch(true)}
+        style={{backgroundColor : valueSearch.length > 0 ? '#c9e2fc': ''}}
       >
         <div className="search__btn">
           <FontAwesomeIcon icon={faMagnifyingGlass} />

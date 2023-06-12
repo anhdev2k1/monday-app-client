@@ -226,7 +226,7 @@
   .btn__filter--wrapper {
     position: relative;
     border-radius: 4px;
-
+    white-space: nowrap;
     &:hover {
       background-color: #dcdfec;
     }
