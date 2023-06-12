@@ -3,7 +3,6 @@ import { TypeActions } from '~/shared/model';
 export interface IItemFilter {
   _id: string;
   value: string;
-  counter: number;
   parent: string;
   color?: string;
 }
@@ -19,7 +18,6 @@ const ItemFilter = ({
   name,
   isActived,
   value,
-  counter,
   parent,
   color,
   handleFilter,
@@ -44,7 +42,6 @@ const ItemFilter = ({
         }}
       ></span>
       <p className={styles.itemTitle}>{value || 'Blank'}</p>
-      <span className={styles.itemCounter}>{counter || ''}</span>
     </div>
   );
 };

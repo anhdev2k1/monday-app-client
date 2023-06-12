@@ -136,7 +136,7 @@ const HeadView = () => {
       <div className="btn__filter--wrapper">
         <Tippy html={<p>Filter by anything</p>} position="top">
           <ButtonCustom
-            className={isOpenFilter ? 'btn__filter-active' : ''}
+            className={isOpenFilter || totalFilter !== 0 ? 'btn__filter-active' : ''}
             onClick={() => {
               setIsOpenFilter((prev) => !prev);
               // setIsOpenFilter(true);

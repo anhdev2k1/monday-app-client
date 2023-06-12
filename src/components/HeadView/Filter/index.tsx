@@ -63,17 +63,12 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
       const transformedGroupsTemp = currBoard.groups.map((group) => {
         group.tasks.forEach((task) => {
           taskCounterTemp++;
-          if (transformedTasksTemp.has(task.name)) {
-            const foundTask = transformedTasksTemp.get(task.name)!;
-            foundTask.counter++;
-            transformedTasksTemp.set(foundTask.value, foundTask);
-          } else {
+          if (!transformedTasksTemp.has(task.name)) {
             const newTask: IItemFilter = {
               _id: task._id,
               value: task.name,
               color: undefined,
               parent: group._id,
-              counter: 1,
             };
             transformedTasksTemp.set(newTask.value, newTask);
           }
@@ -82,17 +77,12 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
             const valueOfTask = task.values[column.position];
             const value = valueOfTask.valueId?.value ?? valueOfTask.value;
             const color = valueOfTask.valueId?.color ?? '';
-            if (column.defaultValues.has(value + color)) {
-              const foundDefaultValue = column.defaultValues.get(value + color)!;
-              foundDefaultValue.counter++;
-              column.defaultValues.set(value + color, foundDefaultValue);
-            } else {
+            if (!column.defaultValues.has(value + color)) {
               const newDefaultValue: IItemFilter = {
                 _id: valueOfTask._id,
                 value: value,
                 color: color,
                 parent: task.name,
-                counter: 1,
               };
               column.defaultValues.set(
                 newDefaultValue.value + newDefaultValue.color,
@@ -105,7 +95,6 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
         return {
           _id: group._id,
           value: group.name,
-          counter: group.tasks.length,
           parent: currBoard._id,
           color: undefined,
         };
@@ -161,9 +150,7 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
         <div className={styles.filterMenu}>
           <div className={styles.filterMenuHeader}>
             <h4 className={styles.menuHeaderTitle}>Quick filters</h4>
-            <span className={styles.menuHeaderInfo}>
-              Showing {'all'} of {taskCounter} tasks
-            </span>
+            <span className={styles.menuHeaderInfo}></span>
             <ButtonCustom
               title="Clear all"
               statusType={totalFilter !== 0 ? StatusType.Transparent : StatusType.Disabled}
