@@ -1,0 +1,19 @@
+.release__container{
+    width: 500px;
+    min-height: 400px;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 12px;
+    text-align: center;
+    > img{
+        width: 300px;
+        height: 300px;
+    }
+    > p{
+        font-size: 1.7rem;
+        font-weight: 500;
+    }
+}

@@ -60,7 +60,7 @@ const Cards = ({ idBoard }: CardsProps) => {
   return (
     <div className="cards">
       <HeadView />
-      <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]}>
+      <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]} className='cards__container'>
         {tasks.length !== 0 ? (
           tasks.map((task) => (
             <Col key={task._id} span={6} lg={6} md={8} xs={12}>
