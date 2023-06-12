@@ -37,6 +37,7 @@ const ValueIsText = ({ valueTask, icon, task, type }: IPropsValueIsText) => {
          }),
       );
    };
+   
    return (
       <div className="value__text">
          {isEdit ? (
