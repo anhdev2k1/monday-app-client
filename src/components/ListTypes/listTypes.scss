@@ -5,20 +5,36 @@
    background-color: #fff;
    box-shadow: 0 4px 17px 6px rgba(0, 0, 0, 0.1);
    border-radius: 4px;
-   padding: 10px;
+   padding: 7px;
    z-index: 11;
    .list__types {
       min-width: 300px;
       display: flex;
+      align-items: center;
+      justify-content: center;
       flex-wrap: wrap;
       .type__item {
          width: calc(calc(100% / 2) - 10px );
          > button {
             width: 100%;
-            justify-content: flex-start;
-            > span {
-               margin-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            .icon {
+               // margin-left: 10px;
+               display: block;
+               width: max-content;
+               + .title{
+                  display: block;
+                  // width: max-content;
+                  text-align: left;
+               }
             }
+            
+            
+         }
+         .list__types-icon{
+            width: max-content;
          }
       }
    }

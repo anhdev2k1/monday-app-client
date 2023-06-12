@@ -18,8 +18,15 @@
       }
       .column__group:last-child {
          width: 100%;
-         cursor: pointer;
          border-right: none;
+         > .add__column {
+            cursor: pointer;
+            // display: block;
+
+            .icon__add-column {
+               transition: all 0.2s;
+            }
+         }
       }
       .column__group {
          position: relative;
@@ -75,20 +82,15 @@
       }
       .table__data-task-value:nth-child(2) {
          text-align: left;
-         text-indent: 10px;
          font-size: 1.4rem;
          border-bottom: 1px solid #edeef4;
          border-right: 1px solid #edeef4;
          span {
             display: block;
             width: 350px;
-            // display: -webkit-box;
-            // -webkit-line-clamp: 1;
-            // -webkit-box-orient: vertical;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            // padding: 0 2px;
          }
       }
       .table__data-task-value:not(:nth-child(2)) {
@@ -139,6 +141,7 @@
                border: 1px solid #33333334;
             }
             .input__rename-task {
+               width: 100%;
                outline: none;
                height: 20px;
                text-indent: 5px;

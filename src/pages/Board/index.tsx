@@ -109,6 +109,7 @@ const Board = () => {
             <div className="board__wrapper">
                <div className="board__wrapper-title">
                   <div className="wrapper__title-heading">
+                     <img src={icons.board} alt="" className='wrapper__title-heading-icon' />
                      {isEditName ? (
                         <Input
                            defaultValue={currBoard?.name}

@@ -17,6 +17,7 @@ import BoardSidebar from '~/components/BoardSidebar';
 import { IWorkspace } from '~/shared/model/workSpace';
 import Notification from '~/components/NotificationProvider/Notification/notification';
 import LoadingLogo from '~/components/LoadingLogo/loadingLogo';
+import Tippy from '~/components/Tippy';
 const { TextArea } = Input;
 
 const WorkspaceManagement = () => {
@@ -153,31 +154,35 @@ const WorkspaceManagement = () => {
                      <span>{currentWorkspace?.name.substring(0, 1)}</span>
                   </div>
                   <div className="workspace__header-title">
-                     <Input
-                        className="header__title-name"
-                        value={currentWorkspace?.name}
-                        onChange={(e) => {
-                           handleChangeInput(e, 'name');
-                        }}
-                        onBlur={(e) => {
-                           handleBlurInput(e, 'name');
-                        }}
-                     />
-                     <TextArea
-                        rows={2}
-                        value={currentWorkspace?.description}
-                        className="header__title-desc"
-                        onChange={(e) => {
-                           handleChangeInput(e, 'description');
-                        }}
-                        onBlur={(e) => {
-                           handleBlurInput(e, 'description');
-                        }}
-                     />
+                     <Tippy html="Edit name workspace" position="topLeft">
+                        <Input
+                           className="header__title-name"
+                           value={currentWorkspace?.name}
+                           onChange={(e) => {
+                              handleChangeInput(e, 'name');
+                           }}
+                           onBlur={(e) => {
+                              handleBlurInput(e, 'name');
+                           }}
+                        />
+                     </Tippy>
+                     <Tippy html="Edit description workspace" position='topLeft'>
+                        <TextArea
+                           rows={2}
+                           value={currentWorkspace?.description}
+                           className="header__title-desc"
+                           onChange={(e) => {
+                              handleChangeInput(e, 'description');
+                           }}
+                           onBlur={(e) => {
+                              handleBlurInput(e, 'description');
+                           }}
+                        />
+                     </Tippy>
                   </div>
                </div>
                <div className="workspace__content">
-                  <Tabs defaultActiveKey="1" items={items} />
+                  <Tabs defaultActiveKey="1" items={items} type="card" />
                </div>
             </div>
          )}

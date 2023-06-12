@@ -38,7 +38,6 @@ const TaskEdit = ({ task, groupId }: ITaskEditProps) => {
                className="input__rename-task"
                defaultValue={task.name}
                type="text"
-               style={{ width: '90%' }}
                onBlur={(e) => {
                   handleRenameTask(e, task._id);
                   setIsRenameTask(false);

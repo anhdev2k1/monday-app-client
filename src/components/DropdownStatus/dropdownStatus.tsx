@@ -52,17 +52,18 @@ const DropdownStatus = ({
    //    setListStatusState(listStatus);
    //    setColorsIsSamp(listStatus);
    // }, [listStatus]);
-   const handleEditStatus = () => {
+   const handleEditStatus = (e:any) => {
+      e.stopPropagation();
       setIsEdit(true);
    };
    useEffect(() => {
       if (!isOpen) setIsEdit(false);
    }, [isOpen]);
-   useEffect(() => {
-      return () => {
-         setIsApply(false);
-      };
-   }, []);
+   // useEffect(() => {
+   //    return () => {
+   //       setIsApply(false);
+   //    };
+   // }, []);
    const handleValueSelection = async (values: IDefaultValue) => {
       // setChangeStatus((prev) => {
       //    return {
@@ -156,12 +157,12 @@ const DropdownStatus = ({
                   {!isEdit ? (
                      <div onClick={handleEditStatus} className="status__edit-btn">
                         <img src={icons.edit} alt="" />
-                        <span className="status__item-title">Edit labels</span>
+                        <span className="status__item-title" style={{width: "max-content"}}>Edit labels</span>
                      </div>
                   ) : (
                      <div
-                        onClick={() => {
-                           setIsApply(true);
+                        onClick={(e) => {
+                           setIsEdit(false);
                         }}
                         className="status__edit-btn"
                      >

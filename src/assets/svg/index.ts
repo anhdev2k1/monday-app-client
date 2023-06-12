@@ -35,7 +35,7 @@ const images = {
    card: require('./card.svg').default,
    home: require('./home.svg').default,
    work: require('./work.svg').default,
-
+   board: require('./board.svg').default
 };
 
 export default images;

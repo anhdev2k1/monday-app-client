@@ -184,7 +184,7 @@ const Sidebar: React.FC = () => {
             ) : (
                <div className="sidebar__menu-flex">
                   <div
-                     className="sidebar__menu-container"
+                     className={`sidebar__menu-container ${toggleWorkspace && 'active'}`}
                      onClick={ToggleWorkspaces}
                      ref={menuWorkspaceElement}
                   >

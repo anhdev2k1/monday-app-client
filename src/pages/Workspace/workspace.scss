@@ -154,6 +154,10 @@
                flex-direction: column;
                line-height: 22.5px;
                &--heading {
+                  width: 130px;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
                   font-size: 1.5rem;
                }
                &--desc {

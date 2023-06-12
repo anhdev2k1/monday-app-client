@@ -11,6 +11,7 @@
       margin: 0 10px 0 0px;
    }
    .css-dev-only-do-not-override-1fviqcj.ant-tabs .ant-tabs-tab{
+      margin-right: 5px;
       border: 1px solid #e3e3e3 !important;
       border-bottom: none !important;
    }
@@ -22,15 +23,19 @@
       margin-bottom: 10px;
       margin-top: 10px;
       .wrapper__title-heading {
-         > input {
-            font-size: 2rem;
-            font-weight: 600;
-         }
          display: flex;
          align-items: center;
          gap: 10px;
          min-height: 50px;
          width: 500px;
+         &-icon{
+            width: 25px;
+         }
+         > input {
+            font-size: 2rem;
+            font-weight: 600;
+         }
+         
          h3 {
             width: 90%;
             display: block;

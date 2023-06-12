@@ -5,12 +5,28 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { getListlWorkspace } from '~/pages/Workspace/workspace.reducer';
 import ItemWorkspace from './itemWorkspace';
 import icons from '../../assets/svg/index';
+import ModalCustom from '../ModalCustom/modalCustom';
+import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 const ToggleWorkspace = () => {
    const dispatch = useAppDispatch();
    const listlWorkspace = useAppSelector((state) => state.workspaceSlice.infoListWorkSpace.data);
    useEffect(() => {
       dispatch(getListlWorkspace());
    }, []);
+   const handleAddWorkspace = () => {
+      dispatch(
+         setDisplayOverlay({
+            isDisplay: true,
+            children: (
+               <ModalCustom
+                  title="Add new workspace"
+                  type="Workspace"
+                  valueCreate="New Workspace"
+               />
+            ),
+         }),
+      );
+   }
    return (
       <div
          onClick={(e) => {
@@ -36,7 +52,7 @@ const ToggleWorkspace = () => {
                   return <ItemWorkspace key={index} dataWorkspace={data} />;
                })}
          </div>
-         <div className="workspace__modal-feature">
+         <div className="workspace__modal-feature" onClick={handleAddWorkspace}>
             <div className="workspace__modal-feature--item">
                <img src={icons.add} alt="" />
                <span>Add workspace</span>
