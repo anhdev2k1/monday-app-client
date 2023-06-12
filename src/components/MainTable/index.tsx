@@ -1,19 +1,14 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import ButtonCustom from '../Button/ButtonCustom';
 import Group from '../Group';
 import HeadView from '../HeadView/';
 import './mainTable.scss';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { StatusType } from '~/shared/model/global';
-import { IGroup } from '~/shared/model/group';
 import { useEffect } from 'react';
 // import ShowNotification from '~/utils/showNotification';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
-import { group } from 'console';
-
+import { decideRenderGroup } from '~/utils/decideRender';
+import { IGroup } from '~/shared/model/group';
 interface MainTableProps {
   idBoard?: string;
 }
@@ -22,18 +17,48 @@ const MainTable = ({ idBoard }: MainTableProps) => {
   const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
   const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups)!;
   const filterGroup = useAppSelector((state) => state.boardSlice.currBoard.filterGroup);
+  const filterTask = useAppSelector((state) => state.boardSlice.currBoard.filterTask);
+  const filterValueInColumns = useAppSelector(
+    (state) => state.boardSlice.currBoard.filterValueInColumns,
+  );
+
+  const isFilter =
+    filterGroup.size !== 0 ||
+    filterTask.size !== 0 ||
+    filterValueInColumns.some((filterValueInColumn) => filterValueInColumn.size !== 0);
+
+  // Khong render khi group k co task nao
+  // Them dieu kien la nguoi ta da chon filter hay chua
+  const updatedGroups: IGroup[] = isFilter ? [] : listsGroup;
+  if (isFilter) {
+    for (const group of listsGroup) {
+      const { isRender, updatedTasks } = decideRenderGroup({
+        filterGroup,
+        filterTask,
+        filterValueInColumns,
+        group,
+      });
+      if (isRender) {
+        const updatedGroup = { ...group, tasks: updatedTasks };
+        updatedGroups.push(updatedGroup);
+      }
+    }
+  }
 
   const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
   const dispatch = useAppDispatch();
 
   const searchFilter = (dataSearch: string) => {
-    const result = listsGroup?.filter(
-      (group) =>
-        group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
-        group.tasks.some((task) =>
-          task.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
-        ),
-    );
+    const result = updatedGroups?.filter((group) => {
+      if (group) {
+        return (
+          group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
+          group.tasks.some((task) =>
+            task.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
+          )
+        );
+      }
+    });
     return result;
   };
 
@@ -84,36 +109,18 @@ const MainTable = ({ idBoard }: MainTableProps) => {
       <HeadView />
       <div className="main__group__wrap">
         {searchFilter(getValueSearch)!?.length > 0 ? (
-          searchFilter(getValueSearch)!.map((item: IGroup, index) => {
-            if (filterGroup.size !== 0 && filterGroup.has(item._id)) {
-              return (
-                <Group
-                  // handleDeleteGroup={handleDeleteGroup}
-                  handleAddNewGroup={handleAddNewGroup}
-                  // columns={currBoard?.columns}
-                  numberOfGroup={listsGroup.length}
-                  key={item._id}
-                  position={index}
-                  idBoard={idBoard}
-                  data={item}
-                />
-              );
-            }
-            if (filterGroup.size === 0) {
-              return (
-                <Group
-                  // handleDeleteGroup={handleDeleteGroup}
-                  handleAddNewGroup={handleAddNewGroup}
-                  // columns={currBoard?.columns}
-                  numberOfGroup={listsGroup.length}
-                  key={item._id}
-                  position={index}
-                  idBoard={idBoard}
-                  data={item}
-                />
-              );
-            }
-          })
+          searchFilter(getValueSearch)!.map((group, index) => (
+            <Group
+              // handleDeleteGroup={handleDeleteGroup}
+              handleAddNewGroup={handleAddNewGroup}
+              // columns={currBoard?.columns}
+              numberOfGroup={listsGroup.length}
+              key={group._id}
+              position={index}
+              idBoard={idBoard}
+              data={group}
+            />
+          ))
         ) : (
           <div className="search__empty" style={{ textAlign: 'center', padding: '20px 0' }}>
             <img
@@ -122,7 +129,6 @@ const MainTable = ({ idBoard }: MainTableProps) => {
               style={{ width: '300px' }}
             />
             <h3>No result found</h3>
-            <p>Searching 10 of 10 column on this board</p>
           </div>
         )}
       </div>

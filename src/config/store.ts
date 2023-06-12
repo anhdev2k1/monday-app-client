@@ -30,15 +30,15 @@ import logger from 'redux-logger';
 //    return next(action);
 // };
 const store = configureStore({
-   reducer,
-   middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-         serializableCheck: false,
-      }).concat(logger),
+  reducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 const getStore = () => {
-   return store;
+  return store;
 };
 
 export type IRootState = ReturnType<typeof store.getState>;

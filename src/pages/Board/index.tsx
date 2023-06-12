@@ -9,11 +9,11 @@ import Cards from '~/components/Cards';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import {
-   getBoardDetail,
-   handleAddColumn,
-   handleAddValueIntoTask,
-   handleEditCurrBoard,
-   setIndexTab,
+  getBoardDetail,
+  handleAddColumn,
+  handleAddValueIntoTask,
+  handleEditCurrBoard,
+  setIndexTab,
 } from './board.reducer';
 import { editBoardInWorkspace, getDetailWorkspace } from '../Workspace/workspace.reducer';
 import Trash from '../Trash/trash';
@@ -23,83 +23,83 @@ import LoadingLogo from '~/components/LoadingLogo/loadingLogo';
 import { getListTypes } from '~/components/ListTypes/listTypes.reducer';
 import { resetDataCreateCol } from '~/components/MainTable/mainTable.reducer';
 const Board = () => {
-   const { idBoard } = useParams();
-   const dispatch = useAppDispatch();
-   const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data);
-   const currWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
-   const { idWorkspace } = useParams();
-   const [isLoading, setIsLoading] = useState<boolean>(true);
-   const dataCreateCol = useAppSelector((state) => state.mainTableSlice.createCol.data);
+  const { idBoard } = useParams();
+  const dispatch = useAppDispatch();
+  const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data);
+  const currWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
+  const { idWorkspace } = useParams();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const dataCreateCol = useAppSelector((state) => state.mainTableSlice.createCol.data);
 
-   useEffect(() => {
-      if (!currWorkspace && idWorkspace) {
-         dispatch(
-            getDetailWorkspace({
-               idWorkspace,
-            }),
-         );
-      }
-   }, [currWorkspace, dispatch, idWorkspace]);
-   useEffect(() => {
-      setTimeout(() => {
-         setIsLoading(false);
-      }, 1500);
-   }, []);
-   useEffect(() => {
-      if (idBoard) {
-         dispatch(
-            getBoardDetail({
-               id: idBoard,
-            }),
-         );
-      }
-   }, [dispatch, idBoard]);
-   const [isEditName, setEditName] = useState(false);
+  useEffect(() => {
+    if (!currWorkspace && idWorkspace) {
+      dispatch(
+        getDetailWorkspace({
+          idWorkspace,
+        }),
+      );
+    }
+  }, [currWorkspace, dispatch, idWorkspace]);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  }, []);
+  useEffect(() => {
+    if (idBoard) {
+      dispatch(
+        getBoardDetail({
+          id: idBoard,
+        }),
+      );
+    }
+  }, [dispatch, idBoard]);
+  const [isEditName, setEditName] = useState(false);
 
-   const handleEditBoard = (value: string) => {
-      if (value && idBoard && value !== currBoard?.name) {
-         dispatch(
-            handleEditCurrBoard({
-               key: 'name',
-               value,
-            }),
-         );
+  const handleEditBoard = (value: string) => {
+    if (value && idBoard && value !== currBoard?.name) {
+      dispatch(
+        handleEditCurrBoard({
+          key: 'name',
+          value,
+        }),
+      );
 
-         dispatch(
-            editBoardInWorkspace({
-               boardId: idBoard,
-               name: value,
-            }),
-         );
-      }
-      setEditName(false);
-   };
+      dispatch(
+        editBoardInWorkspace({
+          boardId: idBoard,
+          name: value,
+        }),
+      );
+    }
+    setEditName(false);
+  };
 
-   useEffect(() => {
-      dispatch(getListTypes());
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, []);
+  useEffect(() => {
+    dispatch(getListTypes());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-   useEffect(() => {
-      if (dataCreateCol !== undefined) {
-         dispatch(
-            handleAddColumn({
-               newData: dataCreateCol.column,
-            }),
-         );
-         dispatch(
-            handleAddValueIntoTask({
-               position: dataCreateCol.column.position,
-               newValuesOfTasks: dataCreateCol.tasksColumns,
-            }),
-         );
-      }
-      dispatch(resetDataCreateCol());
-   }, [dataCreateCol, dispatch]);
+  useEffect(() => {
+    if (dataCreateCol !== undefined) {
+      dispatch(
+        handleAddColumn({
+          newData: dataCreateCol.column,
+        }),
+      );
+      dispatch(
+        handleAddValueIntoTask({
+          position: dataCreateCol.column.position,
+          newValuesOfTasks: dataCreateCol.tasksColumns,
+        }),
+      );
+    }
+    dispatch(resetDataCreateCol());
+  }, [dataCreateCol, dispatch]);
 
-   const changeIndexInterface = (index: 0 | 1) => {
-      dispatch(setIndexTab({ index }));
-   };
+  const changeIndexInterface = (index: 0 | 1) => {
+    dispatch(setIndexTab({ index }));
+  };
 
    return (
       <>
@@ -138,51 +138,48 @@ const Board = () => {
                            <img src={icons.heart} alt="" />
                         </div>
                      </Tippy> */}
-                  </div>
-               </div>
-               {!currBoard ? (
-                  <Trash />
-               ) : (
-                  <TabCustom
-                     arr={[
-                        {
-                           label: (
-                              <Tippy position="top" html={<p>Main table</p>}>
-                                 <span
-                                    style={{ fontSize: '1.4rem', fontWeight: '500' }}
-                                    onClick={() => changeIndexInterface(0)}
-                                 >
-                                    <FontAwesomeIcon className="icon__table" icon={faHouse} />
-                                    Main table
-                                 </span>
-                              </Tippy>
-                           ),
-                           info: <MainTable idBoard={idBoard} />,
-                        },
-                        {
-                           label: (
-                              <Tippy position="top" html={<p>Cards</p>}>
-                                 <span
-                                    style={{ fontSize: '1.4rem', fontWeight: '500' }}
-                                    onClick={() => changeIndexInterface(1)}
-                                 >
-                                    <FontAwesomeIcon
-                                       className="icon__table"
-                                       icon={faCircleExclamation}
-                                    />
-                                    Cards
-                                 </span>
-                              </Tippy>
-                           ),
-                           info: <Cards idBoard={idBoard} />,
-                        },
-                     ]}
-                  />
-               )}
             </div>
-         )}
-      </>
-   );
+          </div>
+          {!currBoard ? (
+            <Trash />
+          ) : (
+            <TabCustom
+              arr={[
+                {
+                  label: (
+                    <Tippy position="top" html={<p>Main table</p>}>
+                      <span
+                        style={{ fontSize: '1.4rem', fontWeight: '500' }}
+                        onClick={() => changeIndexInterface(0)}
+                      >
+                        <FontAwesomeIcon className="icon__table" icon={faHouse} />
+                        Main table
+                      </span>
+                    </Tippy>
+                  ),
+                  info: <MainTable idBoard={idBoard} />,
+                },
+                {
+                  label: (
+                    <Tippy position="top" html={<p>Cards</p>}>
+                      <span
+                        style={{ fontSize: '1.4rem', fontWeight: '500' }}
+                        onClick={() => changeIndexInterface(1)}
+                      >
+                        <FontAwesomeIcon className="icon__table" icon={faCircleExclamation} />
+                        Cards
+                      </span>
+                    </Tippy>
+                  ),
+                  info: <Cards idBoard={idBoard} />,
+                },
+              ]}
+            />
+          )}
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Board;

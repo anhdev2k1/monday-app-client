@@ -6,9 +6,23 @@
       width: 150px;
       display: flex;
       // flex-shrink: 0;
+      gap: 5px;
       .item__card__btn--icon {
          width: 20px;
          height: 20px;
+      }
+      > .icon{
+         display: block;
+         width: max-content;
+         flex-shrink: 0;
+      }
+      > span{
+         display: block;
+         width: 120px;
+         white-space: nowrap;
+         text-overflow: ellipsis;
+         overflow: hidden;
+         text-align: left;
       }
    }
    .item__value {
@@ -25,6 +39,7 @@
       }  
       .table__data-task-value {
          width: 300px;
+         font-family: 'Roboto Mono';
         span{
          display: block;
          width: 150px;
@@ -63,6 +78,7 @@
          white-space: nowrap;
          text-overflow: ellipsis;
          overflow: hidden;
+         font-family: 'Roboto Mono';
       }
    }
    .status__item{

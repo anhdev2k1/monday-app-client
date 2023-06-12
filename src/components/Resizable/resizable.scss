@@ -25,37 +25,4 @@
 
       width: 30%;
    }
-
-   // &:last-child {
-   //    flex: 1;
-   //    cursor: pointer;
-   //    justify-content: flex-start;
-   //    .plus__lable {
-   //       .input--icon {
-   //          cursor: pointer;
-   //          border-radius: 3px;
-   //          &:hover {
-   //             background-color: var(--background-btn-default);
-   //          }
-   //          > svg {
-   //             font-size: 1.6rem;
-   //             transform: rotate(0deg);
-   //             transition: transform 0.2s ease-in-out;
-   //          }
-   //          padding: 0 4px;
-   //          border: none;
-   //       }
-   //    }
-
-   //    .col__group--check {
-   //       opacity: 0;
-   //       &:checked ~ .plus__lable {
-   //          .input--icon {
-   //             > svg {
-   //                transform: rotate(45deg);
-   //             }
-   //          }
-   //       }
-   //    }
-   // }
 }

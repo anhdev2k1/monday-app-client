@@ -1,3 +1,10 @@
 .cards {
    margin-right: 15px;
+   .cards__container{
+      width: 100%;
+      .search__empty{
+         margin: 0 auto;
+         margin-top: 20px;
+      }
+   }
 }

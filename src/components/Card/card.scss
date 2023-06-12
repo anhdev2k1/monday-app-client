@@ -8,6 +8,7 @@
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
   border-radius: 8px;
   cursor: pointer;
+  font-family: 'Roboto Mono';
   &-img {
     display: flex;
     align-items: center;
@@ -21,19 +22,27 @@
     margin-top: auto;
     margin-bottom: 0;
     padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
     .card__title-header {
       position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-size: 1.6rem;
-      padding: 8px 0px 20px 10px;
+      min-height: 60px;
       &--heading {
         display: block;
-        width: 80%;
-        white-space: nowrap;
+        width: 100%;
+        // white-space: nowrap;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* số dòng hiển thị */
+        -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
+        font-size: 1.4rem;
       }
       .card__icon--plus {
         position: absolute;

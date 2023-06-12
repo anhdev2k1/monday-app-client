@@ -1,15 +1,15 @@
 .wrapper {
    width: 100%;
    display: flex;
-   gap: 10px;
+   gap: 15px;
    padding-top: 60px;
    height: 100vh;
    padding-bottom: 10px;
-   padding-left: 10px;
-   padding-right: 10px;
+   padding-left: 15px;
+   padding-right: 15px;
    background-color: #eceff8;
+   padding-bottom: 15px;
    .content {
-      // height: 670px;
       width: 100vh;
       flex: 1;
       background-color: white;

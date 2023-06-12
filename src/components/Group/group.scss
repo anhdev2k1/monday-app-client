@@ -8,7 +8,7 @@
     align-items: center;
     position: relative;
     .icon__group {
-      background-color: red;
+      // background-color: red;
     }
     .head__btn--option {
       width: 30px;
@@ -37,12 +37,14 @@
         border-radius: 4px;
       }
       .input__group {
-        font-size: 1.8rem;
+        font-size: 1.7rem;
         padding: 4px 10px;
         border: 1px solid transparent;
         border-radius: 4px;
         flex: 1;
         color: #579bfc;
+        font-family: 'Roboto Mono';
+        
         &:hover {
           border: 1px solid #ccc;
         }

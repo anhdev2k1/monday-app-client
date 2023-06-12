@@ -1,6 +1,5 @@
-import React, { forwardRef, Ref } from 'react';
+import React from 'react';
 import { useAppSelector } from '~/config/store';
-import { getListTypes } from './listTypes.reducer';
 import './listTypes.scss';
 import ButtonCustom from '../Button/ButtonCustom';
 interface IListTypesProps {
@@ -10,7 +9,6 @@ interface IListTypesProps {
 }
 const ListTypes = ({ handleAddColumn, isOpenAddColumn, setIsOpenAddColumn }: IListTypesProps) => {
   const listTypes = useAppSelector((state) => state.listTypesSlice.listTypes.datas);
-  console.log('isOpenAddColumn', isOpenAddColumn);
 
   return (
     <>

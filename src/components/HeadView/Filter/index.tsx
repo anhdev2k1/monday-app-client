@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '~/config/store';
 import { IItemFilter } from './ItemFilter';
 import styles from './filter.module.scss';
 import ButtonCustom from '~/components/Button/ButtonCustom';
 import { StatusType } from '~/shared/model/global';
 import ListFilter from './ListFilter';
-import { handleAddFilterGroup } from '~/pages/Board/board.reducer';
+import {
+  clearFilters,
+  handleFilterColumn,
+  handleFilterGroup,
+  handleFilterTask,
+} from '~/pages/Board/board.reducer';
+import { IFilter, TypeActions } from '~/shared/model';
 
 interface FilterColumn {
   name: string;
@@ -13,152 +19,182 @@ interface FilterColumn {
   defaultValues: Map<string, IItemFilter>;
 }
 
-const Filter = React.forwardRef<HTMLDivElement>((props, ref) => {
-  const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data)!;
-  const filterGroup = useAppSelector((state) => state.boardSlice.currBoard.filterGroup);
-  const filterTask = useAppSelector((state) => state.boardSlice.currBoard.filterTask);
-  const filterValueInColumns = useAppSelector(
-    (state) => state.boardSlice.currBoard.filterValueInColumns,
-  );
+interface FilterProps {
+  totalFilter: number;
+  filterGroup: IFilter;
+  filterTask: IFilter;
+  filterValueInColumns: IFilter[];
+}
 
-  const [transformedGroups, setTransformedGroups] = useState<IItemFilter[]>([]);
-  const [transformedColumns, setTransformedColumns] = useState<FilterColumn[]>([]);
-  const [transformedTasks, setTransformedTasks] = useState<Map<string, IItemFilter>>(new Map());
-  const dispatch = useAppDispatch();
+const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
+  ({ totalFilter, filterGroup, filterTask, filterValueInColumns }, ref) => {
+    const currBoard = useAppSelector((state) => state.boardSlice.currBoard.data)!;
 
-  const [taskCounter, setTaskCounter] = useState(0);
+    const [transformedGroups, setTransformedGroups] = useState<IItemFilter[]>([]);
+    const [transformedColumns, setTransformedColumns] = useState<FilterColumn[]>([]);
+    const [transformedTasks, setTransformedTasks] = useState<Map<string, IItemFilter>>(new Map());
+    const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    let taskCounterTemp = 0;
-    const transformedTasksTemp = new Map<string, IItemFilter>();
-    const transformedColumnsTemp = currBoard.columns.map((column) => {
-      const defaultValues = new Map<string, IItemFilter>(
-        column.defaultValues.map((value) => {
-          const { value: defaultValue, color } = value;
-          const key = defaultValue + color;
-          return [key, { _id: value._id, value: defaultValue, color, counter: 0 }];
-        }),
-      );
+    const [taskCounter, setTaskCounter] = useState(0);
 
-      return {
-        name: column.name,
-        position: column.position,
-        defaultValues,
-      };
-    });
+    useEffect(() => {
+      let taskCounterTemp = 0;
+      const transformedColumnsTemp = currBoard.columns.map((column) => {
+        const defaultValues = new Map<string, IItemFilter>(
+          column.defaultValues.map((value) => {
+            const { value: defaultValue, color } = value;
+            const key = defaultValue + color;
+            return [
+              key,
+              { _id: value._id, value: defaultValue, color, counter: 0, parent: column._id },
+            ];
+          }),
+        );
 
-    const transformedGroupsTemp = currBoard.groups.map((group) => {
-      group.tasks.forEach((task) => {
-        taskCounterTemp++;
-        if (transformedTasksTemp.has(task.name)) {
-          const foundTask = transformedTasksTemp.get(task.name)!;
-          foundTask.counter++;
-          transformedTasksTemp.set(foundTask.value, foundTask);
-        } else {
-          const newTask: IItemFilter = {
-            _id: task._id,
-            value: task.name,
-            color: undefined,
-            counter: 1,
-          };
-          transformedTasksTemp.set(newTask.value, newTask);
-        }
-
-        transformedColumnsTemp.forEach((column) => {
-          const valueOfTask = task.values[column.position];
-          const value = valueOfTask.valueId?.value ?? valueOfTask.value;
-          const color = valueOfTask.valueId?.color ?? '';
-          if (column.defaultValues.has(value + color)) {
-            const foundDefaultValue = column.defaultValues.get(value + color)!;
-            foundDefaultValue.counter++;
-            column.defaultValues.set(value + color, foundDefaultValue);
-          } else {
-            const newDefaultValue: IItemFilter = {
-              _id: valueOfTask._id,
-              value: value,
-              color: color,
-              counter: 1,
-            };
-            column.defaultValues.set(
-              newDefaultValue.value + newDefaultValue.color,
-              newDefaultValue,
-            );
-          }
-        });
+        return {
+          name: column.name,
+          position: column.position,
+          defaultValues,
+        };
       });
 
-      return {
-        _id: group._id,
-        value: group.name,
-        counter: group.tasks.length,
-        color: undefined,
-      };
-    });
-    setTransformedColumns(transformedColumnsTemp);
-    setTransformedGroups(transformedGroupsTemp);
-    setTransformedTasks(transformedTasksTemp);
-    setTaskCounter(taskCounterTemp);
-  }, []);
+      const transformedTasksTemp = new Map<string, IItemFilter>();
 
-  const addFilterGroupHandler = (id?: string, name?: string) => {
-    if (id) {
-      dispatch(
-        handleAddFilterGroup({
-          groupId: id,
-        }),
-      );
-    }
-  };
+      const transformedGroupsTemp = currBoard.groups.map((group) => {
+        group.tasks.forEach((task) => {
+          taskCounterTemp++;
+          if (!transformedTasksTemp.has(task.name)) {
+            const newTask: IItemFilter = {
+              _id: task._id,
+              value: task.name,
+              color: undefined,
+              parent: group._id,
+            };
+            transformedTasksTemp.set(newTask.value, newTask);
+          }
 
-  const addFilterTaskHandler = (id?: string, name?: string) => {};
-
-  const addFilterColumnHandler = (id?: string, name?: string) => {};
-
-  return (
-    <div className={styles.filter} ref={ref} onClick={(e) => e.stopPropagation()}>
-      <div className={styles.filterMenu}>
-        <div className={styles.filterMenuHeader}>
-          <h4 className={styles.menuHeaderTitle}>Quick filters</h4>
-          <span className={styles.menuHeaderInfo}>
-            Showing {'all'} of {taskCounter} tasks
-          </span>
-          <ButtonCustom
-            title="Clear all"
-            statusType={false ? StatusType.Transparent : StatusType.Disabled}
-          />
-        </div>
-
-        <div className={styles.menuContainerWrapper}>
-          <h3 className={styles.menuContainerTitle}>All columns</h3>
-
-          <div className={styles.menuContainer}>
-            <ListFilter
-              name="Group"
-              items={transformedGroups}
-              addFilterHandler={addFilterGroupHandler}
-            />
-
-            <ListFilter
-              name="Task"
-              items={[...transformedTasks.values()]}
-              addFilterHandler={addFilterTaskHandler}
-            />
-
-            {transformedColumns.map((column, index) => {
-              return (
-                <ListFilter
-                  key={index}
-                  name={column.name}
-                  items={[...column.defaultValues.values()]}
-                  addFilterHandler={addFilterColumnHandler}
-                />
+          transformedColumnsTemp.forEach((column) => {
+            const valueOfTask = task.values[column.position];
+            const value = valueOfTask.valueId?.value ?? valueOfTask.value;
+            const color = valueOfTask.valueId?.color ?? '';
+            if (!column.defaultValues.has(value + color)) {
+              const newDefaultValue: IItemFilter = {
+                _id: valueOfTask._id,
+                value: value,
+                color: color,
+                parent: task.name,
+              };
+              column.defaultValues.set(
+                newDefaultValue.value + newDefaultValue.color,
+                newDefaultValue,
               );
-            })}
+            }
+          });
+        });
+
+        return {
+          _id: group._id,
+          value: group.name,
+          parent: currBoard._id,
+          color: undefined,
+        };
+      });
+      setTransformedColumns(transformedColumnsTemp);
+      setTransformedGroups(transformedGroupsTemp);
+      setTransformedTasks(transformedTasksTemp);
+      setTaskCounter(taskCounterTemp);
+    }, []);
+
+    const filterGroupHandler = useCallback(
+      (parent: string, value: string, type: TypeActions) => {
+        dispatch(
+          handleFilterGroup({
+            type,
+            groupId: value,
+            belongBoard: parent,
+          }),
+        );
+      },
+      [dispatch],
+    );
+
+    const filterTaskHandler = useCallback(
+      (parent: string, value: string, type: TypeActions) => {
+        dispatch(
+          handleFilterTask({
+            type,
+            taskName: value,
+            belongGroup: parent,
+          }),
+        );
+      },
+      [dispatch],
+    );
+
+    const filterColumnHandler = useCallback(
+      (position: number, parent: string, value: string, type: TypeActions) => {
+        dispatch(
+          handleFilterColumn({
+            type,
+            position,
+            valueName: value,
+            belongColumn: parent,
+          }),
+        );
+      },
+      [dispatch],
+    );
+
+    return (
+      <div className={styles.filter} ref={ref} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.filterMenu}>
+          <div className={styles.filterMenuHeader}>
+            <h4 className={styles.menuHeaderTitle}>Quick filters</h4>
+            <span className={styles.menuHeaderInfo}></span>
+            <ButtonCustom
+              title="Clear all"
+              statusType={totalFilter !== 0 ? StatusType.Transparent : StatusType.Disabled}
+              onClick={() => {
+                dispatch(clearFilters());
+              }}
+            />
+          </div>
+
+          <div className={styles.menuContainerWrapper}>
+            <h3 className={styles.menuContainerTitle}>All columns</h3>
+
+            <div className={styles.menuContainer}>
+              <ListFilter
+                name="Group"
+                items={transformedGroups}
+                filteredItems={filterGroup}
+                handleFilter={filterGroupHandler}
+              />
+
+              <ListFilter
+                name="Task"
+                items={[...transformedTasks.values()]}
+                filteredItems={filterTask}
+                handleFilter={filterTaskHandler}
+              />
+
+              {transformedColumns.map((column, index) => {
+                return (
+                  <ListFilter
+                    key={index}
+                    name={column.name}
+                    items={[...column.defaultValues.values()]}
+                    filteredItems={filterValueInColumns[index]}
+                    handleFilter={filterColumnHandler.bind(null, index)}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 export default Filter;

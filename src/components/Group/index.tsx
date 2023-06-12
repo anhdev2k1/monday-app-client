@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleDown, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import './group.scss';
 import { useRef, useState } from 'react';
 import Tippy from '../Tippy';
@@ -61,18 +61,18 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
   };
 
   const inputElement = useRef<HTMLInputElement>(null);
-  const { edit, add, move, deleteIcon } = images;
+  const { edit, add, deleteIcon } = images;
 
   const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: <span>Add group</span>,
-      icon: <img src={add} alt="icon-board" className="icon__group" />,
-      onClick: () => handleAddNewGroup(position + 1),
-    },
+    // {
+    //   key: '1',
+    //   label: <span>Add group</span>,
+    //   icon: <img src={add} alt="icon-board" className="icon__group" />,
+    //   onClick: () => handleAddNewGroup(position + 1),
+    // },
     {
       key: '2',
-      label: <span>Rename group</span>,
+      label: <span style={{fontFamily: 'Roboto Mono'}}>Rename group</span>,
       icon: <img src={edit} alt="icon-board" className="icon__group" />,
       onClick: () => {
         inputElement.current?.focus();
@@ -80,7 +80,7 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
     },
     {
       key: '3',
-      label: <span>Delete group</span>,
+      label: <span style={{fontFamily: 'Roboto Mono'}}>Delete group</span>,
       icon: <img src={deleteIcon} alt="icon-board" className="icon__group" />,
       onClick: () => {
         handleDeleteGroup(data._id, data.position);
