@@ -34,7 +34,8 @@ const ValueIsText = ({ valueTask, position, icon, task, type }: IPropsValueIsTex
     dispatch(
       handleEmptyValueTask({
         taskId: task._id,
-        valueId: valueTask._id,
+        positionOfTask: task.position,
+        positionOfValueTask: position,
       }),
     );
   };

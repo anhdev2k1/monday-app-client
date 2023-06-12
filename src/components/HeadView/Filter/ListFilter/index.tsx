@@ -1,11 +1,11 @@
-import { TypeActions } from '~/shared/model';
+import { IFilter, TypeActions } from '~/shared/model';
 import ItemFilter, { IItemFilter } from '../ItemFilter';
 import styles from './listFilter.module.scss';
 interface ListFilterProps {
   name: string;
   items: IItemFilter[];
-  filteredItems: Map<string, number>;
-  handleFilter: (value: string, type: TypeActions) => void;
+  filteredItems: IFilter;
+  handleFilter: (parent: string, value: string, type: TypeActions) => void;
 }
 
 const ListFilter = ({ name, items, filteredItems, handleFilter }: ListFilterProps) => {

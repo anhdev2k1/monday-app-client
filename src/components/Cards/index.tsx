@@ -6,7 +6,7 @@ import { ITask } from '~/shared/model/task';
 import { IColumn } from '~/shared/model/column';
 import { Col, Row } from 'antd';
 import { useAppSelector } from '~/config/store';
-import { decideRenderTask } from '~/utils/decideRenderTask';
+import { decideRenderTask } from '~/utils/decideRender';
 export interface ITaskCard extends ITask {
   columns: IColumn[];
   group: IGroup;
@@ -25,28 +25,29 @@ const Cards = ({ idBoard }: CardsProps) => {
     (state) => state.boardSlice.currBoard.filterValueInColumns,
   );
 
-  const tasks: (ITaskCard | undefined)[] = groups!.flatMap((group) =>
-    group.tasks.map((task) => {
-      let isChoose = true;
-      if (filterGroup.size === 0) isChoose &&= true;
-      else if (!filterGroup.has(group._id)) isChoose &&= false;
-      else isChoose &&= true;
-      const isRender = decideRenderTask({
-        filterTask,
-        filterValueInColumns,
-        taskName: task.name,
-        valuesInTask: task.values,
-      });
-      if (isChoose && isRender) {
-        return {
-          ...task,
-          position: task.position,
-          group: group,
-          columns: columns!,
-        };
-      }
-    }),
-  );
+  const tasks: any[] = [];
+  // const tasks: (ITaskCard | undefined)[] = groups!.flatMap((group) =>
+  //   group.tasks.map((task) => {
+  //     let isChoose = true;
+  //     if (filterGroup.size === 0) isChoose &&= true;
+  //     else if (!filterGroup.has(group._id)) isChoose &&= false;
+  //     else isChoose &&= true;
+  //     const isRender = decideRenderTask({
+  //       filterTask,
+  //       filterValueInColumns,
+  //       taskName: task.name,
+  //       valuesInTask: task.values,
+  //     });
+  //     if (isChoose && isRender) {
+  //       return {
+  //         ...task,
+  //         position: task.position,
+  //         group: group,
+  //         columns: columns!,
+  //       };
+  //     }
+  //   }),
+  // );
 
   return (
     <div className="cards">

@@ -11,7 +11,7 @@ import {
   handleFilterGroup,
   handleFilterTask,
 } from '~/pages/Board/board.reducer';
-import { TypeActions } from '~/shared/model';
+import { IFilter, TypeActions } from '~/shared/model';
 
 interface FilterColumn {
   name: string;
@@ -21,9 +21,9 @@ interface FilterColumn {
 
 interface FilterProps {
   totalFilter: number;
-  filterGroup: Map<string, number>;
-  filterTask: Map<string, number>;
-  filterValueInColumns: Map<string, number>[];
+  filterGroup: IFilter;
+  filterTask: IFilter;
+  filterValueInColumns: IFilter[];
 }
 
 const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
@@ -44,7 +44,10 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
           column.defaultValues.map((value) => {
             const { value: defaultValue, color } = value;
             const key = defaultValue + color;
-            return [key, { _id: value._id, value: defaultValue, color, counter: 0 }];
+            return [
+              key,
+              { _id: value._id, value: defaultValue, color, counter: 0, parent: column._id },
+            ];
           }),
         );
 
@@ -69,6 +72,7 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
               _id: task._id,
               value: task.name,
               color: undefined,
+              parent: group._id,
               counter: 1,
             };
             transformedTasksTemp.set(newTask.value, newTask);
@@ -87,6 +91,7 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
                 _id: valueOfTask._id,
                 value: value,
                 color: color,
+                parent: task.name,
                 counter: 1,
               };
               column.defaultValues.set(
@@ -101,6 +106,7 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
           _id: group._id,
           value: group.name,
           counter: group.tasks.length,
+          parent: currBoard._id,
           color: undefined,
         };
       });
@@ -111,11 +117,12 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
     }, []);
 
     const filterGroupHandler = useCallback(
-      (value: string, type: TypeActions) => {
+      (parent: string, value: string, type: TypeActions) => {
         dispatch(
           handleFilterGroup({
             type,
             groupId: value,
+            belongBoard: parent,
           }),
         );
       },
@@ -123,11 +130,12 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
     );
 
     const filterTaskHandler = useCallback(
-      (value: string, type: TypeActions) => {
+      (parent: string, value: string, type: TypeActions) => {
         dispatch(
           handleFilterTask({
             type,
             taskName: value,
+            belongGroup: parent,
           }),
         );
       },
@@ -135,12 +143,13 @@ const Filter = React.forwardRef<HTMLDivElement, FilterProps>(
     );
 
     const filterColumnHandler = useCallback(
-      (position: number, value: string, type: TypeActions) => {
+      (position: number, parent: string, value: string, type: TypeActions) => {
         dispatch(
           handleFilterColumn({
             type,
             position,
             valueName: value,
+            belongColumn: parent,
           }),
         );
       },

@@ -4,13 +4,14 @@ export interface IItemFilter {
   _id: string;
   value: string;
   counter: number;
+  parent: string;
   color?: string;
 }
 
 interface ItemFilterProps extends IItemFilter {
   name: string;
   isActived: boolean;
-  handleFilter: (value: string, type: TypeActions) => void;
+  handleFilter: (parent: string, value: string, type: TypeActions) => void;
 }
 
 const ItemFilter = ({
@@ -19,11 +20,16 @@ const ItemFilter = ({
   isActived,
   value,
   counter,
+  parent,
   color,
   handleFilter,
 }: ItemFilterProps) => {
   const activeItemHandler = () => {
-    handleFilter(name === 'Group' ? _id : value, !isActived ? TypeActions.ADD : TypeActions.REMOVE);
+    handleFilter(
+      parent,
+      name === 'Group' ? _id : value,
+      !isActived ? TypeActions.ADD : TypeActions.REMOVE,
+    );
   };
 
   return (

@@ -7,9 +7,8 @@ import { useAppDispatch, useAppSelector } from '~/config/store';
 import { createGroup, resetCreateGroup } from '../Group/group.reducer';
 import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
-import { decideRenderTask } from '~/utils/decideRenderTask';
-import { ITask } from '~/shared/model/task';
-
+import { decideRenderGroup } from '~/utils/decideRender';
+import { IGroup } from '~/shared/model/group';
 interface MainTableProps {
   idBoard?: string;
 }
@@ -23,30 +22,34 @@ const MainTable = ({ idBoard }: MainTableProps) => {
     (state) => state.boardSlice.currBoard.filterValueInColumns,
   );
 
-  const transformedGroups = listsGroup.map((group) => {
-    let isChoose = true;
-    if (filterGroup.size === 0) isChoose &&= true;
-    else if (!filterGroup.has(group._id)) isChoose &&= false;
-    else isChoose &&= true;
-    const newTasks: ITask[] = [];
-    group.tasks.forEach((task) => {
-      const isRender = decideRenderTask({
+  const isFilter =
+    filterGroup.size !== 0 ||
+    filterTask.size !== 0 ||
+    filterValueInColumns.some((filterValueInColumn) => filterValueInColumn.size !== 0);
+
+  // Khong render khi group k co task nao
+  // Them dieu kien la nguoi ta da chon filter hay chua
+  const updatedGroups: IGroup[] = isFilter ? [] : listsGroup;
+  if (isFilter) {
+    for (const group of listsGroup) {
+      const { isRender, updatedTasks } = decideRenderGroup({
+        filterGroup,
         filterTask,
         filterValueInColumns,
-        taskName: task.name,
-        valuesInTask: task.values,
+        group,
       });
-      if (isRender) newTasks.push(task);
-    });
-    const updatedGroup = { ...group, tasks: newTasks };
-    if (newTasks.length !== 0 && isChoose) return updatedGroup;
-  });
+      if (isRender) {
+        const updatedGroup = { ...group, tasks: updatedTasks };
+        updatedGroups.push(updatedGroup);
+      }
+    }
+  }
 
   const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
   const dispatch = useAppDispatch();
 
   const searchFilter = (dataSearch: string) => {
-    const result = transformedGroups?.filter((group) => {
+    const result = updatedGroups?.filter((group) => {
       if (group) {
         return (
           group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
@@ -106,21 +109,18 @@ const MainTable = ({ idBoard }: MainTableProps) => {
       <HeadView />
       <div className="main__group__wrap">
         {searchFilter(getValueSearch)!?.length > 0 ? (
-          searchFilter(getValueSearch)!.map(
-            (group, index) =>
-              group && (
-                <Group
-                  // handleDeleteGroup={handleDeleteGroup}
-                  handleAddNewGroup={handleAddNewGroup}
-                  // columns={currBoard?.columns}
-                  numberOfGroup={listsGroup.length}
-                  key={group._id}
-                  position={index}
-                  idBoard={idBoard}
-                  data={group}
-                />
-              ),
-          )
+          searchFilter(getValueSearch)!.map((group, index) => (
+            <Group
+              // handleDeleteGroup={handleDeleteGroup}
+              handleAddNewGroup={handleAddNewGroup}
+              // columns={currBoard?.columns}
+              numberOfGroup={listsGroup.length}
+              key={group._id}
+              position={index}
+              idBoard={idBoard}
+              data={group}
+            />
+          ))
         ) : (
           <div className="search__empty" style={{ textAlign: 'center', padding: '20px 0' }}>
             <img
