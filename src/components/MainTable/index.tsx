@@ -9,6 +9,7 @@ import { isNotification } from '../Notification/notification.reducer';
 import { handleAddGroup } from '~/pages/Board/board.reducer';
 import { decideRenderGroup } from '~/utils/decideRender';
 import { IGroup } from '~/shared/model/group';
+import { ITask } from '~/shared/model/task';
 interface MainTableProps {
   idBoard?: string;
 }
@@ -21,6 +22,8 @@ const MainTable = ({ idBoard }: MainTableProps) => {
   const filterValueInColumns = useAppSelector(
     (state) => state.boardSlice.currBoard.filterValueInColumns,
   );
+  const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
+  const dispatch = useAppDispatch();
 
   const isFilter =
     filterGroup.size !== 0 ||
@@ -45,20 +48,20 @@ const MainTable = ({ idBoard }: MainTableProps) => {
     }
   }
 
-  const getValueSearch = useAppSelector((state) => state.boardSlice.searchValue);
-  const dispatch = useAppDispatch();
-
   const searchFilter = (dataSearch: string) => {
-    const result = updatedGroups?.filter((group) => {
-      if (group) {
-        return (
-          group.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()) ||
-          group.tasks.some((task) =>
-            task.name.toLocaleLowerCase().includes(dataSearch.toLocaleLowerCase()),
-          )
-        );
+    const result: IGroup[] = [];
+    for (const group of updatedGroups) {
+      const isChoose = group.name.toLowerCase().includes(dataSearch.toLowerCase());
+      const updatedTasks: ITask[] = [];
+      for (const task of group.tasks) {
+        if (task.name.toLowerCase().includes(dataSearch.toLowerCase())) {
+          updatedTasks.push(task);
+        }
       }
-    });
+      if (isChoose || updatedTasks.length !== 0) {
+        result.push({ ...group, tasks: updatedTasks });
+      }
+    }
     return result;
   };
 

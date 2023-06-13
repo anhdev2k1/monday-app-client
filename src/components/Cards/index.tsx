@@ -34,24 +34,16 @@ const Cards = ({ idBoard }: CardsProps) => {
         filterTask,
         filterValueInColumns,
         taskName: task.name,
+        valueSearch,
         valuesInTask: task.values,
       });
       if (isChoose && isRender) {
-        if (valueSearch && task.name.includes(valueSearch)) {
-          tasks.push({
-            ...task,
-            position: task.position,
-            group: group,
-            columns: columns!,
-          });
-        } else if (!valueSearch) {
-          tasks.push({
-            ...task,
-            position: task.position,
-            group: group,
-            columns: columns!,
-          });
-        }
+        tasks.push({
+          ...task,
+          position: task.position,
+          group: group,
+          columns: columns!,
+        });
       }
     }),
   );
@@ -60,7 +52,7 @@ const Cards = ({ idBoard }: CardsProps) => {
   return (
     <div className="cards">
       <HeadView />
-      <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]} className='cards__container'>
+      <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]} className="cards__container">
         {tasks.length !== 0 ? (
           tasks.map((task) => (
             <Col key={task._id} span={6} lg={6} md={8} xs={12}>

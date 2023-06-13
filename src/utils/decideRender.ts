@@ -25,8 +25,8 @@ export const decideRenderGroup = ({
     const isRenderTask = decideRenderTask({
       filterTask,
       filterValueInColumns,
-      taskName: task.name,
       valuesInTask: task.values,
+      taskName: task.name,
     });
     if (isRenderTask) updatedTasks.push(task);
   }
@@ -37,16 +37,19 @@ export const decideRenderGroup = ({
 interface IDecideRenderTaskParams {
   filterTask: IFilter;
   filterValueInColumns: IFilter[];
-  taskName: string;
   valuesInTask: IValueOfTask[];
+  valueSearch?: string;
+  taskName: string;
 }
 
 export const decideRenderTask = ({
   filterTask,
   filterValueInColumns,
   taskName,
+  valueSearch,
   valuesInTask,
 }: IDecideRenderTaskParams) => {
+  if (valueSearch && !taskName.toLowerCase().includes(valueSearch.toLowerCase())) return false;
   let isRender = filterTask.size === 0 || filterTask.has(taskName);
   isRender &&= filterValueInColumns.every((filterValueInColumn, index) => {
     if (filterValueInColumn.size === 0) return true;
