@@ -1,14 +1,16 @@
 .card__item {
-  width: 100%;
-  // min-height: 140px;
+  width: calc(calc(100% / 4) - 10px);
+  height: 150px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   background-color: white;
   border: 1px solid #e3e3e3;
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
   border-radius: 8px;
   cursor: pointer;
   font-family: 'Roboto Mono';
+  // max-height: 150px;
   &-img {
     display: flex;
     align-items: center;
@@ -19,8 +21,7 @@
     font-size: 4rem;
   }
   &-title {
-    margin-top: auto;
-    margin-bottom: 0;
+    height: 100%;
     padding: 8px;
     display: flex;
     flex-direction: column;
@@ -36,9 +37,8 @@
       &--heading {
         display: block;
         width: 100%;
-        // white-space: nowrap;
         display: -webkit-box;
-        -webkit-line-clamp: 2; /* số dòng hiển thị */
+        -webkit-line-clamp: 3; /* số dòng hiển thị */
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -59,6 +59,12 @@
           }
         }
       }
+    }
+    .card__features{
+      width: 100%;
+      display: flex;
+      // flex-direction: column;
+      justify-content: space-between;
     }
     .card__title-features {
       display: flex;

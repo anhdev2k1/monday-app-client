@@ -9,8 +9,9 @@
    border: 1px solid transparent;
    -webkit-user-select: none;
    user-select: none;
-   max-width: 140px;
+   min-width: 140px;
    font-family: 'Roboto Mono';
+   white-space: nowrap;
    > span {
       margin-left: 4px;
    }

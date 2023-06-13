@@ -52,12 +52,10 @@ const Cards = ({ idBoard }: CardsProps) => {
   return (
     <div className="cards">
       <HeadView />
-      <Row gutter={[14, { xs: 8, sm: 12, md: 12, lg: 14 }]} className="cards__container">
+      <div className='cards__container'>
         {tasks.length !== 0 ? (
           tasks.map((task) => (
-            <Col key={task._id} span={6} lg={6} md={8} xs={12}>
-              <Card task={task} idBoard={idBoard} />
-            </Col>
+            <Card task={task} idBoard={idBoard} />
           ))
         ) : (
           <div className="search__empty" style={{ textAlign: 'center', padding: '20px 0' }}>
@@ -69,7 +67,7 @@ const Cards = ({ idBoard }: CardsProps) => {
             <h3>No result found</h3>
           </div>
         )}
-      </Row>
+      </div>
     </div>
   );
 };

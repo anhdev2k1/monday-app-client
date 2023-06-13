@@ -40,7 +40,7 @@
       .table__data-task-value {
          width: 300px;
          font-family: 'Roboto Mono';
-        span{
+        > span{
          display: block;
          width: 150px;
          white-space: nowrap;

@@ -12,7 +12,7 @@ const MenuTask = ({ tasks, handleDeleteTask, setCheckedTasks }: IMenuTaskProps) 
       className="menu__wrapper"
       style={
         tasks.length > 0
-          ? { transform: 'translateY(-40px)', display: 'block' }
+          ? { transform: 'translateY(-40px)', display: 'flex' }
           : { transform: 'translateY(300px)', display: 'none' }
       }
     >

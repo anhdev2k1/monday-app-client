@@ -23,10 +23,6 @@ const { TextArea } = Input;
 const WorkspaceManagement = () => {
    const dispatch = useAppDispatch();
    const navigate = useNavigate();
-   // const nameWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data?.name);
-   // const descriptionWorkspace = useAppSelector(
-   //    (state) => state.workspaceSlice.currWorkspace.data?.description,
-   // );
    const currentWorkspace = useAppSelector((state) => state.workspaceSlice.currWorkspace.data);
    const descriptionWorkspace = useAppSelector(
       (state) => state.workspaceSlice.currWorkspace.data?.description,
@@ -35,7 +31,7 @@ const WorkspaceManagement = () => {
    const { idWorkspace } = useParams();
    useEffect(() => {
       if (currentWorkspace && currentWorkspace._id !== idWorkspace) {
-         navigate(`/workspace/${currentWorkspace._id}`);
+         navigate(`/workspace/${idWorkspace}`);
       }
    }, [currentWorkspace]);
 

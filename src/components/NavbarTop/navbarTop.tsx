@@ -17,15 +17,15 @@ const NavbarTop = () => {
   return (
     <nav className="navbar__top">
       <div className="navbar__top-title">
-        <div className="navbar__top-title-burger">
+        {/* <div className="navbar__top-title-burger">
           <img src={icons.burger} alt="" />
-        </div>
+        </div> */}
 
-        <div className="navbar__top-title-heading">
+        <div className="navbar__top-title-heading" style={{marginLeft: "10px"}}>
           <img src={icons.flower} alt="" className="flower" />
           <strong>monday</strong>
           <span>work management</span>
-          <button className="navbar__top-title-btn">See plans</button>
+          {/* <button className="navbar__top-title-btn">See plans</button> */}
         </div>
       </div>
 

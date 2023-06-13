@@ -95,6 +95,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-indent: 10px;
       }
     }
     .table__data-task-value:not(:nth-child(2)) {

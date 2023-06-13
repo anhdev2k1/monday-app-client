@@ -1,0 +1,60 @@
+.card__features-item{
+    width: 100%;
+    > .item__value {
+        width: 30%;
+        position: relative;
+        height: 40px;
+        flex: 1;
+        text-align: center;
+        color: #fff;
+        font-size: 1.5rem;
+        .value__task--btn {
+           align-items: center;
+           padding: 0 8px;
+           cursor: pointer;
+        }  
+        .table__data-task-value {
+           width: 300px;
+           font-family: 'Roboto Mono';
+          span{
+           display: block;
+           width: 150px;
+           white-space: nowrap;
+           text-overflow: ellipsis;
+           overflow: hidden;
+           padding: 0 2px;
+           margin: 0 auto;
+          }
+          .default__value--task--wrapper{
+           overflow: hidden;
+           .default__value--task{
+              width: 100%;
+              p{
+                 width: 80%;
+                 white-space: nowrap;
+                 text-overflow: ellipsis;
+                 overflow: hidden;
+              }
+           }
+          }
+           &:hover {
+              .default__value--task {
+                 display: flex;
+                 border-color: #ccc;
+                 
+                 .value__task--btn,
+                 .icon__value--task {
+                    display: flex;
+                 }
+              }
+           }
+        }
+        // .table__data-task-value.data-status {
+        //   width: 50px;
+        //    white-space: nowrap;
+        //    text-overflow: ellipsis;
+        //    overflow: hidden;
+        //    font-family: 'Roboto Mono';
+        // }
+     }
+}
