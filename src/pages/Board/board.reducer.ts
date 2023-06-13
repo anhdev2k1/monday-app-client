@@ -14,7 +14,6 @@ import { IFilter, TypeActions } from '~/shared/model';
 import { IBoard, IBoardResponse, IBoardsResponse } from '~/shared/model/board';
 import { IColumn } from '~/shared/model/column';
 import { IResponseData } from '~/shared/model/global';
-import { IGroup } from '~/shared/model/group';
 import { IItemInListValueSelect, ITask, IValueOfTask } from '~/shared/model/task';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
 
@@ -265,6 +264,29 @@ const boardSlice = createSlice({
         });
       }
     },
+
+    handleUpdateAllGroup(
+      state,
+      action: PayloadAction<{
+        startPosition: number;
+        endPosition: number;
+      }>,
+    ) {
+      const { startPosition, endPosition } = action.payload;
+
+      if (state.currBoard.data) {
+        const updatedGroupsCopy = [...state.currBoard.data.groups];
+        const [removed] = updatedGroupsCopy.splice(startPosition, 1);
+        updatedGroupsCopy.splice(endPosition, 0, removed);
+        updatedGroupsCopy.forEach((group, index) => {
+          if (group.position !== index) {
+            group.position = index;
+          }
+        });
+        state.currBoard.data.groups = updatedGroupsCopy;
+      }
+    },
+
     handleAddTaskToGroup: (
       state,
       action: PayloadAction<{
@@ -757,9 +779,12 @@ export const {
   handleAddValueListStatus,
   handleEditValueListStatus,
   handleDeleteValueListStatus,
+  //Group
   handleAddGroup,
   handleRenameGroup,
   handleDelGroup,
+  handleUpdateAllGroup,
+  //Value
   handleSetValueTask,
   handleEditValueSelected,
   setIndexTab,

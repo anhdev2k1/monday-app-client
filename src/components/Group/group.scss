@@ -1,5 +1,6 @@
 .group {
   min-width: calc(var(--width-default-layout) - 100px);
+
   .group:not(:nth-child(1)) {
     margin-top: 40px;
   }
@@ -44,7 +45,7 @@
         flex: 1;
         color: #579bfc;
         font-family: 'Roboto Mono';
-        
+
         &:hover {
           border: 1px solid #ccc;
         }
@@ -63,6 +64,10 @@
       //    cursor: pointer;
       // }
     }
+  }
+  .group__drag {
+    padding-left: 40px;
+    height: max-content;
   }
   .group__table {
     margin-top: 10px;
@@ -113,4 +118,9 @@
       // }
     }
   }
+}
+
+.group.dragging {
+  background-color: #e3e3e3;
+  height: max-content;
 }

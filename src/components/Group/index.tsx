@@ -11,15 +11,16 @@ import { deleteGroup, updateGroup } from './group.reducer';
 import Table from './Table/table';
 import { handleDelGroup, handleRenameGroup } from '~/pages/Board/board.reducer';
 import { isNotification } from '../Notification/notification.reducer';
+import { DraggableProvidedDragHandleProps } from 'react-beautiful-dnd';
 interface IPropsGroup {
   data: IGroup;
   idBoard?: string;
   position: number;
   numberOfGroup: number;
-  // columns?: IColumn[];
-  handleAddNewGroup: (position?: number) => Promise<void>;
+  dragHandle: DraggableProvidedDragHandleProps | null | undefined;
+  isDragging: boolean;
 }
-const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IPropsGroup) => {
+const Group = ({ data, idBoard, numberOfGroup, dragHandle, position, isDragging }: IPropsGroup) => {
   const [valueNameInput, setValueNameInput] = useState<string>(data.name);
   const dispatch = useAppDispatch();
   const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +73,7 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
     // },
     {
       key: '2',
-      label: <span style={{fontFamily: 'Roboto Mono'}}>Rename group</span>,
+      label: <span style={{ fontFamily: 'Roboto Mono' }}>Rename group</span>,
       icon: <img src={edit} alt="icon-board" className="icon__group" />,
       onClick: () => {
         inputElement.current?.focus();
@@ -80,7 +81,7 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
     },
     {
       key: '3',
-      label: <span style={{fontFamily: 'Roboto Mono'}}>Delete group</span>,
+      label: <span style={{ fontFamily: 'Roboto Mono' }}>Delete group</span>,
       icon: <img src={deleteIcon} alt="icon-board" className="icon__group" />,
       onClick: () => {
         handleDeleteGroup(data._id, data.position);
@@ -107,8 +108,8 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
     }
   };
   return (
-    <div className="group">
-      <div className="group__head">
+    <div className={`group ${isDragging ? 'dragging' : ''}`}>
+      <div className="group__head" {...dragHandle}>
         <Dropdown
           overlayStyle={{
             width: '200px',
@@ -141,9 +142,15 @@ const Group = ({ data, idBoard, numberOfGroup, position, handleAddNewGroup }: IP
           </Tippy>
         </div>
       </div>
-      <div className="group__table">
-        <Table data={data} idBoard={idBoard} />
-      </div>
+      {isDragging ? (
+        <div className="group__drag">
+          {data.tasks.length} task{data.tasks.length > 1 ? 's' : ''}
+        </div>
+      ) : (
+        <div className="group__table">
+          <Table data={data} idBoard={idBoard} />
+        </div>
+      )}
     </div>
   );
 };
