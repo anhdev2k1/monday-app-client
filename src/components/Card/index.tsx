@@ -6,6 +6,8 @@ import { useAppDispatch } from '~/config/store';
 import { setDisplayOverlay } from '../Overlay/overlay.reducer';
 import ModalCardDetail from './ModalCardDetail/modalCardDetail';
 import { setTaskToDisplay } from '~/pages/Board/board.reducer';
+import ValueTask from '../Group/Table/ValueTask/valueTask';
+import TypeMultipleCard from '../Cards/TypeMultipleCard/typeMultipleCard';
 interface IPropsCard {
   task: ITaskCard;
   idBoard?: string;
@@ -33,12 +35,6 @@ const Card = ({ task, idBoard }: IPropsCard) => {
       <div className="card__item-title">
         <div className="card__title-header">
           <span className="card__title-header--heading">{task.name}</span>
-          <Tippy position="top" html={<p>Start Conversation</p>}>
-            {/* <button className="card__icon--plus">
-              <img src={iconDesTask} alt="card__icon--plus" />
-              <IconDesTask />
-            </button> */}
-          </Tippy>
         </div>
         <div className="card__title-features">
           {task.columns.map((column, index) => {
@@ -52,6 +48,8 @@ const Card = ({ task, idBoard }: IPropsCard) => {
                   value={task.values[index]}
                   idBoard={idBoard}
                 />
+
+                // <TypeMultipleCard column = {column} task={task} index={index} key={column._id} value={task.values[index]} idBoard={idBoard}/>
               );
             }
           })}

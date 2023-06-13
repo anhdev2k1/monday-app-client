@@ -23,7 +23,6 @@ interface IPropsBoardSidebar {
 
 const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
    const [valueInput, setValueInput] = useState<string>(dataBoard.name);
-
    useEffect(() => {
       setValueInput(dataBoard.name);
    }, [dataBoard.name]);

@@ -52,7 +52,8 @@ const ValueTask = ({ valueOfTask, index, column, task, idBoard }: IValueTaskProp
       setOpenStatusBox(false);
     }
   };
-
+  
+  
   return (
     <td
       ref={valueOfTask.typeOfValue === 'multiple' ? refValueElement : undefined}

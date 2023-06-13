@@ -1,47 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600&display=swap');
 * {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 :root {
-   --background-primary-color: #0173ea;
-   --text-btn-color: #323338;
-   --background-btn-default: #dddfec;
-   --width-default-layout: 1200px;
+  --background-primary-color: #0173ea;
+  --text-btn-color: #323338;
+  --background-btn-default: #dddfec;
+  --width-default-layout: 1200px;
 }
 $primary-bg-color: #eceff8;
 $primary-button-color: #0073ea;
 $primary-selected-hover-color: #b5cec0;
 html {
-   font-size: 62.5%;
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
-   font-family: 'Roboto Mono', monospace;
-   line-height: 26.5px;
-   color: #333;
+  font-size: 62.5%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Roboto Mono', monospace;
+  line-height: 26.5px;
+  color: #333;
+  
 }
 a {
-   text-decoration: none;
+  text-decoration: none;
 }
 ul {
-   list-style-type: none;
+  list-style-type: none;
 }
 img {
-   max-width: 100%;
-   height: 100%;
-   object-fit: cover;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+input[type='checkbox'] {
+  cursor: pointer;
 }
 .container {
-   width: var(--width-default-layout);
-   margin: 0 auto;
-   min-height: 200px;
+  width: var(--width-default-layout);
+  margin: 0 auto;
+  min-height: 200px;
 }
-.ant-dropdown-menu{
-   font-family: 'Roboto Mono' !important;
-   font-size: 1.3rem;
+.ant-dropdown-menu {
+  font-family: 'Roboto Mono' !important;
+  font-size: 1.3rem;
 }
-.ant-tabs-tab{
-   font-family: 'Roboto Mono' !important;
+.ant-tabs-tab {
+  font-family: 'Roboto Mono' !important;
 }
+
