@@ -49,11 +49,12 @@ const ValueTask = ({ valueOfTask, index, column, task, idBoard }: IValueTaskProp
   });
   const handleClickOutside = (event: any) => {
     if (refValueElement.current && !refValueElement.current.contains(event.target)) {
+      console.log("here");
+      
       setOpenStatusBox(false);
     }
   };
-  
-  
+
   return (
     <td
       ref={valueOfTask.typeOfValue === 'multiple' ? refValueElement : undefined}
@@ -65,6 +66,7 @@ const ValueTask = ({ valueOfTask, index, column, task, idBoard }: IValueTaskProp
       }}
       className="table__data-task-value data-status"
       onClick={(e) => {
+        
         const target = e.target as HTMLElement;
         if (target.closest('.item__value')) {
           e.stopPropagation();
@@ -79,15 +81,15 @@ const ValueTask = ({ valueOfTask, index, column, task, idBoard }: IValueTaskProp
           idBoard={idBoard}
           setOpenStatusBox={setOpenStatusBox}
           selectValueHandler={selectValueHandler}
-          columnId={column._id}
-          valueID={valueOfTask._id}
+          columnId={column?._id}
+          valueID={valueOfTask?._id}
         />
       ) : (
         <ValueCustomizedByColumnType
           task={task}
           position={index}
           valueTask={valueOfTask}
-          nameOfType={column.belongType.name}
+          nameOfType={column?.belongType.name}
         />
       )}
     </td>

@@ -16,17 +16,18 @@
       min-width: 360px;
       border-right: 1px solid #edeef4;
       border-bottom: 1px solid #edeef4;
-      font-family: 'Roboto Mono';
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
     }
     .column__group:last-child {
       width: 100%;
       border-right: none;
       > .add__column {
         cursor: pointer;
-        // display: block;
         transition: all 0.2s;
         .icon__add-column {
           transition: all 0.2s;
+          font-size: 1.5rem;
         }
       }
     }
@@ -87,7 +88,7 @@
       font-size: 1.4rem;
       border-bottom: 1px solid #edeef4;
       border-right: 1px solid #edeef4;
-      font-family: 'Roboto Mono';
+      font-family: 'Poppins', sans-serif;
       font-size: 1.3rem;
       span {
         display: block;
@@ -102,7 +103,7 @@
       border-bottom: 1px solid #edeef4;
       border-right: 1px solid #edeef4;
       position: relative;
-      font-family: 'Roboto Mono';
+      font-family: 'Poppins', sans-serif;
       font-size: 1.3rem;
       span {
         display: block;

@@ -21,7 +21,7 @@ const ModalCardDetail = ({ idBoard, taskInGroup }: ModalCardDetailProps) => {
   const { iconDesTask } = images;
   const dispatch = useAppDispatch();
   const task = useAppSelector((state) => state.boardSlice.taskToDisplay)!;
-
+  
   const handleRenameTask = async (
     e: React.FocusEvent<HTMLInputElement, Element>,
     taskID: string,
@@ -56,16 +56,16 @@ const ModalCardDetail = ({ idBoard, taskInGroup }: ModalCardDetailProps) => {
               }}
               className="modal__card__title--input"
               defaultValue={task.name}
-              type="tex"
+              type="text"
             />
-            <Tippy position="top" html={<p>Start Conversation</p>}>
+            {/* <Tippy position="top" html={<p>Start Conversation</p>}>
               <button className="modal__card__icon--plus">
                 <img src={iconDesTask} alt="modal__card__icon--plus" />
               </button>
-            </Tippy>
+            </Tippy> */}
           </div>
           <div className="card__title-features">
-            <div className="item__in__card">
+            {/* <div className="item__in__card">
               <ButtonCustom
                 sizeType={SizeType.Medium}
                 className="item__card--btn"
@@ -84,7 +84,7 @@ const ModalCardDetail = ({ idBoard, taskInGroup }: ModalCardDetailProps) => {
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </div> */}
 
             {task.columns.map((column, index) => {
               return (
@@ -99,6 +99,7 @@ const ModalCardDetail = ({ idBoard, taskInGroup }: ModalCardDetailProps) => {
               );
             })}
           </div>
+          
         </div>
       </div>
     </div>

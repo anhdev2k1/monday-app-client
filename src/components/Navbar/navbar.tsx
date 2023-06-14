@@ -44,23 +44,19 @@ const Navbar = () => {
           />
         </div>
         {currentUser?.user ? (
-          // <div className="navbar__brand-feature" onClick={handleLogout}>
-          //    <Link to="" className="navbar__brand-feature--btn">
-          //       Logout
-          //    </Link>
-          // </div>
-          <button className="button-29" onClick={handleLogout}>
-            <span>Logout</span>
-          </button>
+          <div className="navbar__brand-feature" onClick={handleLogout}>
+             <Link to="" className="navbar__brand-feature--btn">
+                Logout
+             </Link>
+          </div>
+          
         ) : (
-          //  <div className="navbar__brand-feature">
-          //    <Link to="/login" className="navbar__brand-feature--btn">
-          //      Login
-          //    </Link>
-          //  </div>
-          <Link to="/login">
-            <button className="button-29">Login</button>
-          </Link>
+           <div className="navbar__brand-feature">
+             <Link to="/login" className="navbar__brand-feature--btn">
+               Login
+             </Link>
+           </div>
+          
         )}
       </div>
     </nav>

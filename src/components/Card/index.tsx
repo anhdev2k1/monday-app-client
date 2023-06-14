@@ -40,16 +40,15 @@ const Card = ({ task, idBoard }: IPropsCard) => {
           {task.columns.map((column, index) => {
             if (column.belongType.name === 'Status') {
               return (
-                <ItemInCard
-                  task={task}
-                  index={index}
-                  key={column._id}
-                  column={column}
-                  value={task.values[index]}
-                  idBoard={idBoard}
-                />
-
-                // <TypeMultipleCard column = {column} task={task} index={index} key={column._id} value={task.values[index]} idBoard={idBoard}/>
+                // <ItemInCard
+                //   task={task}
+                //   index={index}
+                //   key={column._id}
+                //   column={column}
+                //   value={task.values[index]}
+                //   idBoard={idBoard}
+                // />
+                <TypeMultipleCard column = {column} task={task} index={index} key={column._id} value={task.values[index]} idBoard={idBoard}/>
               );
             }
           })}

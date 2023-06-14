@@ -13,6 +13,8 @@ interface IPropsCard {
   idBoard?: string;
 }
 const ItemInCard = ({ column, index, value, task, idBoard }: IPropsCard) => {
+  console.log({task});
+  
   return (
     <div className="item__in__card">
       <ButtonCustom
@@ -32,11 +34,12 @@ const ItemInCard = ({ column, index, value, task, idBoard }: IPropsCard) => {
         title={column.name}
       />
       <table className="item__value">
-        <tbody>
+        <tbody className="table__data">
           <tr
             onClick={(e) => {
               e.preventDefault();
             }}
+            className="table__data-task" key={task._id}
           >
             <ValueTask
               task={task}

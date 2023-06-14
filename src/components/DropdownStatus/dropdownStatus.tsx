@@ -59,20 +59,7 @@ const DropdownStatus = ({
    useEffect(() => {
       if (!isOpen) setIsEdit(false);
    }, [isOpen]);
-   // useEffect(() => {
-   //    return () => {
-   //       setIsApply(false);
-   //    };
-   // }, []);
    const handleValueSelection = async (values: IDefaultValue) => {
-      // setChangeStatus((prev) => {
-      //    return {
-      //       ...prev,
-      //       idSelected: values._id,
-      //       value: values.value,
-      //       color: values.color,
-      //    };
-      // });
       selectValueHandler(values);
       await axios.patch(`${SERVER_API_URL}v1/api/tasksColumns/${valueID}`, {
          value: values.value,
@@ -106,6 +93,7 @@ const DropdownStatus = ({
          );
       }
    };
+   
    return (
       <>
          {isOpen && (

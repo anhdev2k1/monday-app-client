@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import './sidebar.scss';
 import { useAppDispatch, useAppSelector } from '~/config/store';
@@ -27,6 +27,11 @@ const ToggleWorkspace = () => {
          }),
       );
    }
+   const [valueSearchWorkspace, setValueSearchWorkspace] = useState<string>('')
+   const searchWorkspace = () => {
+      const result = listlWorkspace?.filter(workspace => workspace.name.toLocaleLowerCase().includes(valueSearchWorkspace))
+      return result
+   }
    return (
       <div
          onClick={(e) => {
@@ -39,6 +44,8 @@ const ToggleWorkspace = () => {
                type="text"
                className="workspace__modal-input"
                placeholder="Search for a workspace"
+               value={valueSearchWorkspace}
+               onChange={(e) => setValueSearchWorkspace(e.target.value)}
             />
             <div className="workspace__modal-search-btn">
                <SearchOutlined />
@@ -47,8 +54,8 @@ const ToggleWorkspace = () => {
          <div className="workspace__modal-list">
             <h3>My workspaces</h3>
 
-            {listlWorkspace &&
-               listlWorkspace.map((data, index) => {
+            {searchWorkspace() &&
+               searchWorkspace()!.map((data, index) => {
                   return <ItemWorkspace key={index} dataWorkspace={data} />;
                })}
          </div>

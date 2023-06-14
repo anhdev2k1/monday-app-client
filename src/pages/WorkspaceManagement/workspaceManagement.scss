@@ -15,6 +15,7 @@
       display: flex;
       padding: 0 100px;
       gap: 10px;
+      margin-top: 10px;
       .workspace__header-avt {
          width: 100px;
          height: 90px;
@@ -68,6 +69,7 @@
          }
       }
       .workspace__boards {
+         width: 500px;
          display: flex;
          flex-direction: column;
          gap: 15px;
@@ -81,7 +83,6 @@
             font-size: 1.6rem;
             border-bottom: 1px solid #c3c3c3;
             border-radius: 8px;
-            color: #333;
             cursor: pointer;
             &:hover {
                background-color: #dcdfec;
@@ -92,15 +93,22 @@
       .workspace__subscribers-header {
          display: flex;
          align-items: center;
-         font-size: 1.6rem;
+         font-size: 1.5rem;
+         font-family: 'Poppins';
       }
       .workspace__info-user {
          display: flex;
          gap: 10px;
          align-items: center;
          margin-top: 20px;
+         font-family: 'Poppins';
          > span {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            display: block;
+            width: 250px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
          }
          .info__user-img {
             width: 50px;

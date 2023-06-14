@@ -19,9 +19,10 @@ const { edit, coppy, deleteIcon, move, iconBoard } = images;
 
 interface IPropsBoardSidebar {
    dataBoard: IBoard;
+   height?:string
 }
 
-const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
+const BoardSidebar = ({ dataBoard,height }: IPropsBoardSidebar) => {
    const [valueInput, setValueInput] = useState<string>(dataBoard.name);
    useEffect(() => {
       setValueInput(dataBoard.name);
@@ -79,22 +80,6 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
          },
       },
       {
-         key: '2',
-         label: <span>Move to</span>,
-         icon: <img src={move} alt="icon-board" />,
-         children: [
-            {
-               key: '2-1',
-               label: 'Move to workspace',
-            },
-         ],
-      },
-      {
-         key: '3',
-         label: <span>Duplicate Board</span>,
-         icon: <img src={coppy} alt="icon-board" />,
-      },
-      {
          key: '4',
          label: <span>Delete Board</span>,
          icon: <img src={deleteIcon} alt="icon-board" />,
@@ -111,6 +96,7 @@ const BoardSidebar = ({ dataBoard }: IPropsBoardSidebar) => {
             }
          }}
          className={`item__board ${dataBoard._id === idBoard ? 'board__info--active' : ''}`}
+         style={{height: height}}
       >
          <div className={`board__info`}>
             <svg

@@ -124,7 +124,7 @@ const HeadView = () => {
         leftIcon={<FontAwesomeIcon icon={faPlus} />}
         className="table__head-add-group"
       /> */}
-      <button className="button-29" onClick={addNewGroupHandler}>
+      <button className="table__head-add-group" onClick={addNewGroupHandler}>
         <FontAwesomeIcon icon={faPlus} />
         <span>Add group</span>
       </button>

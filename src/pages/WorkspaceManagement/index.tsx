@@ -60,11 +60,11 @@ const WorkspaceManagement = () => {
          label: `Recent boards`,
          children: (
             <>
-               <span>Boards and dashboards you visited recently in this workspace</span>
+               <span style={{fontFamily: 'Poppins'}}>Boards and dashboards you visited recently in this workspace</span>
                <div className="workspace__boards">
                   {currentWorkspace?.boards &&
                      currentWorkspace.boards.map((board, index) => {
-                        return <BoardSidebar dataBoard={board} key={index} />;
+                        return <BoardSidebar dataBoard={board} key={index} height='40px'/>;
                      })}
                </div>
             </>

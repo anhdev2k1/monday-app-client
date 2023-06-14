@@ -1,3 +1,5 @@
+import { IGroup } from "./group";
+
 export interface IItemInListValueSelect {
   _id: string;
   value: string;
@@ -15,4 +17,5 @@ export interface ITask {
   name: string;
   position: number;
   values: IValueOfTask[];
+  group: IGroup;
 }

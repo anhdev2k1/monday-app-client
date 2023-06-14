@@ -12,6 +12,7 @@
       font-size: 2.8rem;
       margin-top: 40px;
       margin-bottom: 20px;
+      font-weight: 500;
    }
    .workspace__color {
       width: 100px;
@@ -32,11 +33,12 @@
    }
    .modal__input {
       width: 100%;
-      border: 0.5px solid #ccc;
+      border: 1px solid #e3e3e3;
       margin-top: 10px;
       font-size: 2rem;
+      border-radius: 4px;
       &:focus {
-         border: 0.5px solid blue;
+         border: 1px solid #579bfc;
       }
       padding: 10px 0 10px 10px;
       outline: none;

@@ -18,7 +18,7 @@
     box-sizing: border-box;
     color: #fff;
     cursor: pointer;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Poppins', sans-serif;
     height: 38px;
     justify-content: center;
     line-height: 1;
@@ -49,11 +49,25 @@
     transform: translateY(2px);
   }
   .table__head-add-group {
-    background-color: transparent;
-    color: #0073ea;
+    width: max-content;
+    padding: 0 10px;
+    height: 38px;
+    border-radius: 4px;
+    background-color: #0073ea;
+    color: white;
     border: 1px solid #0073ea;
-    font-weight: 500;
-    font-family: 'Roboto Mono';
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    &:hover{
+      background-color: #0265cf;
+      transition: all .2s;
+    }
   }
   .search {
     width: max-content;

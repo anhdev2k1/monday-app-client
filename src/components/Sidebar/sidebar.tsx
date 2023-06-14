@@ -77,26 +77,6 @@ const Sidebar: React.FC = () => {
       onClick: handleRenameWorkspace,
     },
     {
-      key: '2',
-      label: <span>Change icon</span>,
-      icon: <img src={change} alt="icon-board" />,
-      children: [
-        {
-          key: '2-1',
-          label: 'Background color',
-        },
-        {
-          key: '2-2',
-          label: 'Icon',
-        },
-      ],
-    },
-    {
-      key: '3',
-      label: <span>Manage workspace</span>,
-      icon: <img src={manage} alt="icon-board" />,
-    },
-    {
       key: '4',
       label: <span>Delete</span>,
       onClick: handleDelete,
@@ -308,7 +288,7 @@ const Sidebar: React.FC = () => {
           <Loading height="30px" />
         ) : currentWorkSpace?.boards && (
           searchBoards()!.map((dataBoard) => {
-            return <BoardSidebar dataBoard={dataBoard} key={dataBoard._id} />;
+            return <BoardSidebar dataBoard={dataBoard} key={dataBoard._id} height='35px' />;
           })
         )}
       </div>

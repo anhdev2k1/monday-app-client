@@ -10,7 +10,7 @@
    border-radius: 8px;
    position: absolute;
    top: 120%;
-   left: -12%;
+   left: 16px;
    z-index: 99;
    border: 1px solid #e3e3e3;
    &::after {
@@ -43,9 +43,14 @@
          // background-color: #797e93;
          color: white;
          border-radius: 3px;
-         
          padding: 4px;
          cursor: pointer;
+         > span {
+            width: 100%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+         }
          &:focus-within {
             border: 1px solid #0073ea;
             transition: all 0.3s;
