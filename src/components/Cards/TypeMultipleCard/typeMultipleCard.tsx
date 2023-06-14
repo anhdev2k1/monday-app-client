@@ -15,6 +15,7 @@ interface ITypeMultipleCardProps {
 }
 const TypeMultipleCard = ({ column, value, task, idBoard, index }: ITypeMultipleCardProps) => {
   
+  
   return (
     <>
       <div className="card__features-item">

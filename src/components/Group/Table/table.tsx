@@ -15,8 +15,10 @@ import { createColumn } from '~/components/MainTable/mainTable.reducer';
 import { ITask } from '~/shared/model/task';
 import { IResponseData } from '~/shared/model/global';
 import ValueTask from './ValueTask/valueTask';
-import { handleAddTaskToGroup, handleDeleteTasksFromGroup } from '~/pages/Board/board.reducer';
+import { handleAddTaskToGroup, handleDeleteTasksFromGroup, handleUpdateAllTasks } from '~/pages/Board/board.reducer';
 import { SERVER_API_URL } from '~/config/constants';
+import { DragDropContext, Draggable, DropResult, Droppable } from 'react-beautiful-dnd';
+import { updateAllGroups, updateAllTasks } from '../group.reducer';
 interface IPropsTable {
   data: IGroup;
   idBoard?: string;
@@ -69,32 +71,26 @@ const Table = ({ data, idBoard }: IPropsTable) => {
       messageApi.error(`${error}`);
     }
   };
-  const handleAddTask = () => {
-    if (valueAddTask !== '') {
-      const addTask = async () => {
-        messageApi.loading('Đợi xý nhé !...');
-        const res = await axios.post<
-          IResponseData<{
-            task: ITask;
-          }>
-        >(`http://localhost:3001/v1/api/board/${idBoard}/group/${data._id}/task`, {
-          name: valueAddTask,
-          position: data.tasks.length,
-        });
-        if (res.data.metadata) {
-          dispatch(
-            handleAddTaskToGroup({
-              groupId: data._id,
-              newTask: res.data.metadata?.task,
-            }),
-          );
-          messageApi.success('Tạo task thành công!');
-          setValueAddTask('');
-        }
-      };
-      addTask();
-    } else {
-      messageApi.error('Vui lòng nhập tên task');
+  const handleAddTask = async () => {
+    if (valueAddTask === '') return;
+    messageApi.loading('Đợi xý nhé !...');
+    const res = await axios.post<
+      IResponseData<{
+        task: ITask;
+      }>
+    >(`http://localhost:3001/v1/api/board/${idBoard}/group/${data._id}/task`, {
+      name: valueAddTask,
+      position: data.tasks.length,
+    });
+    if (res.data.metadata) {
+      messageApi.success('Tạo task thành công!');
+      dispatch(
+        handleAddTaskToGroup({
+          groupId: data._id,
+          newTask: res.data.metadata?.task,
+        }),
+      );
+      setValueAddTask('');
     }
   };
   const [isOpenAddColumn, setIsOpenAddColumn] = useState<boolean>(false);
@@ -110,16 +106,37 @@ const Table = ({ data, idBoard }: IPropsTable) => {
       setIsOpenAddColumn(false);
     }
   };
+  // const [tasks, updateTasks] = useState<ITask[]>(data.tasks);
+ 
+  const handleOnDragEnd = async (result: DropResult) => {
+    console.log("result",result);
+    
+    if (!result.destination) return;
+    const startIndex = result.source.index;
+    const endIndex = result.destination.index;
+    const newTasks = [...data.tasks];
+    const [reorderedItem] = newTasks.splice(startIndex, 1);
+    newTasks.splice(endIndex, 0, reorderedItem);
+  
+    dispatch(handleUpdateAllTasks({
+      idGroup : data._id,
+      tasksDidDrop: newTasks
+    }))
+    await dispatch(
+      updateAllTasks({
+        idGroup: data._id,
+        tasks: newTasks,
+      }),
+    );
+    
+  };
   return (
     <>
       <table className="table__group">
         {contextHolder}
         <thead className="table__group-header">
           <tr>
-            <th className="column__group-check">
-              {/* <label htmlFor="checked"></label>
-              <input type="checkbox" id="checked" disabled /> */}
-            </th>
+            <th className="column__group-check"></th>
             <th className="column__group-task">Task</th>
             {columns?.map((col, index) => (
               <Column key={col._id} col={col} position={index} handleAddColumn={handleAddColumn} />
@@ -150,49 +167,71 @@ const Table = ({ data, idBoard }: IPropsTable) => {
             </th>
           </tr>
         </thead>
-        <tbody className="table__data">
-          {data.tasks.map((task) => {
-            return (
-              <tr className="table__data-task" key={task._id}>
-                <td className="table__data-task-value">
-                  <label htmlFor="checked"></label>
-                  <input
-                    type="checkbox"
-                    id="checked"
-                    onChange={(e) => toggleCheckedTask(e, task._id)}
-                    data-id={task._id}
-                    checked={checkedTasks.includes(task._id)}
-                    style={{transform: "scale(1.4)"}}
-                  />
-                </td>
-                <TaskEdit task={task} groupId={data._id} />
-                {task.values.map((value, index) => (
-                  <ValueTask
-                    key={index}
-                    index={index}
-                    idBoard={idBoard}
-                    valueOfTask={value}
-                    task={task}
-                    column={columns[index]}
-                  />
-                ))}
-              </tr>
-            );
-          })}
-          <tr className="table__data-task">
-            <td className="table__data-task-value"></td>
-            <td className="table__data-add-task">
-              <input
-                type="text"
-                value={valueAddTask}
-                placeholder="Add Task"
-                ref={handleValueAdd}
-                onChange={() => setValueAddTask(handleValueAdd.current?.value)}
-                onBlur={handleAddTask}
-              />
-            </td>
-          </tr>
-        </tbody>
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Droppable droppableId="tasks-droppable">
+            {(provided) => (
+              <tbody
+                className="table__data tasks-droppable"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {data.tasks.map((task, index) => {
+                  return (
+                    <Draggable key={index} draggableId={task._id} index={index}>
+                      {(provided) => (
+                        <tr
+                          className="table__data-task"
+                          key={task._id}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <td className="table__data-task-value">
+                            <label htmlFor="checked"></label>
+                            <input
+                              type="checkbox"
+                              id="checked"
+                              onChange={(e) => toggleCheckedTask(e, task._id)}
+                              data-id={task._id}
+                              checked={checkedTasks.includes(task._id)}
+                              style={{ transform: 'scale(1.4)' }}
+                            />
+                          </td>
+                          <TaskEdit task={task} groupId={data._id} />
+                          {task.values.map((value, index) => (
+                            <ValueTask
+                              key={index}
+                              index={index}
+                              idBoard={idBoard}
+                              valueOfTask={value}
+                              task={task}
+                              column={columns[index]}
+                            />
+                          ))}
+                        </tr>
+                      )}
+                    </Draggable>
+                  );
+                })}
+
+                <tr className="table__data-task">
+                  <td className="table__data-task-value"></td>
+                  <td className="table__data-add-task">
+                    <input
+                      type="text"
+                      value={valueAddTask}
+                      placeholder="Add Task"
+                      ref={handleValueAdd}
+                      onChange={() => setValueAddTask(handleValueAdd.current?.value)}
+                      onBlur={handleAddTask}
+                    />
+                  </td>
+                </tr>
+                {provided.placeholder}
+              </tbody>
+            )}
+          </Droppable>
+        </DragDropContext>
       </table>
       <MenuTask
         setCheckedTasks={setCheckedTasks}

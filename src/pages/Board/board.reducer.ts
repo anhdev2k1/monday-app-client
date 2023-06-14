@@ -30,6 +30,7 @@ interface IInitState {
   };
   currBoard: {
     data?: IBoard;
+    updateAllTask: ITask[];
     filterGroup: IFilter;
     filterTask: IFilter;
     filterValueInColumns: IFilter[];
@@ -54,6 +55,7 @@ const initialState: IInitState = {
   },
   currBoard: {
     data: undefined,
+    updateAllTask: [],
     filterGroup: new Map(),
     filterTask: new Map(),
     filterValueInColumns: [],
@@ -286,7 +288,25 @@ const boardSlice = createSlice({
         state.currBoard.data.groups = updatedGroupsCopy;
       }
     },
-
+    handleUpdateAllTasks(
+      state,
+      action: PayloadAction<{
+        idGroup: string,
+        tasksDidDrop:ITask[]
+      }>,
+    ) {
+      const { tasksDidDrop } = action.payload;
+      
+      if(state.currBoard.data){
+        state.currBoard.data.groups.map(gr => {
+          if(gr._id === action.payload.idGroup){
+              gr.tasks = tasksDidDrop
+          }
+        })
+      }
+      
+    },
+    
     handleAddTaskToGroup: (
       state,
       action: PayloadAction<{
@@ -610,6 +630,7 @@ const boardSlice = createSlice({
     resetCurrBoard(state) {
       state.currBoard = {
         data: undefined,
+        updateAllTask: [],
         filterGroup: new Map(),
         filterTask: new Map(),
         filterValueInColumns: [],
@@ -810,6 +831,7 @@ export const {
   handleFilterTask,
   handleFilterColumn,
   clearFilters,
+  handleUpdateAllTasks
 } = boardSlice.actions;
 
 export default boardSlice.reducer;

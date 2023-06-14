@@ -37,7 +37,7 @@ const Card = ({ task, idBoard }: IPropsCard) => {
           <span className="card__title-header--heading">{task.name}</span>
         </div>
         <div className="card__title-features">
-          {task.columns.map((column, index) => {
+          {[task.columns[0]].map((column, index) => {
             if (column.belongType.name === 'Status') {
               return (
                 // <ItemInCard

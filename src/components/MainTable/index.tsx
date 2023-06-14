@@ -19,8 +19,7 @@ interface MainTableProps {
 const MainTable = ({ idBoard }: MainTableProps) => {
   const dataCreateGroup = useAppSelector((state) => state.groupSlice.createGroup);
   const listsGroup = useAppSelector((state) => state.boardSlice.currBoard.data?.groups)!;
-  console.log({ listsGroup });
-
+  
   const filterGroup = useAppSelector((state) => state.boardSlice.currBoard.filterGroup);
   const filterTask = useAppSelector((state) => state.boardSlice.currBoard.filterTask);
   const filterValueInColumns = useAppSelector(

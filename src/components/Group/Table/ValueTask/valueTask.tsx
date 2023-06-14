@@ -49,8 +49,6 @@ const ValueTask = ({ valueOfTask, index, column, task, idBoard }: IValueTaskProp
   });
   const handleClickOutside = (event: any) => {
     if (refValueElement.current && !refValueElement.current.contains(event.target)) {
-      console.log("here");
-      
       setOpenStatusBox(false);
     }
   };

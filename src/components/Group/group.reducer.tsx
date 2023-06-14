@@ -1,4 +1,5 @@
 import {
+  PayloadAction,
   createAsyncThunk,
   createSlice,
   isFulfilled,
@@ -11,6 +12,7 @@ import { IResponseData } from '~/shared/model/global';
 import { IGroup } from '~/shared/model/group';
 import { IBoard } from '../../shared/model/board';
 import { serializeAxiosError } from '~/shared/reducers/reducer.utils';
+import { ITask } from '~/shared/model/task';
 
 const apiUrl = SERVER_API_URL;
 
@@ -121,6 +123,16 @@ export const updateAllGroups = createAsyncThunk(
     });
   },
 );
+export const updateAllTasks = createAsyncThunk(
+  'update-tasks-slice',
+  async ({ idGroup, tasks }: { idGroup: string; tasks: ITask[] }) => {
+    const requestUrl = `${apiUrl}v1/api/group/${idGroup}/tasks`;
+    const transformTasks = tasks.map((task) => ({ _id: task._id, position: task.position }));
+    return await axios.patch(requestUrl, {
+      tasks: transformTasks,
+    });
+  },
+);
 
 export const groupSlice = createSlice({
   name: 'WorkspaceSlice',
@@ -188,7 +200,8 @@ export const groupSlice = createSlice({
           state.deleteGroup.status = response.data.statusCode;
           state.deleteGroup.mess = response.data.message;
         }
-      });
+      })
+      
   },
   reducers: {
     resetCreateGroup(state) {
@@ -198,6 +211,7 @@ export const groupSlice = createSlice({
       state.createGroup.mess = '';
       state.createGroup.error = false;
     },
+
     resetEditGroup(state) {
       state.createGroup.loading = false;
       state.createGroup.data = undefined;
