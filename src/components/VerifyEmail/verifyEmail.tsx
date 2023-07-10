@@ -24,7 +24,7 @@ const VerifyEmail = () => {
             children: <LoadingHandleEvent />,
          }),
       );
-      const res = await axios.post('http://localhost:3001/v1/api/auth/verify', {
+      const res = await axios.post('https://monday-app-server.vercel.app/v1/api/auth/verify', {
          email,
          code: values.code,
       });

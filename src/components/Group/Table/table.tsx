@@ -78,7 +78,7 @@ const Table = ({ data, idBoard }: IPropsTable) => {
       IResponseData<{
         task: ITask;
       }>
-    >(`http://localhost:3001/v1/api/board/${idBoard}/group/${data._id}/task`, {
+    >(`https://monday-app-server.vercel.app/v1/api/board/${idBoard}/group/${data._id}/task`, {
       name: valueAddTask,
       position: data.tasks.length,
     });

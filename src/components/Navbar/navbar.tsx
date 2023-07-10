@@ -15,7 +15,7 @@ const Navbar = () => {
     localStorage.removeItem('userId');
     dispatch(resetUser());
     await axios.post(
-      'http://localhost:3001/v1/api/auth/logout',
+      'https://monday-app-server.vercel.app/v1/api/auth/logout',
       {},
       {
         headers: {

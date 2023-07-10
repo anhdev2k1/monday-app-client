@@ -70,7 +70,7 @@ const HeadView = () => {
       IResponseData<{
         task: ITask;
       }>
-    >(`http://localhost:3001/v1/api/board/${idBoard}/group/${firstGroup._id}/task`, {
+    >(`https://monday-app-server.vercel.app/v1/api/board/${idBoard}/group/${firstGroup._id}/task`, {
       name: 'New Task',
       position: 0,
     });
