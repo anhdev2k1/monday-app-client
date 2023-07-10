@@ -21,7 +21,7 @@ export interface IAuthen {
    };
 }
 
-const baseUrl = SERVER_API_URL;
+// const baseUrl = SERVER_API_URL;
 const initialState: IAuthen = {
    user: {
       data: undefined,
@@ -53,7 +53,7 @@ export interface IDataVerifyAcc {
 export const loginAccount = createAsyncThunk(
    'login-slice',
    async (infoLogin: IDataLogin) => {
-      const requestUrl = `${baseUrl}v1/api/auth/signin`;
+      const requestUrl = `${SERVER_API_URL}v1/api/auth/signin`;
       return await axios.post<IResponseUser>(requestUrl, infoLogin);
    },
    { serializeError: serializeAxiosError },
@@ -62,7 +62,7 @@ export const loginAccount = createAsyncThunk(
 export const registerAccount = createAsyncThunk(
    'register-slice',
    async (infoRegister: IDataRegister) => {
-      const requestUrl = `${baseUrl}v1/api/auth/signup`;
+      const requestUrl = `${SERVER_API_URL}v1/api/auth/signup`;
       return await axios.post<IResponseUser>(requestUrl, infoRegister);
    },
    { serializeError: serializeAxiosError },
@@ -70,7 +70,7 @@ export const registerAccount = createAsyncThunk(
 export const getCurrentUser = createAsyncThunk(
    'current-user-slice',
    async () => {
-      const requestUrl = `${baseUrl}v1/api/auth/me`;
+      const requestUrl = `${SERVER_API_URL}v1/api/auth/me`;
       return await axios.get<IResponseGetMe>(requestUrl);
    },
    { serializeError: serializeAxiosError },
@@ -79,7 +79,7 @@ export const getCurrentUser = createAsyncThunk(
 export const verifyEmail = createAsyncThunk(
    'verify-email-user-slice',
    async (data: IDataVerifyAcc) => {
-      const requestUrl = `${baseUrl}v1/api/auth/verify`;
+      const requestUrl = `${SERVER_API_URL}v1/api/auth/verify`;
       return await axios.post<IResponseData<{ user: IUserNotToken }>>(requestUrl, data);
    },
    { serializeError: serializeAxiosError },
